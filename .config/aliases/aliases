@@ -1,0 +1,129 @@
+# +--------+
+# | System |
+# +--------+
+
+alias shutdown='sudo shutdown now'
+alias restart='sudo reboot'
+alias suspend='sudo pm-suspend'
+
+
+# +-----+
+# | bat |
+# +-----+
+
+alias bat='batcat'
+
+# +----+
+# | ls |
+# +----+
+
+# -----------------------------
+# Interactive aliases (colors, icons, Git info)
+# -----------------------------
+
+# Basic directory listing with colors, icons, and directories first
+alias ls='eza --color=auto --icons --group-directories-first'  # list files interactively
+
+# Long listing in bare format with Git info, colors, icons, directories first
+alias l='eza -lbF --git --color=auto --icons --group-directories-first'  # quick interactive list
+
+# Long listing with Git info, colors, icons, directories first, shows more details
+alias ll='eza -lbGF --git --color=auto --icons --group-directories-first'  # detailed list
+
+# Long listing sorted by modification time, Git info, colors, icons, directories first
+alias llm='eza -lbG --git --sort=modified --color=auto --icons --group-directories-first'  # list by modification time
+
+# Full long listing including hidden files, extended info, Git info, time in ISO format, color scale, icons
+alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --color=auto --icons --group-directories-first'  # all files, long info
+
+# Full long listing with extended attributes (@), hidden files, Git info, color scale, icons
+alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale --color=auto --icons --group-directories-first'  # extended listing with attributes
+
+# -----------------------------
+# Specialty / script-friendly views
+# -----------------------------
+
+# One file per line (good for scripts or piping)
+alias lS='eza -1'  # single column listing
+
+# Tree view up to 2 levels deep
+alias lt='eza --tree --level=2'  # tree view of directories
+
+# Show all hidden files safely using eza's pattern matching
+alias l.='eza --all --pattern ".*"'  # show hidden files
+
+# +----+
+# | cp |
+# +----+
+
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+
+
+# +-----+
+# | fzf |
+# +-----+
+
+alias fzfp="fzf --preview 'batcat --color=always {}' --preview-window '~3'"
+
+
+
+# +------+
+# | time |
+# +------+
+
+alias time='/usr/bin/time'
+
+# +--------+
+# | Neovim |
+# +--------+
+
+alias vim='nvim'
+alias vi='nvim'
+
+# +-----+
+# | Git |
+# +-----+
+
+alias gs='git status'
+alias gss='git status -s'
+alias ga='git add'
+alias gp='git push'
+alias gpraise='git blame'
+alias gpo='git push origin'
+alias gpof='git push origin --force-with-lease'
+alias gpofn='git push origin --force-with-lease --no-verify'
+alias gpt='git push --tag'
+alias gtd='git tag --delete'
+alias gtdr='git tag --delete origin'
+alias grb='git branch -r'                                                                           # display remote branch
+alias gplo='git pull origin'
+alias gb='git branch '
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gd='git diff'
+alias gco='git checkout '
+alias gl='git log --oneline'
+alias gr='git remote'
+alias grs='git remote show'
+alias glol='git log --graph --abbrev-commit --oneline --decorate'
+alias gclean="git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d" # Delete local branch merged with master
+alias gblog="git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:red)%(refname:short)%(color:reset) - %(color:yellow)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:blue)%(committerdate:relative)%(color:reset))'"                                                             # git log for each branches
+alias gsub="git submodule update --remote"                                                        # pull submodules
+alias gj="git-jump"                                                                               # Open in vim quickfix list files of interest (git diff, merged...)
+
+alias dif="git diff --no-index"                                                                   # Diff two files even if not in git repo! Can add -w (don't diff whitespaces)
+
+
+# +--------+
+# | docker |
+# +--------+
+alias dockls="docker container ls | awk 'NR > 1 {print \$NF}'"                  # display names of running containers
+alias dockRr='docker rm $(docker ps -a -q)'                                     # delete every containers / images
+alias dockRr='docker rm $(docker ps -a -q) && docker rmi $(docker images -q)'   # delete every containers / images
+alias dockstats='docker stats $(docker ps -q)'                                  # stats on images
+alias dockimg='docker images'                                                   # list images installed
+alias dockprune='docker system prune -a'                                        # prune everything
+alias dockceu='docker-compose run --rm -u $(id -u):$(id -g)'                    # run as the host user
+alias dockce='docker-compose run --rm'
