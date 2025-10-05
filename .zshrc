@@ -1,5 +1,16 @@
+# Put Lua 5.1 first so Lazy.nvim sees it
+export PATH=$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH
+#GO
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+#LLVM
+export PATH="/usr/lib/llvm-20/bin:$PATH"
+#rust
+export PATH="$HOME/.cargo/bin:$PATH"
+#java
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
-export PATH="$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
 # Make sudoedit use Neovim without arguments
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
@@ -26,7 +37,6 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-patch-dl \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
-
 
 #aliases    
 source ~/.config/aliases/aliases
@@ -116,8 +126,19 @@ setopt hist_find_no_dups
 
 zinit snippet OMZP::command-not-found
 
-
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(starship init zsh)"
 #zsh-syntax-highlighting last!
 zinit light zsh-users/zsh-syntax-highlighting
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+path=('/home/emiel/.juliaup/bin' $path)
+export PATH
+
+# <<< juliaup initialize <<<
