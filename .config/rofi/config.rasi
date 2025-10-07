@@ -1,0 +1,18 @@
+
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";        
+    font: "JetBrainsMono Nerd Font 12";
+    terminal: "wezterm";          
+    scrollbar: true;
+    scroll-method: 0;             
+    disable-history: false;
+    sidebar-mode: false;
+    display-run: " Run:";
+    display-drun: " Apps:";
+    display-window: " Win:";
+}
+
+
+@theme "catppuccin-mocha"

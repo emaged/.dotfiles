@@ -10,6 +10,8 @@ export PATH="/usr/lib/llvm-20/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 #java
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# PKG_CONFIG 1.7
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Make sudoedit use Neovim without arguments
 export SUDO_EDITOR="nvim"
@@ -37,6 +39,7 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-patch-dl \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
+
 
 #aliases    
 source ~/.config/aliases/aliases
@@ -102,7 +105,6 @@ zinit cdreplay -q # recomended for performance?
 
 # Load fzf-tab immediately after compinit
 zinit light Aloxaf/fzf-tab
-
 
 # Plugins
 zinit light zsh-users/zsh-autosuggestions
