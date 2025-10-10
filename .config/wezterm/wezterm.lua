@@ -10,11 +10,11 @@
 --    - LEADER + x: Close the current pane (with confirmation).
 --    - LEADER + b: Switch to the previous tab.
 --    - LEADER + n: Switch to the next tab.
---    - LEADER + <number>: Switch to a specific tab (0–9).
+--    - LEADER + <number>: Switch to a specific tab (1–9).
 
 -- 2. Pane Splitting:
 --    - LEADER + |: Split the current pane horizontally into two panes.
---    - LEADER + -: Split the current pane vertically into two panes.
+--    - LEADER + \: Split the current pane vertically into two panes.
 -- 3. Pane Navigation:
 --    - LEADER + h: Move to the pane on the left.
 --    - LEADER + j: Move to the pane below.
@@ -37,6 +37,19 @@
 
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
+
+-- Session manager API
+local session_manager = require("wezterm-session-manager/session-manager")
+-- Session manager functions
+wezterm.on("save_session", function(window)
+	session_manager.save_state(window)
+end)
+wezterm.on("load_session", function(window)
+	session_manager.load_state(window)
+end)
+wezterm.on("restore_session", function(window)
+	session_manager.restore_state(window)
+end)
 
 -- This table will hold the configuration.
 local config = {}
@@ -76,7 +89,7 @@ Font
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font Mono", "JetBrains Mono" })
 config.font_size = 14
 
-config.window_decorations = "RESIZE"
+config.window_decorations = "RESIZE | TITLE"
 
 --[[
 ============================
@@ -152,6 +165,62 @@ Shortcuts
 -- shortcut_configuration
 config.leader = { key = "q", mods = "ALT", timeout_milliseconds = 2000 }
 config.keys = {
+	-- Session manager bindings
+	{
+		key = "s",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action({ EmitEvent = "save_session" }),
+	},
+	{
+		key = "L",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action({ EmitEvent = "load_session" }),
+	},
+	{
+		key = "R",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action({ EmitEvent = "restore_session" }),
+	},
+	{
+		key = "$",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action.PromptInputLine({
+			description = "Enter new name for session",
+			action = wezterm.action_callback(function(window, pane, line)
+				if line then
+					mux.rename_workspace(window:mux_window():get_workspace(), line)
+				end
+			end),
+		}),
+	},
+	-- Attach to muxer
+	{
+		key = "a",
+		mods = "LEADER",
+		action = wezterm.action.AttachDomain("unix"),
+	},
+
+	-- Detach from muxer
+	{
+		key = "d",
+		mods = "LEADER",
+		action = wezterm.action.DetachDomain({ DomainName = "unix" }),
+	},
+	{
+		key = "s",
+		mods = "LEADER",
+		action = wezterm.action.ShowLauncherArgs({ flags = "WORKSPACES|DOMAINS" }),
+	},
+	{
+		mods = "LEADER",
+		key = "[",
+		action = wezterm.action.SwitchWorkspaceRelative(1),
+	},
+	{
+		mods = "LEADER",
+		key = "]",
+		action = wezterm.action.SwitchWorkspaceRelative(-1),
+	},
 	{
 		mods = "LEADER",
 		key = "t",
@@ -228,14 +297,22 @@ config.keys = {
 		key = "UpArrow",
 		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
 	},
+	-- Ctrl + Backspace → delete previous word in Neovim
+	{ key = "Backspace", mods = "CTRL", action = wezterm.action.SendString("\x17") },
+
+	-- Ctrl + Left → move back one word
+	{ key = "LeftArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
+
+	-- Ctrl + Right → move forward one word
+	{ key = "RightArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bw") },
 }
 
-for i = 0, 9 do
+for i = 1, 9 do
 	-- leader + number to activate that tab
 	table.insert(config.keys, {
 		key = tostring(i),
 		mods = "LEADER",
-		action = wezterm.action.ActivateTab(i),
+		action = wezterm.action.ActivateTab(i - 1),
 	})
 end
 
@@ -264,20 +341,13 @@ local function tab_title(tab_info)
 end
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-	local title = " " .. tab.tab_index .. ": " .. tab_title(tab) .. " "
+	-- Visual indicator for tabs attached to the unix domain
+	local domain_name = tab.active_pane.domain_name or ""
+	local unix_indicator = (domain_name == "unix") and "🌐 " or ""
+
+	local title = " " .. unix_indicator .. tab_title(tab) .. " "
 	local left_edge_text = ""
 	local right_edge_text = ""
-
-	if tab_style == "rounded" then
-		title = tab.tab_index .. ": " .. tab_title(tab)
-		title = wezterm.truncate_right(title, max_width - 2)
-		left_edge_text = wezterm.nerdfonts.ple_left_half_circle_thick
-		right_edge_text = wezterm.nerdfonts.ple_right_half_circle_thick
-	end
-
-	-- ensure that the titles fit in the available space,
-	-- and that we have room for the edges.
-	-- title = wezterm.truncate_right(title, max_width - 2)
 
 	if tab.is_active then
 		return {
@@ -289,6 +359,12 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 			{ Text = title },
 			{ Background = { Color = colors.tab_bar_active_tab_bg } },
 			{ Foreground = { Color = colors.tab_bar_active_tab_fg } },
+			{ Text = right_edge_text },
+		}
+	else
+		return {
+			{ Text = left_edge_text },
+			{ Text = title },
 			{ Text = right_edge_text },
 		}
 	end
@@ -340,5 +416,38 @@ wezterm.on("update-status", function(window, _)
 	}))
 end)
 
+config.unix_domains = {
+	{
+		-- The name; must be unique amongst all domains
+		name = "unix",
+
+		-- The path to the socket.  If unspecified, a reasonable default
+		-- value will be computed.
+
+		-- socket_path = "/some/path",
+
+		-- If true, do not attempt to start this server if we try and fail to
+		-- connect to it.
+
+		-- no_serve_automatically = false,
+
+		-- If true, bypass checking for secure ownership of the
+		-- socket_path.  This is not recommended on a multi-user
+		-- system, but is useful for example when running the
+		-- server inside a WSL container but with the socket
+		-- on the host NTFS volume.
+
+		-- skip_permissions_check = false,
+	},
+}
+
+-- This causes `wezterm` to act as though it was started as
+-- `wezterm connect unix` by default, connecting to the unix
+-- domain on startup.
+-- If you prefer to connect manually, leave out this line.
+
+--config.default_gui_startup_args = { "connect", "unix" }
+
+config.show_tab_index_in_tab_bar = false
 -- and finally, return the configuration to wezterm
 return config

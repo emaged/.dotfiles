@@ -27,24 +27,35 @@ workspace 6 output HDMI-0
 exec_always --no-startup-id feh --bg-scale /home/emiel/Pictures/wallpaper.jpg
 
 # picom
-exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
 
 # Polybar
 exec_always --no-startup-id killall polybar
 exec_always --no-startup-id ~/.config/i3/polybar-launch.sh
 
-# gammastep
-exec --no-startup-id gammastep -l 52.08:4.33 -t 6500:4500
-exec --no-startup-id gammastep-indicator
+# Start the gammastep indicator in the tray
+exec --no-startup-id gammastep-indicator 
 
 # Start CopyQ clipboard manager
 exec --no-startup-id copyq
 
+# start dunst notifications 
+exec --no-startup-id dunst
+
+# keyring for vscode
+exec_always --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg
+
+# usb plugin utility
+exec --no-startup-id udiskie -t
+
+# Startup appplication run
+exec firefox
+assign [class="Firefox"] $ws3
 
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:JetBrainsMono Nerd Font Mono 12
+font pango:JetBrainsMono Nerd Font Mono 14
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -59,7 +70,9 @@ exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xset s 1500 1500          # blank after 5 min
+exec --no-startup-id xset dpms 2000 4000 6000 # standby/suspend/off
+exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -80,7 +93,7 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec wezterm
+bindsym $mod+Return exec wezterm-gui start --always-new-process
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -137,13 +150,13 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-# bindsym $mod+space focus mode_toggle
+bindsym $mod+Shift+f focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+#bindsym $mod+space focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -187,7 +200,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec ~/.config/i3/powermenu.sh
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -197,10 +210,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing down will shrink the window’s height.
         # Pressing up will grow the window’s height.
-        bindsym l resize shrink width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym j resize shrink height 10 px or 10 ppt
-        bindsym h resize grow width 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left  resize shrink width 10 px or 10 ppt
@@ -215,25 +228,6 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-
-# user keybinds
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# bar {
-#         status_command i3status
-# }
-
-# Disable titlebars for all tiling windows
-for_window [tiling] border none
-
-#
-# # Disable mouse acceleration on startup
-# exec --no-startup-id xinput set-prop "Logitech USB Receiver" "libinput Accel Profile Enabled" 0, 1, 0
-# exec --no-startup-id xinput set-prop "Logitech USB Receiver" "libinput Accel Speed" 0
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
 
 # catppuccin color information
 set $rosewater #f5e0dc
@@ -263,11 +257,46 @@ set $base      #1e1e2e
 set $mantle    #181825
 set $crust     #11111b
 
-# target                 title     bg    text      indicator    border
-client.focused           $mantle   $mauve $mantle  $rosewater $mauve
-client.focused_inactive  $overlay0 $base  $text    $rosewater $overlay0
-client.unfocused         $overlay0 $base  $text    $rosewater $overlay0
-client.urgent            $peach    $base  $peach   $overlay0  $peach
-client.placeholder       $overlay0 $base  $text    $overlay0  $overlay0
+# Focused window (active) – subtle pop
+client.focused           $surface0 $surface2  $text   $overlay1  $surface2
+# Focused but inactive – muted
+client.focused_inactive  $surface0 $surface1  $subtext0 $overlay0  $surface1
+# Unfocused windows – minimal contrast
+client.unfocused         $surface0 $surface0  $subtext0 $overlay0  $surface0
+# Urgent window – still visible for alerts
+client.urgent            $peach    $base      $text   $peach    $peach
+# Placeholder (empty container)
+client.placeholder       $surface0 $base      $text   $overlay0 $overlay0
+# Background (root window)
 client.background        $base
+
+# Disable titlebars for all tiling windows
+for_window [tiling] border pixel 2
+
+for_window [floating] border pixel 2
+
+ #for_window [class="^.*"] border pixel 2
+
+# user keybinds
+
+bindsym Ctrl+Shift+Escape exec gnome-system-monitor
+
+# i3-resurrect not working yet
+# bindsym $mod+Shift+z exec --no-startup-id ~/.config/i3/scripts/i3r save
+# bindsym $mod+Shift+x exec --no-startup-id ~/.config/i3/scripts/i3r restore
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+# bar {
+#         status_command i3status
+# }
+
+
+#
+# # Disable mouse acceleration on startup
+# exec --no-startup-id xinput set-prop "Logitech USB Receiver" "libinput Accel Profile Enabled" 0, 1, 0
+# exec --no-startup-id xinput set-prop "Logitech USB Receiver" "libinput Accel Speed" 0
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
 

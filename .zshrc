@@ -1,24 +1,47 @@
-# Put Lua 5.1 first so Lazy.nvim sees it
-export PATH=$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH
-#GO
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-#LLVM
-export PATH="/usr/lib/llvm-20/bin:$PATH"
-#rust
+# =========================================
+#  .zshrc - Optimized and Organized
+# =========================================
+
+# -------------------------------
+# 1. PATH & Environment
+# -------------------------------
+
+# Base PATH additions
+export PATH="$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
-#java
+export PATH="/usr/lib/llvm-20/bin:$PATH"
+
+# Remove duplicate PATH entries
+typeset -U PATH
+
+# Language & Tools
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-# PKG_CONFIG 1.7
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
-# Make sudoedit use Neovim without arguments
+# Editor
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 
+# FZF configuration
+export FZF_DEFAULT_OPTS="
+  --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
+  --style=default
+"
+export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
+export FZF_CTRL_R_OPTS="--preview 'echo {}'"
+export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
 
-### Added by Zinit's installer
+# -------------------------------
+# 2. Node / NVM
+# -------------------------------
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# -------------------------------
+# 3. Zinit (plugin manager)
+# -------------------------------
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
     command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
@@ -40,39 +63,46 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
 
-
-#aliases    
-source ~/.config/aliases/aliases
-
-# Exports
-export FZF_DEFAULT_OPTS="
-  --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
-  --style=default
-"
-# File picker (CTRL+T)
-export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
-
-# History search (CTRL+R)
-export FZF_CTRL_R_OPTS="--preview 'echo {}'"
-
-# Directory switcher (ALT+C)
-export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
-
-# zsh-vi-mode
-# configuration
+# -------------------------------
+# 3. zsh-vi-mode Config
+# -------------------------------
 # Increase recursion limit to prevent zle-hook warnings
 typeset -g FUNCNEST=200
 
 KEYTIMEOUT=1
 ZVM_VI_SURROUND_BINDKEY=s-prefix
 ZVM_SYSTEM_CLIPBOARD_ENABLED=true
-ZVM_CLIPBOARD_COPY_CMD='win32yank.exe -i --crlf'
-ZVM_CLIPBOARD_PASTE_CMD='win32yank.exe -o --lf'
+
+# Detect platform /  server
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
+    # WSL
+    ZVM_CLIPBOARD_COPY_CMD='win32yank.exe -i --crlf'
+    ZVM_CLIPBOARD_PASTE_CMD='win32yank.exe -o --lf'
+elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+    # Windows native
+    ZVM_CLIPBOARD_COPY_CMD='win32yank.exe -i --crlf'
+    ZVM_CLIPBOARD_PASTE_CMD='win32yank.exe -o --lf'
+elif [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+    # Linux Wayland
+    ZVM_CLIPBOARD_COPY_CMD='wl-copy'
+    ZVM_CLIPBOARD_PASTE_CMD='wl-paste'
+else
+    # Linux X11
+    ZVM_CLIPBOARD_COPY_CMD='xclip -selection clipboard'
+    ZVM_CLIPBOARD_PASTE_CMD='xclip -selection clipboard -o'
+fi
+
+#history keybinds
+bindkey -M vicmd 'k' history-search-backward
+bindkey -M vicmd 'j' history-search-forward
 
 #load plugin
 zinit ice depth=1
 zinit light jeffreytse/zsh-vi-mode
 
+# -------------------------------
+# 4. Completion & FZF-Tab
+# -------------------------------
 # Completion styling
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
@@ -103,17 +133,14 @@ zinit cdreplay -q # recomended for performance?
 #source fzf.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Plugins
 # Load fzf-tab immediately after compinit
 zinit light Aloxaf/fzf-tab
-
-# Plugins
 zinit light zsh-users/zsh-autosuggestions
 
-#history keybinds
-bindkey -M vicmd 'k' history-search-backward
-bindkey -M vicmd 'j' history-search-forward
-
-#history
+# -------------------------------
+# 5. History Configuration
+# -------------------------------
 HISTSIZE=5000       
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
@@ -122,25 +149,19 @@ setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 zinit snippet OMZP::command-not-found
 
+# -------------------------------
+# 6. Aliases
+# -------------------------------
+[ -f ~/.config/aliases/aliases ] && source ~/.config/aliases/aliases
+
+# -------------------------------
+# 7 Prompt
+# -------------------------------
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(starship init zsh)"
 #zsh-syntax-highlighting last!
 zinit light zsh-users/zsh-syntax-highlighting
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# >>> juliaup initialize >>>
-
-# !! Contents within this block are managed by juliaup !!
-
-path=('/home/emiel/.juliaup/bin' $path)
-export PATH
-
-# <<< juliaup initialize <<<

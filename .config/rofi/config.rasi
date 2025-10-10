@@ -3,7 +3,7 @@ configuration {
     modi: "drun,run,window";
     show-icons: true;
     icon-theme: "Papirus";        
-    font: "JetBrainsMono Nerd Font 12";
+    font: "JetBrainsMono Nerd Font Mono 14";
     terminal: "wezterm";          
     scrollbar: true;
     scroll-method: 0;             
@@ -13,6 +13,5 @@ configuration {
     display-drun: " Apps:";
     display-window: " Win:";
 }
-
 
 @theme "catppuccin-mocha"
