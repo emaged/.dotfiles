@@ -135,7 +135,5 @@ alias dockce='docker-compose run --rm'
 #
 # +--------+
 
-alias python='python3.13' 
-alias pip='pip3.13' 
 
 

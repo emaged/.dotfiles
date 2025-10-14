@@ -23,6 +23,9 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 
+# Flask debug on
+export FLASK_DEBUG=1
+
 # FZF configuration
 export FZF_DEFAULT_OPTS="
   --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
@@ -157,6 +160,15 @@ zinit snippet OMZP::command-not-found
 # 6. Aliases
 # -------------------------------
 [ -f ~/.config/aliases/aliases ] && source ~/.config/aliases/aliases
+
+# yazi cd to directory
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
 
 # -------------------------------
 # 7 Prompt
