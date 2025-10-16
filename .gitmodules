@@ -4,3 +4,6 @@
 [submodule ".config/wezterm/wezterm-session-manager"]
 	path = .config/wezterm/wezterm-session-manager
 	url = https://github.com/danielcopper/wezterm-session-manager
+[submodule "nvim/.config/nvim"]
+	path = nvim/.config/nvim
+	url = git@github.com:emaged/nvim-config.git
