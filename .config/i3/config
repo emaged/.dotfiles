@@ -29,9 +29,8 @@ exec_always --no-startup-id feh --bg-scale /home/emiel/Pictures/wallpaper.jpg
 # picom
 exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
 
-# Polybar
-exec_always --no-startup-id killall polybar
-exec_always --no-startup-id ~/.config/i3/polybar-launch.sh
+#autotiling
+exec --no-startup-id ~/.local/bin/autotiling
 
 # Start the gammastep indicator in the tray
 exec --no-startup-id gammastep-indicator 
@@ -47,6 +46,13 @@ exec_always --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=p
 
 # usb plugin utility
 exec --no-startup-id udiskie -t
+
+# Start xscreensaver daemon (D-Bus only, no locking)
+exec --no-startup-id xscreensaver --no-splash
+
+# Polybar
+#exec_always --no-startup-id killall polybar
+exec_always --no-startup-id ~/.config/i3/polybar-launch.sh
 
 # Startup appplication run
 exec firefox
@@ -133,10 +139,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+\ split h
+bindsym $mod+g split h
 
 # split in vertical orientation
-bindsym $mod+Shift+\ split v
+bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle

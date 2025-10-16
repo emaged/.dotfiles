@@ -23,6 +23,9 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 
+# Force GTK theme
+#export GTK_THEME=Yaru-dark
+
 # Flask debug on
 export FLASK_DEBUG=1
 
