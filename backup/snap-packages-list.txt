@@ -1,0 +1,10 @@
+bare
+canonical-livepatch
+core22
+firmware-updater
+gnome-42-2204
+gtk-common-themes
+icon-theme-breeze
+snap-store
+snapd
+snapd-desktop-integration
