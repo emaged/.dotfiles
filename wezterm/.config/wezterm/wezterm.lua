@@ -54,6 +54,8 @@ end)
 -- This table will hold the configuration.
 local config = {}
 
+config.enable_wayland = true
+
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then

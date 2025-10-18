@@ -1,0 +1,17 @@
+/* Powermenu custom module */
+#custom-powermenu {
+  color: #f5c2e7; /* text color */
+  padding: 0 8px; /* same horizontal spacing as other modules */
+  border-bottom: 2px solid transparent; /* underline placeholder */
+}
+
+/* Underline on normal state (matches other modules) */
+#custom-powermenu > * {
+  border-bottom: 2px solid #f5c2e7;
+}
+
+/* Optional: subtle hover effect */
+#custom-powermenu:hover {
+  background-color: rgba(245, 194, 231, 0.1); /* light highlight on hover */
+  cursor: pointer;
+}

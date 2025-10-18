@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# File: ~/.config/i3/powermenu.sh
-
+# File: ~/.config/sway/powermenu.sh
 
 THEME_STR='
 window {
@@ -16,22 +15,21 @@ listview {
 }
 '
 
-
 # Define menu options with icons
 CHOICE=$(echo -e "  Lock\n  Logout\n  Suspend\n  Hibernate\n  Reboot\n  Shutdown" | rofi -dmenu -p "Power Menu" -theme-str "$THEME_STR")
 
 case "$CHOICE" in
     "  Lock")
-        betterlockscreen -l
+        swaylock -f
         ;;
     "  Logout")
-        i3-msg exit
+        swaymsg exit
         ;;
     "  Suspend")
-        betterlockscreen -l && systemctl suspend
+        swaylock -f && systemctl suspend
         ;;
     "  Hibernate")
-        betterlockscreen -l && systemctl hibernate
+        swaylock -f && systemctl hibernate
         ;;
     "  Reboot")
         systemctl reboot

@@ -4,14 +4,17 @@ set $mod Mod4
 # Monitors
 ####################
 # Position monitors like your i3 setup
-output DP-2 position 0 0
-output DP-4 position 1920 0
-output HDMI-0 position 3840 0
+output DP-4 position 0 0
+output DP-5 position 1920 0
+output HDMI-4 position 3840 0
+
+# xdg-desktop-portal-wlr activation
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 ####################
 # Background
 ####################
-exec_always --no-startup-id swaybg -i /home/emiel/Pictures/wallpaper.jpg -m fill
+exec_always --no-startup-id swaybg -i /home/emiel/Pictures/wallpaper/images/1.jpg -m fill
 
 ####################
 # Startup applications
@@ -23,13 +26,19 @@ exec_always --no-startup-id dunst
 # Clipboard manager                 
 exec_always --no-startup-id copyq                
 # Gamma indicator
-exec_always --no-startup-id gammastep-indicator   
+exec --no-startup-id gammastep-indicator   
 # USB automount
 exec_always --no-startup-id udiskie -t           
 # USB automount
 exec_always --no-startup-id nm-applet            
  # Network manager tray
 exec_always --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg
+
+# Launch Waybar
+# Kill existing Waybar (if any) and start a new one
+exec_always --no-startup-id pkill waybar
+exec_always --no-startup-id waybar
+
 exec_always --no-startup-id swayidle -w \
     timeout 300 'swaylock -f -c 000000' \
     timeout 600 'swaymsg "output * dpms off"' \
@@ -55,7 +64,7 @@ floating_modifier $mod
 
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
-tiling_drag modifier titlebar
+tiling_drag enable 
 
 # start a terminal
 bindsym $mod+Return exec wezterm-gui start --always-new-process
@@ -165,7 +174,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec ~/.config/i3/powermenu.sh
+bindsym $mod+Shift+e exec ~/.config/sway/powermenu.sh
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -205,19 +214,21 @@ for_window [floating] border pixel 2
 
 bindsym Ctrl+Shift+Escape exec gnome-system-monitor
 
-bar {
-    position top
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
+# bar {
+#     position top
+#     status_command while date +'%Y-%m-%d %X'; do sleep 1; done
+#     colors {
+#         statusline #ffffff
+#         background #323232
+#         inactive_workspace #32323200 #32323200 #5c5c5c
+#     }
+# }
+
 input * {
-pointer_accel 1.0
-pointer_cursor software
+    accel_profile flat
+    pointer_accel 0
 }
+
 # catppuccin color information
 set $rosewater #f5e0dc
 set $flamingo  #f2cdcd
