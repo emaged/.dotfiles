@@ -54,8 +54,6 @@ end)
 -- This table will hold the configuration.
 local config = {}
 
-config.enable_wayland = true
-
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then
@@ -63,8 +61,8 @@ if wezterm.config_builder then
 end
 
 -- max fps
-config.max_fps = 120
-config.animation_fps = 120
+config.max_fps = 60
+config.animation_fps = 60
 
 --[[
 ============================
@@ -91,7 +89,8 @@ Font
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font Mono", "JetBrains Mono" })
 config.font_size = 14
 
-config.window_decorations = "RESIZE | TITLE"
+config.window_decorations = "NONE"
+-- "RESIZE | TITLE"
 
 --[[
 ============================
@@ -233,7 +232,7 @@ config.keys = {
 		key = "c",
 		action = wezterm.action.CloseCurrentPane({ confirm = true }),
 	},
-	{ key = "v", mods = "CTRL", action = wezterm.action.PasteFrom("Clipboard") },
+	{ key = "v",          mods = "CTRL", action = wezterm.action.PasteFrom("Clipboard") },
 	{
 		key = "q",
 		mods = "CTRL|SHIFT",
@@ -300,10 +299,10 @@ config.keys = {
 		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
 	},
 	-- Ctrl + Backspace → delete previous word in Neovim
-	{ key = "Backspace", mods = "CTRL", action = wezterm.action.SendString("\x17") },
+	{ key = "Backspace",  mods = "CTRL", action = wezterm.action.SendString("\x17") },
 
 	-- Ctrl + Left → move back one word
-	{ key = "LeftArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
+	{ key = "LeftArrow",  mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
 
 	-- Ctrl + Right → move forward one word
 	{ key = "RightArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bw") },

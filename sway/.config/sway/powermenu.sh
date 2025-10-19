@@ -20,16 +20,18 @@ CHOICE=$(echo -e "  Lock\n  Logout\n  Suspend\n  Hibernate\n  Reb
 
 case "$CHOICE" in
     "  Lock")
-        swaylock -f
+        ~/.config/swaylock/swaylock_bash.sh 
         ;;
     "  Logout")
         swaymsg exit
         ;;
     "  Suspend")
-        swaylock -f && systemctl suspend
+        ~/.config/swaylock/swaylock_bash.sh &
+        systemctl suspend
         ;;
     "  Hibernate")
-        swaylock -f && systemctl hibernate
+        ~/.config/swaylock/swaylock_bash.sh & 
+        systemctl hibernate
         ;;
     "  Reboot")
         systemctl reboot
