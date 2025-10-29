@@ -8,7 +8,19 @@ output DP-5 position 1920 0
 output HDMI-A-4 position 3840 0
 
 # xdg-desktop-portal-wlr activation
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME DISPLAY
+
+# Start GNOME Keyring (only once; systemd manages it)
+# exec --no-startup-id sh -c '\
+#     eval $(gnome-keyring-daemon --start --components=secrets,pkcs11,gpg,ssh); \
+#     export GNOME_KEYRING_CONTROL; \
+#     export GNOME_KEYRING_PID; \
+#     export SSH_AUTH_SOCK; \
+#     dbus-update-activation-environment --systemd --all \
+# '
+
+# Update environment for apps launched via D-Bus
+#exec_always --no-startup-id dbus-update-activation-environment --all
 
 ####################
 # Background
@@ -31,7 +43,8 @@ exec_always --no-startup-id udiskie -t
 # USB automount
 exec_always --no-startup-id nm-applet            
  # Network manager tray
-exec_always --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg
+
+
 
 workspace 1 output DP-4
 workspace 2 output DP-4
@@ -65,7 +78,7 @@ exec --no-startup-id dex --autostart --environment sway
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+# exec --no-startup-id nm-applet
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod

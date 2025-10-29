@@ -41,9 +41,6 @@ export EDITOR="nvim"
 # Force GTK theme
 #export GTK_THEME=Yaru-dark
 
-# Flask debug on
-export FLASK_DEBUG=1
-
 # FZF configuration
 export FZF_DEFAULT_OPTS="
   --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
@@ -145,13 +142,17 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
+# zinit completions?
 zinit light zsh-users/zsh-completions
-#load completions
+
+# poetry completions
+fpath+=~/.zfunc
+# load completions
 autoload -U compinit && compinit
 
 zinit cdreplay -q # recomended for performance?
 
-#source fzf.zsh
+# source fzf.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Plugins
@@ -193,7 +194,7 @@ function y() {
 # -------------------------------
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(starship init zsh)"
-#zsh-syntax-highlighting last!
+# zsh-syntax-highlighting last!
 zinit light zsh-users/zsh-syntax-highlighting
 
 
