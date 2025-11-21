@@ -13,6 +13,16 @@ cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
 
+# keybinds
 keybind = ctrl+shift+x=close_surface
+keybind = ctrl+backspace=text:\x17
+
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+l=goto_split:right
+
+keybind = ctrl+\=new_split:right
+keybind = ctrl+shift+\=new_split:down
 
 

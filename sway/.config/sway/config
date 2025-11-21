@@ -8,19 +8,7 @@ output DP-5 position 1920 0
 output HDMI-A-4 position 3840 0
 
 # xdg-desktop-portal-wlr activation
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME DISPLAY
-
-# Start GNOME Keyring (only once; systemd manages it)
-# exec --no-startup-id sh -c '\
-#     eval $(gnome-keyring-daemon --start --components=secrets,pkcs11,gpg,ssh); \
-#     export GNOME_KEYRING_CONTROL; \
-#     export GNOME_KEYRING_PID; \
-#     export SSH_AUTH_SOCK; \
-#     dbus-update-activation-environment --systemd --all \
-# '
-
-# Update environment for apps launched via D-Bus
-#exec_always --no-startup-id dbus-update-activation-environment --all
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME DISPLAY
 
 ####################
 # Background
@@ -61,8 +49,8 @@ exec_always --no-startup-id pkill waybar
 exec_always --no-startup-id waybar
 
 exec_always --no-startup-id swayidle -w \
-    timeout 1500 '~/.config/swaylock/swaylock_bash.sh' \
-    timeout 2500 'swaymsg "output * dpms off"' \
+    timeout 2000 '~/.config/swaylock/swaylock_bash.sh' \
+    timeout 3000 'swaymsg "output * dpms off"' \
     resume 'swaymsg "output * dpms on"'
 
 # Startup apps
@@ -251,30 +239,3 @@ input * {
     pointer_accel 0
 }
 
-# catppuccin color information
-set $rosewater #f5e0dc
-set $flamingo  #f2cdcd
-set $pink      #f5c2e7
-set $mauve     #cba6f7
-set $red       #f38ba8
-set $maroon    #eba0ac
-set $peach     #fab387
-set $yellow    #f9e2af
-set $green     #a6e3a1
-set $teal      #94e2d5
-set $sky       #89dceb
-set $sapphire  #74c7ec
-set $blue      #89b4fa
-set $lavender  #b4befe
-set $text      #cdd6f4
-set $subtext1  #bac2de
-set $subtext0  #a6adc8
-set $overlay2  #9399b2
-set $overlay1  #7f849c
-set $overlay0  #6c7086
-set $surface2  #585b70
-set $surface1  #45475a
-set $surface0  #313244
-set $base      #1e1e2e
-set $mantle    #181825
-set $crust     #11111b

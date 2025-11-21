@@ -8,24 +8,23 @@
 
 # Base PATH additions
 export PATH="$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/usr/lib/llvm-20/bin:$PATH"
+export PATH="$HOME/.local/scripts:$PATH"
 
 # >>> juliaup initialize >>>
-
 # !! Contents within this block are managed by juliaup !!
-
-path=('/home/emiel/.juliaup/bin' $path)
-export PATH
-
+export PATH="$HOME/.juliaup/bin:$PATH"
 # <<< juliaup initialize <<<
 
-PATH="/home/emiel/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/home/emiel/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/emiel/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/emiel/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/emiel/perl5"; export PERL_MM_OPT;
+# Perl stuff
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT
+PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT
 
 # Remove duplicate PATH entries
 typeset -U PATH
@@ -38,9 +37,6 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 
-# Force GTK theme
-#export GTK_THEME=Yaru-dark
-
 # FZF configuration
 export FZF_DEFAULT_OPTS="
   --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
@@ -49,6 +45,7 @@ export FZF_DEFAULT_OPTS="
 export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}'"
 export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
+
 
 # -------------------------------
 # 2. Node / NVM
@@ -81,11 +78,12 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
 
+
 # -------------------------------
 # 3. zsh-vi-mode Config
 # -------------------------------
 # Increase recursion limit to prevent zle-hook warnings
-typeset -g FUNCNEST=200
+typeset -g FUNCNEST=500
 
 KEYTIMEOUT=1
 ZVM_VI_SURROUND_BINDKEY=s-prefix
@@ -110,13 +108,10 @@ else
     ZVM_CLIPBOARD_PASTE_CMD='xclip -selection clipboard -o'
 fi
 
-#history keybinds
-bindkey -M vicmd 'k' history-search-backward
-bindkey -M vicmd 'j' history-search-forward
-
-#load plugin
+#load plugin, VI MODE plugin here
 zinit ice depth=1
 zinit light jeffreytse/zsh-vi-mode
+
 
 # -------------------------------
 # 4. Completion & FZF-Tab
@@ -124,32 +119,34 @@ zinit light jeffreytse/zsh-vi-mode
 # Completion styling
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
+#set descriptions format to enable group support
 # NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
 zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
+#set list-colors to enable filename colorizing
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+#force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
-# preview directory's content with eza when completing cd
+# case insensitive
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+#preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# custom fzf flags
+#custom fzf flags
 # NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
 zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
-# To make fzf-tab follow FZF_DEFAULT_OPTS.
+#To make fzf-tab follow FZF_DEFAULT_OPTS.
 # NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
-# switch group using `<` and `>`
+#switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
-
+# tmux pupup
+# zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 # zinit completions?
 zinit light zsh-users/zsh-completions
 
 # poetry completions
 fpath+=~/.zfunc
-# load completions
-autoload -U compinit && compinit
 
+autoload -Uz compinit;  compinit
 zinit cdreplay -q # recomended for performance?
 
 # source fzf.zsh
@@ -158,15 +155,50 @@ zinit cdreplay -q # recomended for performance?
 # Plugins
 # Load fzf-tab immediately after compinit
 zinit light Aloxaf/fzf-tab
-zinit light zsh-users/zsh-autosuggestions
+
+# autosuggestions
+# prevent rebinding bug
+if [[ -z ${_MY_AUTOSUGGEST_LOADED-} ]]; then
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=true
+  zinit light zsh-users/zsh-autosuggestions
+  _MY_AUTOSUGGEST_LOADED=1
+fi
+
+# Run after zsh-vi-mode has finished initializing
+function zvm_after_init() {
+  # 1) Re-run fzf keybindings so vi-mode can't break them
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+  # 2) Make <Tab> use fzf-tab again in insert mode
+  if (( $+widgets[fzf-tab-complete] )); then
+    bindkey -M viins '^I' fzf-tab-complete
+  fi
+
+  # 3) Re-bind autosuggestions widgets once after vi-mode + our keybinds
+  if (( $+functions[_zsh_autosuggest_bind_widgets] )); then
+    _zsh_autosuggest_bind_widgets
+  fi
+
+  # 4) Your tmux sessionizer bindings (insert mode)
+  bindkey  -s '\ef'  'tmux-sessionizer\n'
+  bindkey  -s '\eh' 'tmux-sessionizer -s 0\n'
+  bindkey  -s '\et' 'tmux-sessionizer -s 1\n'
+  bindkey  -s '\en' 'tmux-sessionizer -s 2\n'
+  bindkey  -s '\es' 'tmux-sessionizer -s 3\n'
+
+  # 5) History search binds in normal mode
+  bindkey -M vicmd 'K' history-search-backward
+  bindkey -M vicmd 'J' history-search-forward
+}
+
 
 # -------------------------------
 # 5. History Configuration
 # -------------------------------
+
 HISTSIZE=5000       
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
@@ -175,9 +207,11 @@ setopt hist_find_no_dups
 
 zinit snippet OMZP::command-not-found
 
+
 # -------------------------------
 # 6. Aliases
 # -------------------------------
+
 [ -f ~/.config/aliases/aliases ] && source ~/.config/aliases/aliases
 
 # yazi cd to directory
@@ -186,15 +220,27 @@ function y() {
 	yazi "$@" --cwd-file="$tmp"
 	IFS= read -r -d '' cwd < "$tmp"
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+	rm -f -- "$tmp" >/dev/null 2>&1
 }
+
 
 # -------------------------------
 # 7 Prompt
 # -------------------------------
-eval "$(zoxide init zsh --cmd cd)"
-eval "$(starship init zsh)"
-# zsh-syntax-highlighting last!
-zinit light zsh-users/zsh-syntax-highlighting
 
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init - zsh)"
+
+eval "$(zoxide init zsh --cmd cd)"
+
+# prevent funcnest
+if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
+      "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
+    zle -N zle-keymap-select "";
+fi
+eval "$(starship init zsh)"
+
+#zsh-syntax-highlighting last!
+zinit light zsh-users/zsh-syntax-highlighting
 
