@@ -38,10 +38,7 @@ export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 
 # FZF configuration
-export FZF_DEFAULT_OPTS="
-  --height=60% --layout=reverse --info=inline --border --margin=1 --padding=1
-  --style=default
-"
+export FZF_DEFAULT_OPTS="--height=60% --layout=reverse --info=inline --border --margin=1 --padding=1 --style=default"
 export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}'"
 export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
@@ -180,11 +177,18 @@ function zvm_after_init() {
   fi
 
   # 4) Your tmux sessionizer bindings (insert mode)
-  bindkey  -s '\ef'  'tmux-sessionizer\n'
-  bindkey  -s '\eh' 'tmux-sessionizer -s 0\n'
-  bindkey  -s '\et' 'tmux-sessionizer -s 1\n'
-  bindkey  -s '\en' 'tmux-sessionizer -s 2\n'
-  bindkey  -s '\es' 'tmux-sessionizer -s 3\n'
+  bindkey -s '\ef'  'tmux-sessionizer\n'
+  bindkey -M vicmd -s '\ef' 'i tmux-sessionizer\n'
+  # long running sessions
+  bindkey -s '\el' 'tmux-sessionizer -s 0\n'
+  bindkey -s '\eo' 'tmux-sessionizer -s 1\n'
+  bindkey -s '\ep' 'tmux-sessionizer -s 2\n'
+  bindkey -s '\er' 'tmux-sessionizer -s 3\n'
+  # normal mode bindings 
+  bindkey -M vicmd -s '\el' 'i tmux-sessionizer -s 0\n'
+  bindkey -M vicmd -s '\eo' 'i tmux-sessionizer -s 1\n'
+  bindkey -M vicmd -s '\ep' 'i tmux-sessionizer -s 2\n'
+  bindkey -M vicmd -s '\er' 'i tmux-sessionizer -s 3\n'
 
   # 5) History search binds in normal mode
   bindkey -M vicmd 'K' history-search-backward
