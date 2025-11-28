@@ -245,6 +245,9 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
-#zsh-syntax-highlighting last!
+# codex completions
+eval "$(codex completion zsh)"
+
+# zsh-syntax-highlighting last!
 zinit light zsh-users/zsh-syntax-highlighting
 

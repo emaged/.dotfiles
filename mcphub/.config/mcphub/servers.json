@@ -1,0 +1,107 @@
+{
+  "mcpServers": {
+    "blender": {
+      "args": [
+        "blender-mcp"
+      ],
+      "command": "uvx"
+    },
+    "browser_tools": {
+      "args": [
+        "@agentdeskai/browser-tools-mcp@latest"
+      ],
+      "command": "npx"
+    },
+    "context7": {
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "command": "npx",
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "10000"
+      }
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "command": "uvx"
+    },
+    "figma": {
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--figma-api-key=${FIGMA_API_KEY}",
+        "--stdio"
+      ],
+      "command": "npx",
+      "env": {
+        "FIGMA_API_KEY": "${FIGMA_API_KEY}"
+      }
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "${ALLOWED_DIRECTORY}"
+      ],
+      "command": "npx"
+    },
+    "git": {
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "${HOME}/projects/CS50web/"
+      ],
+      "command": "uvx",
+      "disabled": false
+    },
+    "github": {
+      "disabled": true,
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "memory": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "command": "npx"
+    },
+    "playwright": {
+      "args": [
+        "@playwright/mcp@latest"
+      ],
+      "command": "npx"
+    },
+    "sequentialthinking": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "command": "npx"
+    },
+    "task_master": {
+      "args": [
+        "-y",
+        "--package=task-master-ai",
+        "task-master-ai"
+      ],
+      "command": "npx",
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    },
+    "time": {
+      "args": [
+        "mcp-server-time"
+      ],
+      "command": "uvx"
+    }
+  },
+  "nativeMCPServers": {}
+}
