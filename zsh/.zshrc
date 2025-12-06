@@ -36,6 +36,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 # Editor
 export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
+export VISUAL="nvim"
 
 # FZF configuration
 export FZF_DEFAULT_OPTS="--height=60% --layout=reverse --info=inline --border --margin=1 --padding=1 --style=default"
