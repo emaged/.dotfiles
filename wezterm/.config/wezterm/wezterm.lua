@@ -61,8 +61,8 @@ if wezterm.config_builder then
 end
 
 -- max fps
-config.max_fps = 60
-config.animation_fps = 60
+config.max_fps = 120
+config.animation_fps = 120
 
 --[[
 ============================
@@ -232,7 +232,7 @@ config.keys = {
 		key = "c",
 		action = wezterm.action.CloseCurrentPane({ confirm = true }),
 	},
-	{ key = "v",          mods = "CTRL", action = wezterm.action.PasteFrom("Clipboard") },
+	{ key = "v", mods = "CTRL", action = wezterm.action.PasteFrom("Clipboard") },
 	{
 		key = "q",
 		mods = "CTRL|SHIFT",
@@ -299,10 +299,10 @@ config.keys = {
 		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
 	},
 	-- Ctrl + Backspace → delete previous word in Neovim
-	{ key = "Backspace",  mods = "CTRL", action = wezterm.action.SendString("\x17") },
+	{ key = "Backspace", mods = "CTRL", action = wezterm.action.SendString("\x17") },
 
 	-- Ctrl + Left → move back one word
-	{ key = "LeftArrow",  mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
+	{ key = "LeftArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bb") },
 
 	-- Ctrl + Right → move forward one word
 	{ key = "RightArrow", mods = "CTRL", action = wezterm.action.SendString("\x1bw") },
