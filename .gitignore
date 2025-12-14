@@ -4,3 +4,6 @@
 # codex
 .codex/
 codex/.codex/
+
+# sway
+sway/.config/sway/config

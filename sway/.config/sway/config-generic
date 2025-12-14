@@ -1,3 +1,4 @@
+# vim: ft=swayconfig
 set $mod Mod4
 
 ####################
@@ -19,21 +20,21 @@ exec_always --no-startup-id swaybg -i ~/.config/sway/wallpapers/no3.jpg -m fill
 # Startup applications
 ####################
 #autotiling
-exec_always autotiling
+exec autotiling
 # Notifications
-exec_always --no-startup-id dunst  
+exec --no-startup-id dunst
 # Clipboard manager                 
 exec_always --no-startup-id copyq                
 # Gamma indicator
 exec --no-startup-id gammastep-indicator   
 # USB automount
-exec_always --no-startup-id udiskie -t           
+exec --no-startup-id udiskie -t           
 # USB automount
 exec_always --no-startup-id nm-applet            
  # Network manager tray
 
 
-
+# set up workspaces
 workspace 1 output DP-4
 workspace 2 output DP-4
 
@@ -48,7 +49,7 @@ workspace 6 output HDMI-A-4
 exec_always --no-startup-id pkill waybar
 exec_always --no-startup-id waybar
 
-exec_always --no-startup-id swayidle -w \
+exec --no-startup-id swayidle -w \
     timeout 2000 '~/.config/swaylock/swaylock_bash.sh' \
     timeout 3000 'swaymsg "output * dpms off"' \
     resume 'swaymsg "output * dpms on"'
@@ -221,8 +222,9 @@ for_window [floating] border pixel 2
  #for_window [class="^.*"] border pixel 2
 
 # user keybinds
-
 bindsym Ctrl+Shift+Escape exec gnome-system-monitor
+# needs ddcutil to control brightness! 
+bindsym $mod+b exec ~/.config/sway/brightness.sh
 
 # bar {
 #     position top
