@@ -39,11 +39,23 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 # FZF configuration
-export FZF_DEFAULT_OPTS="--height=60% --layout=reverse --info=inline --border --margin=1 --padding=1 --style=default"
-export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
-export FZF_CTRL_R_OPTS="--preview 'echo {}'"
-export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
+# Global defaults
+export FZF_DEFAULT_OPTS="--height=60% --style=default"
+# Ctrl-T: files & dirs
+export FZF_CTRL_T_OPTS="--preview \
+'if [[ -d {} ]]; then
+   eza -T --level=1 --color=always {}
+ elif [[ -f {} ]] && file --mime {} | grep -qv \"charset=binary\"; then
+   batcat --color=always --style=numbers --line-range=:500 {}
+ else
+   file {}
+ fi'"
+# Ctrl-R: history
+export FZF_CTRL_R_OPTS="--preview 'echo {} | batcat --language=sh --style=plain --color=always'"
+# Alt-C: directories
+export FZF_ALT_C_OPTS="--preview 'eza -T --level=1 --color=always {}'"
 
+source ~/themes/fzf/catppuccin-fzf-mocha.sh
 
 # -------------------------------
 # 2. Node / NVM

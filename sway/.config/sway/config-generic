@@ -4,9 +4,9 @@ set $mod Mod4
 ####################
 # Monitors
 ####################
-output DP-4 position 0 0
-output DP-5 position 1920 0 
-output HDMI-A-4 position 3840 0
+# output DP-4 position 0 0
+# output DP-5 position 1920 0 
+# output HDMI-A-4 position 3840 0
 
 # xdg-desktop-portal-wlr activation
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME DISPLAY
@@ -35,14 +35,14 @@ exec_always --no-startup-id nm-applet
 
 
 # set up workspaces
-workspace 1 output DP-4
-workspace 2 output DP-4
-
-workspace 3 output DP-5
-workspace 4 output DP-5
-
-workspace 5 output HDMI-A-4
-workspace 6 output HDMI-A-4
+# workspace 1 output DP-4
+# workspace 2 output DP-4
+#
+# workspace 3 output DP-5
+# workspace 4 output DP-5
+#
+# workspace 5 output HDMI-A-4
+# workspace 6 output HDMI-A-4
 
 # Launch Waybar
 # Kill existing Waybar (if any) and start a new one

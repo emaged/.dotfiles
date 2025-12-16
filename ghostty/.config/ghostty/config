@@ -25,4 +25,9 @@ keybind = ctrl+shift+l=goto_split:right
 # keybind = ctrl+\=new_split:down
 # keybind = ctrl+shift+\=new_split:right
 
+# disable ligatures
+# font-feature = -dlig
+# font-feature = -liga
+font-feature = -calt
+
 
