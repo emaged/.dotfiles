@@ -1,12 +1,14 @@
 [[plugin.deps]]
-use = "yazi-rs/plugins:vcs-files"
-rev = "2301ff8"
-hash = "4ee57085277d616acfa0ef1fef37dc00"
+use = "Lil-Dank/lazygit"
+rev = "ea20d05"
+hash = "b95f2d56dd4b2df1be338179a6f1f6c9"
 
 [[plugin.deps]]
-use = "Lil-Dank/lazygit"
-rev = "8f37dc5"
-hash = "ee71543790f0ce3951161045a3787abd"
+use = "yazi-rs/plugins:chmod"
+rev = "19dc890"
+hash = "5b2eb0cc2050cec1e4de83cfa51a5b90"
 
-[flavor]
-deps = []
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "5e0e49e"
+hash = "b951d27afe197d154f6da9683b46c5f8"
