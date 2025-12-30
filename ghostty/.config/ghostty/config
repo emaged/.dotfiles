@@ -2,13 +2,8 @@ theme = Catppuccin Mocha
 
 # theme = GruvboxDark
 font-family = JetBrainsMono Nerd Font Mono 
-# font-family = CaskaydiaMono Nerd Font
-# font-family = CaskaydiaCove Nerd Font
 font-size = 14
-#background-opacity = 0.95
 gtk-titlebar = false
-# custom-shader = /home/chris/bloom.glsl
-#custom-shader = /home/chris/crt.glsl
 
 cursor-style = block
 cursor-style-blink = false
@@ -17,17 +12,15 @@ shell-integration-features = no-cursor
 # keybinds
 keybind = ctrl+backspace=text:\x17
 
-keybind = ctrl+shift+k=goto_split:top
-keybind = ctrl+shift+j=goto_split:bottom
-keybind = ctrl+shift+h=goto_split:left
-keybind = ctrl+shift+l=goto_split:right
+keybind = performable:ctrl+shift+h=goto_split:left
+keybind = performable:ctrl+shift+j=goto_split:bottom
+keybind = performable:ctrl+shift+k=goto_split:top
+keybind = performable:ctrl+shift+l=goto_split:right
 
-# keybind = ctrl+\=new_split:down
-# keybind = ctrl+shift+\=new_split:right
+keybind = ctrl+shift+f=toggle_split_zoom
 
 # disable ligatures
 # font-feature = -dlig
 # font-feature = -liga
 font-feature = -calt
-
 
