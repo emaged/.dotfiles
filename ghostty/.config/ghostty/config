@@ -5,9 +5,14 @@ font-family = JetBrainsMono Nerd Font Mono
 font-size = 14
 gtk-titlebar = false
 
+window-theme = ghostty
+# window-padding-x = 14
+# window-padding-y = 14
+confirm-close-surface=false
+
 cursor-style = block
 cursor-style-blink = false
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor, ssh-env
 
 # keybinds
 keybind = ctrl+backspace=text:\x17
