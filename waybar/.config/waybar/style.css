@@ -45,7 +45,6 @@ window#waybar {
   box-shadow: none;
   /* Remove predefined box-shadow */
   text-shadow: none;
-  /* Remove predefined text-shadow */
   border: 0px;
   background: none;
 }
@@ -341,80 +340,83 @@ window#waybar.empty #window {
   margin-right: 10px;
 }
 
-/* window#waybar {
-     background: #2d2a2e;
- }
- 
- * {
-     color: #c8b9a9;
-     font-family: Ubuntu Mono, sans-serif;
-     font-size: 12px;
- }
- 
- #workspaces button.focused {
-     color: #f2e5bc;
- }
- 
- #workspaces button {
-     color: #c8b9a9;
- }
- 
- .separator {
-     background-color: #c8b9a9;
- }
- 
- #mode {
-     color: #ebcb8b;
- }
- 
- #clock {
-     color: #a3be8c;
- }
- 
- #battery {
-     color: #d8dee9;
- }
- 
- #battery.charging {
-     color: #b48ead;
- }
- 
- #battery.critical:not(.charging) {
-     color: #bf616a;
- }
- 
- #cpu {
-     color: #a3be8c;
- }
- 
- #memory {
-     color: #d3869b;
- }
- 
- #network {
-     color: #8fbcbb;
- }
- 
- #network.disabled {
-     color: #bf616a;
- }
- 
- #network.disconnected {
-     color: #bf616a;
- }
- 
- #pulseaudio {
-     color: #b48ead;
- }
- 
- #pulseaudio.muted {
-     color: #bf616a;
- }
- 
- #temperature {
-     color: #8fbcbb;
- }
- 
- #temperature.critical {
-     color: #bf616a;
- } */
+/* window#waybar { */
+/*   background: #2d2a2e; */
+/* } */
+
+* {
+  /* color: #c8b9a9; */
+  /* font-family: */
+  /*   Ubuntu Mono, */
+  /*   sans-serif; */
+  font-size: 12px;
+}
+
+/* #workspaces button.focused {
+  color: #f2e5bc;
+}
+
+#workspaces button {
+  color: #c8b9a9;
+}
+
+.separator {
+  background-color: #c8b9a9;
+}
+
+#mode {
+  color: #ebcb8b;
+}
+
+#clock {
+  color: #a3be8c;
+}
+
+#battery {
+  color: #d8dee9;
+}
+
+#battery.charging {
+  color: #b48ea
+}
+
+#battery.critical:not(.charging) {
+  color: #bf616a;
+}
+*/
+
+/* #cpu { */
+/*   color: #a3be8c; */
+/* } */
+
+/* #memory { */
+/*   color: #d3869b; */
+/* } */
+
+/* #network { */
+/*   color: #8fbcbb; */
+/* } */
+/**/
+/* #network.disabled { */
+/*   color: #bf616a; */
+/* } */
+/**/
+/* #network.disconnected { */
+/*   color: #bf616a; */
+/* } */
+
+/* #pulseaudio { */
+/*   color: #b48ead; */
+/* } */
+/**/
+/* #pulseaudio.muted { */
+/*   color: #bf616a; */
+/* } */
+
+/* #temperature { */
+/*   color: #8fbcbb; */
+/* } */
+/**/
+/* #temperature.critical { */
+/*   color: #bf616a; */
+/* } */
