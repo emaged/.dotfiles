@@ -1,7 +1,6 @@
 # +--------+
 # | System |
 # +--------+
-
 alias shutdown='sudo shutdown now'
 alias restart='sudo reboot'
 alias suspend='sudo pm-suspend'
@@ -10,7 +9,6 @@ alias suspend='sudo pm-suspend'
 # +-----+
 # | bat |
 # +-----+
-
 alias bat='batcat'
 
 # +----+
@@ -20,7 +18,6 @@ alias bat='batcat'
 # -----------------------------
 # Interactive aliases (colors, icons, Git info)
 # -----------------------------
-
 # Basic directory listing with colors, icons, and directories first
 alias ls='eza --color=auto --icons --group-directories-first'  # list files interactively
 
@@ -42,7 +39,6 @@ alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale --color=au
 # -----------------------------
 # Specialty / script-friendly views
 # -----------------------------
-
 # One file per line (good for scripts or piping)
 alias lS='eza -1'  # single column listing
 
@@ -50,12 +46,12 @@ alias lS='eza -1'  # single column listing
 alias lt='eza --tree --level=2'  # tree view of directories
 
 # Show all hidden files safely using eza's pattern matching
-alias l.='eza --all --pattern ".*"'  # show hidden files
+alias l.='eza -a'  # show hidden files
+
 
 # +----+
 # | cp |
 # +----+
-
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -iv'
@@ -64,36 +60,29 @@ alias rm='rm -iv'
 # +-----+
 # | fzf |
 # +-----+
-
 alias fzfp="fzf --preview 'batcat --color=always {}' --preview-window '~3'"
-
 
 
 # +------+
 # | time |
 # +------+
-
 alias time='/usr/bin/time'
 
 # +--------+
 # | Neovim |
 # +--------+
-
 alias vim='nvim'
 alias vi='nvim'
-
 
 
 # +--------+
 # | Neovim |
 # +--------+
-
 alias t='tmux new-session -As "$(basename "$PWD")"'
 
 # +-----+
 # | Git |
 # +-----+
-
 alias gs='git status'
 alias gss='git status -s'
 alias ga='git add'
@@ -135,13 +124,4 @@ alias dockimg='docker images'                                                   
 alias dockprune='docker system prune -a'                                        # prune everything
 alias dockceu='docker-compose run --rm -u $(id -u):$(id -g)'                    # run as the host user
 alias dockce='docker-compose run --rm'
-
-
-# +--------+
-#
-# | docker |
-#
-# +--------+
-
-
 
