@@ -165,7 +165,7 @@ autoload -Uz compinit;  compinit
 zinit cdreplay -q # recomended for performance?
 
 # source fzf.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
 
 # Plugins
 # Load fzf-tab immediately after compinit
@@ -182,7 +182,7 @@ fi
 # Run after zsh-vi-mode has finished initializing
 function zvm_after_init() {
   # 1) Re-run fzf keybindings so vi-mode can't break them
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  source <(fzf --zsh)
 
   # 2) Make <Tab> use fzf-tab again in insert mode
   if (( $+widgets[fzf-tab-complete] )); then
