@@ -1,0 +1,21 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 80
+
+# Braces on the next line for everything (Allman style)
+BreakBeforeBraces: Allman
+
+# Always expand functions onto multiple lines (no short function inline)
+AllowShortFunctionsOnASingleLine: None
+
+# Spacing
+SpaceAfterCStyleCast: true # e.g., (int) x
+PointerAlignment: Left # e.g., int *ptr, not int* ptr
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceBeforeParens: ControlStatements # e.g., if (x) {...}
+
+# optional, sorts include statements
+SortIncludes: true
