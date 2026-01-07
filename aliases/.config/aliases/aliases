@@ -74,8 +74,9 @@ alias time='/usr/bin/time'
 alias vim='nvim'
 alias vi='nvim'
 
-alias nvim-lazy = 'NVIM_APPNAME="nvim-lazyvim" nvim'
-alias nvim-bare 'NVIM_APPNAME="nvim-bare" nvim'
+alias nvim-lazy='NVIM_APPNAME="nvim-lazyvim" nvim'
+alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
+alias nvim-bare='NVIM_APPNAME="nvim-bare" nvim'
 
 # +--------+
 # | Neovim |
