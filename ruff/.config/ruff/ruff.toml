@@ -1,0 +1,73 @@
+# ~/.config/ruff/ruff.toml
+line-length = 88
+indent-width = 4
+
+target-version = "py313"
+
+[lint]
+preview = true
+select = [
+  "ALL", # include all the rules, including new ones
+]
+ignore = [
+  #### modules
+  "ANN", # flake8-annotations
+  # "COM", # flake8-commas
+  # "C90", # mccabe complexity
+  # "DJ",  # django
+  # "EXE", # flake8-executable
+  # "T10", # debugger
+  # "TID", # flake8-tidy-imports
+
+  #### docstring rules toggle
+  # "D", 
+  "D100", # ignore missing docs
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "D105",
+  "D106",
+  "D107",
+  # "D200",
+  # "D205",
+  # "D212",
+  # "D400",
+  # "D415",
+  # "D401",
+
+  "D203", # prefer D211 (no blank line before class)
+  "D213", # prefer D212 (summary on first line)
+
+  ### other specific rules
+  "E501", # line too long
+  # "TRY003", # external messages in exceptions are too verbose
+  # "TD002",
+  # "TD003",
+  # "FIX002", # too verbose descriptions of todos
+  "CPY001",
+
+  ### formatter conflicts
+  "W191",
+  "E111",
+  "E114",
+  "E117",
+  "D206",
+  "D300",
+  "Q000",
+  "Q001",
+  "Q002",
+  "Q003",
+  "COM812",
+  "COM819",
+  "ISC001",
+  "ISC002",
+]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "E402"]
+"tests/**" = ["ARG", "E402"]
+"**/{tests,docs,tools}/**" = ["E402"]
+
+[format]
+quote-style = "single"

@@ -1,1 +1,0 @@
-/home/emiel/.config/omarchy/current/theme/neovim.lua
