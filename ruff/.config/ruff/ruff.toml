@@ -10,6 +10,10 @@ select = [
   "ALL", # include all the rules, including new ones
 ]
 ignore = [
+  ###personal
+  # "DOC501",
+  # "PLC0415",
+
   #### modules
   "ANN", # flake8-annotations
   # "COM", # flake8-commas
