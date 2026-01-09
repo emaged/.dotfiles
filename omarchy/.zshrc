@@ -14,6 +14,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/usr/lib/llvm-20/bin:$PATH"
 export PATH="$HOME/.local/scripts:$PATH"
 export PATH="$HOME/bin:$PATH"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # >>> juliaup initialize >>>
 
