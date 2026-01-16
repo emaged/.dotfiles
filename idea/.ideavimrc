@@ -1,0 +1,14 @@
+nnoremap <localleader>c "_c
+vnoremap <localleader>c "_c
+
+nnoremap <localleader>C "_C
+vnoremap <localleader>C "_C
+
+nnoremap <localleader>x "_x
+vnoremap <localleader>x "_d
+
+nnoremap <localleader>d "_d
+vnoremap <localleader>d "_d
+
+nnoremap <localleader>D "_D
+vnoremap <localleader>D "_D
