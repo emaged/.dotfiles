@@ -2,8 +2,17 @@
 .vscode/
 
 # codex
-.codex/
-codex/.codex/
+# Codex runtime state
+codex/.codex/sessions/
+codex/.codex/log/
+codex/.codex/tmp/
+codex/.codex/history.jsonl
+codex/.codex/auth.json
+
+# Defensive (future-proof)
+.codex/cache/
+.codex/**/*.log
+.codex/**/*.jsonl
 
 # sway
 sway/.config/sway/config

@@ -1,0 +1,128 @@
+# ──────────────────────────────────────────────────────────────
+#        C O D E X   C L I   &   I D E   C O N F I G 
+# ──────────────────────────────────────────────────────────────
+
+model = "gpt-5.2-codex"
+model_reasoning_effort = "high"
+
+[notice]
+hide_gpt5_1_migration_prompt = true
+
+[notice.model_migrations]
+"gpt-5.1-codex-max" = "gpt-5.2-codex"
+
+[features]
+rmcp_client = true
+web_search_request = true
+
+### Server Configurations
+[mcp_servers.serena]
+command = "uvx"
+args = [
+  "--from",
+  "git+https://github.com/oraios/serena",
+  "serena",
+  "start-mcp-server",
+  "--context",
+  "codex",
+]
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+bearer_token_env_var = "CONTEXT7_API_KEY"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["chrome-devtools-mcp@latest", "--headless", "--isolated"]
+
+[mcp_servers.fetch]
+command = "uvx"
+args = ["mcp-server-fetch"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+
+[mcp_servers.filesystem]
+command = "npx"
+args = [
+  "-y",
+  "@modelcontextprotocol/server-filesystem",
+  "/home/emiel/projects",
+  "/home/emiel/.config/nvim",
+]
+
+[mcp_servers.sequentialthinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+
+[mcp_servers.task_master]
+command = "env"
+args = [
+  "PERPLEXITY_API_KEY=$PERPLEXITY_API_KEY",
+  "npx",
+  "-y",
+  "--package=task-master-ai",
+  "task-master-ai",
+]
+
+[mcp_servers.time]
+command = "uvx"
+args = ["mcp-server-time"]
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+bearer_token_env_var = "GITHUB_TOKEN"
+
+[mcp_servers.perplexity]
+command = "env"
+args = [
+  "PERPLEXITY_API_KEY=$PERPLEXITY_API_KEY",
+  "npx",
+  "-y",
+  "@perplexity-ai/mcp-server",
+]
+
+
+# ──────────────────────────────────────────────────────────────
+#                     T R U S T   M O D E L
+# ──────────────────────────────────────────────────────────────
+
+[projects."/home/{USER}/projects"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/.config/nvim"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/.dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/.dotfiles/.git/modules/nvim/.config"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/Dropbox/Vault"]
+trust_level = "trusted"
+
+[projects."/home/{USER}"]
+trust_level = "untrusted"
+
+[projects."/home/{USER}/projects/CS50web"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/projects/CS50/finalProject"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/Dropbox/projects/djangoTest/djangotutorial"]
+trust_level = "trusted"
+
+[projects."/home/{USER}/Dropbox/projects/tests"]
+trust_level = "untrusted"
+
+[projects."/home/{USER}/Dropbox/projects/codewars"]
+trust_level = "untrusted"
+
+[projects."/home/emiel/.dotfiles/.git/modules/nvim/.config"]
+trust_level = "untrusted"
+
+[projects."/home/emiel"]
+trust_level = "untrusted"
