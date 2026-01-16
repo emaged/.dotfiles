@@ -14,6 +14,8 @@ shell-integration-features = no-cursor, ssh-env
 
 # keybinds
 keybind = ctrl+backspace=text:\x17
+keybind = shift+insert=paste_from_clipboard
+keybind = control+insert=copy_to_clipboard
 
 # fix for tmux, maps to alt + enter
 keybind = shift+enter=text:\x1b\r
