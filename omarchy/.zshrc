@@ -8,6 +8,7 @@
 
 # Base PATH additions
 export PATH="$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
 export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -16,10 +17,8 @@ export PATH="$HOME/.local/scripts:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 # >>> juliaup initialize >>>
-
 # !! Contents within this block are managed by juliaup !!
-path=('/home/emiel/.juliaup/bin' $path)
-export PATH
+export PATH="$HOME/.juliaup/bin:$PATH"
 # <<< juliaup initialize <<<
 
 # Perl stuff
@@ -32,6 +31,7 @@ PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT
 # Remove duplicate PATH entries
 typeset -U PATH
 
+# mise setup
 eval "$(~/.local/bin/mise activate zsh)"
 
 # Language & Tools
@@ -89,7 +89,7 @@ zinit light-mode for \
 
 
 # -------------------------------
-# 2. zsh-vi-mode Config
+# 3. zsh-vi-mode Config
 # -------------------------------
 # Increase recursion limit to prevent zle-hook warnings
 typeset -g FUNCNEST=500
@@ -123,7 +123,7 @@ zinit light jeffreytse/zsh-vi-mode
 
 
 # -------------------------------
-# 3. Completion & FZF-Tab
+# 4. Completion & FZF-Tab
 # -------------------------------
 # Completion styling
 # disable sort when completing `git checkout`
@@ -208,7 +208,7 @@ function zvm_after_init() {
 
 
 # -------------------------------
-# 4. History Configuration
+# 5. History Configuration
 # -------------------------------
 
 HISTSIZE=5000       
@@ -224,7 +224,7 @@ zinit snippet OMZP::command-not-found
 
 
 # -------------------------------
-# 5. Aliases
+# 6. Aliases
 # -------------------------------
 
 [ -f ~/.config/aliases/aliases ] && source ~/.config/aliases/aliases
@@ -240,7 +240,7 @@ function y() {
 
 
 # -------------------------------
-# 6 Prompt
+# 7 Prompt
 # -------------------------------
 
 # export PYENV_ROOT="$HOME/.pyenv"

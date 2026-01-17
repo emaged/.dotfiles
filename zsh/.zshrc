@@ -9,6 +9,7 @@
 # Base PATH additions
 export PATH="$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
 export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/usr/lib/llvm-20/bin:$PATH"
@@ -34,7 +35,7 @@ typeset -U PATH
 eval "$(~/.local/bin/mise activate zsh)"
 
 # Language & Tools
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/default
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Editor
@@ -160,7 +161,7 @@ autoload -Uz compinit;  compinit -C
 zinit cdreplay -q # recomended for performance?
 
 # source fzf.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
 
 # Plugins
 # Load fzf-tab immediately after compinit
@@ -174,7 +175,7 @@ zinit light zsh-users/zsh-autosuggestions
 # Run after zsh-vi-mode has finished initializing
 function zvm_after_init() {
   # 1) Re-run fzf keybindings so vi-mode can't break them
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  source <(fzf --zsh)
 
   # 2) Make <Tab> use fzf-tab again in insert mode
   if (( $+widgets[fzf-tab-complete] )); then
@@ -255,10 +256,8 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
-
 # codex completions 
 eval "$(codex completion zsh)"
-
 
 # zsh-syntax-highlighting (Turbo, last)
 zinit ice wait'1' lucid
