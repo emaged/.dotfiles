@@ -1,14 +1,156 @@
-nnoremap <localleader>c "_c
-vnoremap <localleader>c "_c
+""" Map leader to space ---------------------
+let mapleader=" "
 
-nnoremap <localleader>C "_C
-vnoremap <localleader>C "_C
+""" Plugins  --------------------------------
+set surround
+set multiple-cursors
+set commentary
+set argtextobj
+set easymotion
+set textobj-entire
+set ReplaceWithRegister
+set which-key
+set matchit
+" Trying the new syntax
+Plug 'machakann/vim-highlightedyank'
 
-nnoremap <localleader>x "_x
-vnoremap <localleader>x "_d
+" disable the timeout option for which-key
+set notimeout
+" increase the timeoutlen (default: 1000), don't add space around the equal sign
+"set timeoutlen=5000
 
-nnoremap <localleader>d "_d
-vnoremap <localleader>d "_d
+""" Plugin settings -------------------------
+let g:argtextobj_pairs="[:],(:),<:>"
 
-nnoremap <localleader>D "_D
-vnoremap <localleader>D "_D
+""" Common settings -------------------------
+set showmode
+set so=5
+set incsearch
+set nu
+set scrolloff=5
+set number relativenumber
+
+""" Idea specific settings ------------------
+set ideajoin
+set ideastatusicon=gray
+set idearefactormode=keep
+
+""" Mappings --------------------------------
+map <leader>f <Plug>(easymotion-s)
+map <leader>e <Plug>(easymotion-f)
+
+map <leader>d <Action>(Debug)
+map <leader>db <Action>(ToggleLineBreakpoint)
+map <leader>r <Action>(RenameElement)
+map <leader>dq <Action>(Stop)
+map <leader>z <Action>(ToggleDistractionFreeMode)
+
+map <leader>s <Action>(SelectInProjectView)
+map <leader>h <Action>(Vcs.ShowTabbedFileHistory)
+map <S-Space> <Action>(GotoNextError)
+
+map <leader>b <Action>(ToggleLineBreakpoint)
+map <leader>o <Action>(FileStructurePopup)
+
+""" Personal mappings ------------------------
+set clipboard=unnamedplus
+set clipboard^=ideaput
+nnoremap <silent> <C-L> :nohlsearch<CR>
+
+nnoremap <leader>a ggVG
+nnoremap <leader>y :%y<CR>
+map ,a <Action>(Annotate)
+
+" Copy (Ctrl-c like system behavior)
+nnoremap <C-c> y
+vnoremap <C-c> y
+
+" Paste (Ctrl-v consistency)
+nnoremap <C-v> p
+vnoremap <C-v> P
+inoremap <C-v> <C-o>p
+
+" ======================
+" Visual block mode
+" ======================
+nnoremap <C-q> <C-v>
+vnoremap <C-q> <C-v>
+
+" ======================
+" Delete / change without yank
+" pseudo-localleader = ','
+" ======================
+nnoremap ,c "_c
+vnoremap ,c "_c
+
+nnoremap ,C "_C
+vnoremap ,C "_C
+
+nnoremap ,x "_x
+vnoremap ,x "_d
+
+nnoremap ,d "_d
+vnoremap ,d "_d
+
+nnoremap ,D "_D
+vnoremap ,D "_D
+
+" backwards search convenience
+nnoremap ,, ,
+
+" ======================
+" Scrolling (Primeagen style)
+" ======================
+"nnoremap <C-d> <C-d>zz
+"nnoremap <C-u> <C-u>zz
+
+" ======================
+" Move visual selection
+" ======================
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" flash
+nmap gs <Action>(flash.search)
+xmap gs <Action>(flash.search)
+
+" search
+nnoremap gre :%s/\<<C-r><C-w>\>//g<Left><Left>
+
+" might break intellij
+"nnoremap <CR> o<Esc>
+"nnoremap <shift-CR> O<Esc>j
+
+
+" multiple cursors
+" Remap multiple-cursors shortcuts to match terryma/vim-multiple-cursors
+nmap <C-n> <Plug>NextWholeOccurrence
+xmap <C-n> <Plug>NextWholeOccurrence
+nmap g<C-n> <Plug>NextOccurrence
+xmap g<C-n> <Plug>NextOccurrence
+xmap <C-x <Plug>SkipOccurrence
+xmap <C-p> <Plug>RemoveOccurrence
+
+" Note that the default <A-n> and g<A-n> shortcuts don't work on Mac due to dead keys.
+" <A-n> is used to enter accented text e.g. ñ
+" Feel free to pick your own mappings that are not affected. I like to use <leader>
+nmap <leader><C-n> <Plug>AllWholeOccurrences
+xmap <leader><C-n> <Plug>AllWholeOccurrences
+nmap <leader>g<C-n> <Plug>AllOccurrences
+xmap <leader>g<C-n> <Plug>AllOccurrences
+
+noremap <leader>fa :edit ~/.ideavimrc<cr>
+noremap <leader><leader>s :source ~/.ideavimrc<cr>
+
+" splits
+map <leader>wv <Action>(SplitVertically)
+map <leader>wh <Action>(SplitHorizontally)
+map <leader>ww <Action>(Unsplit)
+map <leader>wa <Action>(UnsplitAll)
+
+map <C-l> <C-w>l
+map <C-k> <C-w>k
+map <C-j> <C-w>j
+map <C-h> <C-w>h
+
+map <leader>c <Action>(CloseEditor)

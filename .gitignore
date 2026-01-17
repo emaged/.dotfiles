@@ -9,10 +9,5 @@ codex/.codex/tmp/
 codex/.codex/history.jsonl
 codex/.codex/auth.json
 
-# Defensive (future-proof)
-.codex/cache/
-.codex/**/*.log
-.codex/**/*.jsonl
-
-# sway
-sway/.config/sway/config
+# sway when on multiple pc's
+# sway/.config/sway/config
