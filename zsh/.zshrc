@@ -30,6 +30,9 @@ PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT
 # Remove duplicate PATH entries
 typeset -U PATH
 
+# mise setup
+eval "$(~/.local/bin/mise activate zsh)"
+
 # Language & Tools
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -58,15 +61,9 @@ export FZF_ALT_C_OPTS="--preview 'eza -T --level=1 --color=always {}'"
 
 source ~/themes/fzf/catppuccin-fzf-mocha.sh
 
-# -------------------------------
-# 2. Node / NVM
-# -------------------------------
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # -------------------------------
-# 3. Zinit (plugin manager)
+# 2. Zinit (plugin manager)
 # -------------------------------
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -91,7 +88,7 @@ zinit light-mode for \
 
 
 # -------------------------------
-# 3. zsh-vi-mode Config
+# 3 zsh-vi-mode Config
 # -------------------------------
 # Increase recursion limit to prevent zle-hook warnings
 typeset -g FUNCNEST=500
@@ -139,6 +136,8 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu no
 # case insensitive
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.cache/zsh"
 #preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 #custom fzf flags
@@ -157,7 +156,7 @@ zinit light zsh-users/zsh-completions
 # poetry completions
 fpath+=~/.zfunc
 
-autoload -Uz compinit;  compinit
+autoload -Uz compinit;  compinit -C
 zinit cdreplay -q # recomended for performance?
 
 # source fzf.zsh
@@ -167,13 +166,10 @@ zinit cdreplay -q # recomended for performance?
 # Load fzf-tab immediately after compinit
 zinit light Aloxaf/fzf-tab
 
-# autosuggestions
-# prevent rebinding bug
-if [[ -z ${_MY_AUTOSUGGEST_LOADED-} ]]; then
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=true
-  zinit light zsh-users/zsh-autosuggestions
-  _MY_AUTOSUGGEST_LOADED=1
-fi
+# autosuggestions (Turbo, correct first-prompt behavior)
+ZSH_AUTOSUGGEST_MANUAL_REBIND=true
+zinit ice wait'1' lucid atload='_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
 
 # Run after zsh-vi-mode has finished initializing
 function zvm_after_init() {
@@ -259,9 +255,12 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
-# codex completions
+
+# codex completions 
 eval "$(codex completion zsh)"
 
-# zsh-syntax-highlighting last!
+
+# zsh-syntax-highlighting (Turbo, last)
+zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
 
