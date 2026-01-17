@@ -126,3 +126,6 @@ trust_level = "untrusted"
 
 [projects."/home/emiel"]
 trust_level = "untrusted"
+
+[projects."/home/emiel/.dotfiles"]
+trust_level = "untrusted"
