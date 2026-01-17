@@ -8,7 +8,7 @@
 
 # Base PATH additions
 export PATH="$HOME/.local/luas/5.1/bin:$HOME/.local/bin:$HOME/.fzf/bin:$PATH"
-export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/usr/lib/llvm-20/bin:$PATH"
@@ -114,7 +114,7 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]];
 elif [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
     # Linux Wayland
     ZVM_CLIPBOARD_COPY_CMD='wl-copy'
-    ZVM_CLIPBOARD_PASTE_CMD='wl-paste'
+    ZVM_CLIPBOARD_PASTE_CMD='wl-paste -n'
 else
     # Linux X11
     ZVM_CLIPBOARD_COPY_CMD='xclip -selection clipboard'

@@ -112,7 +112,7 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]];
 elif [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
     # Linux Wayland
     ZVM_CLIPBOARD_COPY_CMD='wl-copy'
-    ZVM_CLIPBOARD_PASTE_CMD='wl-paste'
+    ZVM_CLIPBOARD_PASTE_CMD='wl-paste -n'
 else
     # Linux X11
     ZVM_CLIPBOARD_COPY_CMD='xclip -selection clipboard'
