@@ -32,7 +32,7 @@ PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT
 typeset -U PATH
 
 # mise setup
-eval "$(~/.local/bin/mise activate zsh)"
+eval "$(mise activate zsh)"
 
 # Language & Tools
 export JAVA_HOME=/usr/lib/jvm/default
