@@ -228,10 +228,10 @@ gaps inner 8
 # toggle waybar
 bindsym $mod+o exec killall -SIGUSR1 waybar
 # open firefox
-bindsym $mod+b exec firefox
+bindsym $mod+shift+b exec firefox
 bindsym Ctrl+Shift+Escape exec gnome-system-monitor
 # needs ddcutil to control brightness! 
-bindsym $mod+Shift+b exec ~/.config/sway/brightness.sh
+bindsym $mod+b exec ~/.config/sway/brightness.sh
 
 input * {
     accel_profile flat
