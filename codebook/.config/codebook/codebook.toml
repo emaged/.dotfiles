@@ -5,6 +5,7 @@ dictionaries = [
 words = [
     "cjs",
     "cwd",
+    "fieldsets",
     "htmldjango",
     "keymap",
     "nvim",
