@@ -132,3 +132,6 @@ trust_level = "untrusted"
 
 [projects."/home/emiel/Dropbox/projects/djangoTest"]
 trust_level = "untrusted"
+
+[projects."/home/emiel/projects"]
+trust_level = "untrusted"
