@@ -28,7 +28,7 @@ export default defineConfig([
   },
 
   // ------------------------------------------------------
-  // React rules (scoped)
+  // React rules (scoped) — consolidated & safe
   // ------------------------------------------------------
   {
     files: ["**/*.{js,jsx}"],
@@ -45,9 +45,12 @@ export default defineConfig([
         version: "detect",
       },
     },
+    rules: {
+      "react/prop-types": "off",
+    },
   },
   {
-    files: ["**/*.{jsx,js}"],
+    files: ["**/*.{js,jsx}"],
     plugins: {
       "react-hooks": reactHooks,
     },
