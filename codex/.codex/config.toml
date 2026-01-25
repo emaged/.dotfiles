@@ -48,8 +48,9 @@ command = "npx"
 args = [
   "-y",
   "@modelcontextprotocol/server-filesystem",
-  "/home/emiel/projects",
+  "/home/emiel/Dropbox/projects",
   "/home/emiel/.config/nvim",
+  "/home/emiel/.dotfiles",
 ]
 
 [mcp_servers.sequentialthinking]

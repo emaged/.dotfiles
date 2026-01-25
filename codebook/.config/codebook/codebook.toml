@@ -3,12 +3,15 @@ dictionaries = [
     "en_gb",
 ]
 words = [
+    "alacritty",
     "cjs",
     "cwd",
+    "dri",
     "fieldsets",
     "ghostty",
     "htmldjango",
     "keymap",
+    "libgl",
     "nvim",
     "pyproject",
     "pyright",
