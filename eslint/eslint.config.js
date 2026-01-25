@@ -31,18 +31,21 @@ export default defineConfig([
   // React rules (scoped)
   // ------------------------------------------------------
   {
-    files: ["**/*.{jsx,js}"],
+    files: ["**/*.{js,jsx}"],
     ...pluginReact.configs.flat.recommended,
+  },
+  {
+    files: ["**/*.{js,jsx}"],
+    ...pluginReact.configs.flat["jsx-runtime"],
+  },
+  {
+    files: ["**/*.{js,jsx}"],
     settings: {
       react: {
         version: "detect",
       },
     },
-    rules: {
-      "react/react-in-jsx-scope": "off",
-    },
   },
-
   {
     files: ["**/*.{jsx,js}"],
     plugins: {
