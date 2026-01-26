@@ -1,0 +1,40 @@
+#!/bin/bash
+
+WARN_THRESHOLD=20
+CRITICAL_THRESHOLD=5
+
+NOTIFICATION_DIR="/run/user/$UID"
+WARN_FLAG="$NOTIFICATION_DIR/custom_battery_warned"
+CRITICAL_FLAG="$NOTIFICATION_DIR/custom_battery_critical"
+
+BATTERY_LEVEL=$(omarchy-battery-remaining)
+BATTERY_STATE=$(upower -i $(upower -e | grep 'BAT') | grep -E "state" | awk '{print $2}')
+
+send_warn() {
+  notify-send -u normal "󰂃 Battery getting low" "Battery is at ${1}%" -i battery-low -t 15000
+}
+
+send_critical() {
+  notify-send -u critical "󰂎 Plug in NOW!" "Battery is at ${1}% — system may power off" -i battery-empty -t 0
+}
+
+if [[ -n "$BATTERY_LEVEL" && "$BATTERY_LEVEL" =~ ^[0-9]+$ ]]; then
+  if [[ $BATTERY_STATE == "discharging" ]]; then
+
+    if [[ $BATTERY_LEVEL -le $CRITICAL_THRESHOLD ]]; then
+      if [[ ! -f $CRITICAL_FLAG ]]; then
+        send_critical "$BATTERY_LEVEL"
+        touch "$CRITICAL_FLAG"
+      fi
+
+    elif [[ $BATTERY_LEVEL -le $WARN_THRESHOLD ]]; then
+      if [[ ! -f $WARN_FLAG ]]; then
+        send_warn "$BATTERY_LEVEL"
+        touch "$WARN_FLAG"
+      fi
+    fi
+
+  else
+    rm -f "$WARN_FLAG" "$CRITICAL_FLAG"
+  fi
+fi
