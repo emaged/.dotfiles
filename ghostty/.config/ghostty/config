@@ -14,8 +14,6 @@ shell-integration-features = no-cursor, ssh-env
 
 # keybinds
 keybind = ctrl+backspace=text:\x17
-keybind = shift+insert=paste_from_clipboard
-keybind = control+insert=copy_to_clipboard
 
 # fix for tmux, maps to alt + enter
 keybind = shift+enter=text:\x1b\r
@@ -26,6 +24,15 @@ keybind = performable:ctrl+shift+k=goto_split:top
 keybind = performable:ctrl+shift+l=goto_split:right
 
 keybind = ctrl+shift+f=toggle_split_zoom
+
+# Scrollback / screen / selection -> paste path (Neovim-friendly)
+keybind = ctrl+alt+j=write_scrollback_file:paste
+keybind = ctrl+alt+k=write_screen_file:paste
+keybind = ctrl+alt+l=write_selection_file:paste
+
+# move tabs
+keybind = ctrl+shift+alt+left=move_tab:-1
+keybind = ctrl+shift+alt+right=move_tab:1
 
 # disable ligatures
 # font-feature = -dlig
