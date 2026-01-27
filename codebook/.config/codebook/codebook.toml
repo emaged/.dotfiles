@@ -17,6 +17,7 @@ words = [
     "nvim",
     "pyproject",
     "pyright",
+    "urlpatterns",
     "venv",
     "wsgi",
 ]
