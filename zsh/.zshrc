@@ -220,7 +220,15 @@ setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_find_no_dups
 
-zinit snippet OMZP::command-not-found
+# Ubuntu/Debian (Oh My Zsh command-not-found)
+if [[ -f /etc/zsh_command_not_found ]]; then
+  zinit snippet OMZP::command-not-found
+fi
+
+# Arch Linux (pkgfile)
+if [[ -f /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
+  source /usr/share/doc/pkgfile/command-not-found.zsh
+fi
 
 
 # -------------------------------
