@@ -265,7 +265,7 @@ handle_session_cmd() {
 
 handle_window_session_cmd() {
     local current_session="$1"
-    start_index=$((69 + $session_idx))
+    start_index=$((6 + $session_idx))
     target="$current_session:$start_index"
 
     log "target: $target command $session_cmd has-session=$(tmux has-session -t="$target" 2> /dev/null)"
