@@ -139,3 +139,6 @@ trust_level = "untrusted"
 
 [projects."/home/emiel/Dropbox/projects/reacttutor"]
 trust_level = "untrusted"
+
+[projects."/home/emiel/Dropbox/projects/CS50web"]
+trust_level = "untrusted"
