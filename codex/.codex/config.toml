@@ -11,9 +11,6 @@ hide_gpt5_1_migration_prompt = true
 [notice.model_migrations]
 "gpt-5.1-codex-max" = "gpt-5.2-codex"
 
-[features]
-rmcp_client = true
-web_search_request = true
 
 ### Server Configurations
 [mcp_servers.serena]
