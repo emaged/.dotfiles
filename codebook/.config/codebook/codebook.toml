@@ -1,7 +1,4 @@
-dictionaries = [
-    "en_us",
-    "en_gb",
-]
+dictionaries = ["en_us", "nl_nl"]
 words = [
     "alacritty",
     "cjs",
@@ -21,15 +18,8 @@ words = [
     "venv",
     "wsgi",
 ]
-flag_words = [
-    "todo",
-    "fixme",
-]
-ignore_paths = [
-    "target/**/*",
-    "**/*.json",
-    ".git/**/*",
-]
+flag_words = ["todo", "fixme"]
+ignore_paths = ["target/**/*", "**/*.json", ".git/**/*"]
 ignore_patterns = [
     '\b[ATCG]+\b',
     '\d{3}-\d{2}-\d{4}',
