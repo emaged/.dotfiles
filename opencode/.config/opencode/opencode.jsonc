@@ -10,6 +10,8 @@
         "serena",
         "start-mcp-server",
         "opencode",
+        "--open-web-dashboard",
+        "false",
       ],
       "enabled": true,
     },

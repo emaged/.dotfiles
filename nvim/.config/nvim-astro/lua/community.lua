@@ -8,7 +8,8 @@
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.pack.lua" },
-  { import = "astrocommunity.pack.python" },
-  { import = "astrocommunity.pack.html-css" },
+  -- { import = "astrocommunity.pack.python" },
+  -- { import = "astrocommunity.pack.html-css" },
+  { import = "astrocommunity.ai.sidekick-nvim" },
   -- import/override with your plugins folder
 }
