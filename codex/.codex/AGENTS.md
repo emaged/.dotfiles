@@ -32,14 +32,67 @@
 - Use configured project tools when possible (linters, formatters, MCP servers).
 - Ask before introducing new tools or automations.
 
+---
+
 ## MCP Tools
 
 ### General MCP Principles
 
-- Prefer MCP tools over external APIs, scraping, or assumptions.
+- Prefer MCP tools when they provide clear advantages over reasoning directly from provided context.
 - If an MCP call fails, explain the fallback strategy before proceeding.
 - Use small, focused MCP calls rather than large or speculative ones.
 - Respect user privacy — do not store or log MCP request data.
+- Stop using MCP tools once sufficient information exists to propose a change.
+- Do not chain MCP tools unless each step materially reduces uncertainty.
+
+## MCP Tool Precedence (Very Important)
+
+When multiple tools could apply, prefer them in this order and do not skip
+higher-priority tools without a clear reason:
+
+1. **Serena**
+    - Semantic codebase understanding
+    - Symbol navigation, relationships, minimal-scope analysis
+
+2. **Filesystem / GitHub**
+    - Authoritative source of local and remote code
+    - READMEs, issues, examples, and exact file contents
+
+3. **Context7**
+    - External libraries and APIs
+    - Code generation, scaffolding, and structured library understanding
+
+4. **Task Master**
+    - Explicit task planning, decomposition, and multi-step workflows
+
+5. **Fetch**
+    - Precise HTTP(S) requests
+    - API inspection, schemas, and response validation
+
+6. **Perplexity**
+    - Broad or up-to-date external information
+    - Use only when other MCP tools are insufficient
+
+7. **Chrome DevTools**
+    - Web inspection, DOM/CSS/network debugging
+
+---
+
+## Neovim Plugin Documentation
+
+When a question involves **Neovim plugins** (configuration, behavior, options, or comparisons):
+
+- Prefer authoritative plugin documentation over assumptions.
+- Automatically:
+    1. Fetch the plugin’s `README.md` via **GitHub MCP**.
+    2. If GitHub lookup fails, fall back to **Fetch** (raw README URL).
+    3. Use **Context7** only to supplement or structure understanding when relevant.
+- Prefer README content over prior knowledge or intuition.
+- Mention which MCP source was used (GitHub, Fetch, or Context7) if it affects reliability.
+
+For comparisons, configuration guidance, troubleshooting, or behavioral questions:
+
+- Consult plugin documentation (preferably via GitHub MCP) before answering.
 
 ---
 
@@ -61,6 +114,7 @@
 - Use Serena to identify the minimal scope of changes before proposing file edits.
 - Do not perform blind or large-scale refactors without first consulting Serena’s project index.
 - Fall back to Filesystem tools only when Serena is unavailable or insufficient, and explain why.
+- Do not read entire files via Filesystem when Serena symbol inspection is sufficient.
 
 ### Context7
 
@@ -85,15 +139,14 @@
 
 **Primary functions:**
 
-- Web search
-- High-level research summaries
-- Broad information gathering
+- Broad, external web research when other MCP tools are insufficient
+- High-level landscape overviews
 
 **Rules:**
 
-- Use only when information must be external or up-to-date.
-- Do not use when local MCP servers (Context7, filesystem, GitHub) are sufficient.
-- Summarize findings cleanly and cite sources when relevant.
+- Use only when information cannot be obtained via GitHub, Fetch, or local context.
+- Do not use for library APIs or project-specific documentation when authoritative sources exist.
+- Clearly distinguish speculation from sourced facts.
 
 ---
 
@@ -119,27 +172,12 @@
 
 - Raw HTTP(S) requests
 - API endpoint testing
-- Downloading machine-readable data
+- Inspecting response bodies, headers, or schemas
 
 **Rules:**
 
 - Ask before hitting non-public or rate-limited APIs.
 - Prefer Perplexity for general browsing; prefer Fetch for precise endpoint testing.
-
----
-
-### Playwright
-
-**Primary functions:**
-
-- Browser automation
-- End-to-end testing
-- Screenshot generation
-
-**Rules:**
-
-- Ask before performing state-changing operations (clicks, forms, navigation).
-- Use Chrome DevTools for inspection; Playwright for automation.
 
 ---
 
@@ -156,22 +194,7 @@
 - Follow the File Edits rules in this document.
 - Never modify files without explicit approval.
 - Always provide diffs before applying changes.
-
----
-
-### SequentialThinking
-
-**Primary functions:**
-
-- Multi-step reasoning
-- Complex workflows
-- Breaking tasks into structured steps
-
-**Rules:**
-
-- Use automatically for difficult or multi-stage reasoning tasks.
-- Keep steps concise and directly relevant.
-- Provide a clear summary at the end.
+- Avoid full-file reads unless symbol-level or scoped inspection is insufficient.
 
 ---
 
@@ -190,21 +213,6 @@
 
 ---
 
-### Time
-
-**Primary functions:**
-
-- Time/date retrieval
-- Timezone conversion
-- Scheduling logic
-
-**Rules:**
-
-- Use automatically for time-sensitive calculations.
-- Ask before doing anything that could imply scheduling.
-
----
-
 ### GitHub
 
 **Primary functions:**
@@ -218,6 +226,7 @@
 - Ask before interacting with private repositories.
 - Prefer GitHub for remote files that differ from the local filesystem state.
 - Never create issues or PRs unless explicitly requested.
+- Treat the local filesystem as authoritative over remote sources unless explicitly stated otherwise.
 
 ## Testing
 

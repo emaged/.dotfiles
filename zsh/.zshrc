@@ -271,3 +271,6 @@ eval "$(codex completion zsh)"
 zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
 
+
+# opencode
+export PATH=/home/emiel/.opencode/bin:$PATH
