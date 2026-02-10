@@ -191,10 +191,11 @@ function zvm_after_init() {
   bindkey -s '\ef'  'tmux-sessionizer\n'
   bindkey -M vicmd -s '\ef' 'i tmux-sessionizer\n'
   # long running sessions
-  bindkey -s '\el' 'tmux-sessionizer -s 0\n'
-  bindkey -s '\eo' 'tmux-sessionizer -s 1\n'
-  bindkey -s '\ep' 'tmux-sessionizer -s 2\n'
-  bindkey -s '\er' 'tmux-sessionizer -s 3\n'
+  # bindkey -s '\el' 'tmux-sessionizer -s 0\n'
+  # bindkey -s '\eo' 'tmux-sessionizer -s 1\n'
+  # bindkey -s '\ep' 'tmux-sessionizer -s 2\n'
+  # bindkey -s '\er' 'tmux-sessionizer -s 3\n'
+  
   # normal mode bindings 
   bindkey -M vicmd -s '\el' 'i tmux-sessionizer -s 0\n'
   bindkey -M vicmd -s '\eo' 'i tmux-sessionizer -s 1\n'
