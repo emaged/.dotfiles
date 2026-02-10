@@ -1,13 +1,16 @@
 # VSCode 
 .vscode/
 
-# codex
 # Codex runtime state
-codex/.codex/sessions/
-codex/.codex/log/
-codex/.codex/tmp/
-codex/.codex/history.jsonl
 codex/.codex/auth.json
+codex/.codex/history.jsonl
+codex/.codex/models_cache.json
+codex/.codex/version.json
+codex/.codex/.personality_migration
+
+codex/.codex/log/
+codex/.codex/sessions/
+codex/.codex/tmp/
 
 # sway when on multiple pc's
 # sway/.config/sway/config
