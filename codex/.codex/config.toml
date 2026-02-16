@@ -92,3 +92,6 @@ trust_level = "trusted"
 
 [projects."/home/emiel/.local/share/mise/installs/node/25.6.1/bin"]
 trust_level = "trusted"
+
+[projects."/home/emiel/.dotfiles/nvim/.config/nvim"]
+trust_level = "trusted"
