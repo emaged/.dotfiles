@@ -9,7 +9,6 @@ codex/.codex/version.json
 codex/.codex/.personality_migration
 
 codex/.codex/log/
-codex/.codex/sessions/
 codex/.codex/tmp/
 
 # sway when on multiple pc's
