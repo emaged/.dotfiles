@@ -14,16 +14,6 @@ hide_gpt5_1_migration_prompt = true
 
 
 ### Server Configurations
-# [mcp_servers.serena]
-# command = "uvx"
-# args = [
-#   "--from",
-#   "git+https://github.com/oraios/serena",
-#   "serena",
-#   "start-mcp-server",
-#   "--context",
-#   "codex",
-# ]
 
 [mcp_servers.context7]
 url = "https://mcp.context7.com/mcp"
@@ -60,7 +50,6 @@ args = [
   "-y",
   "@perplexity-ai/mcp-server",
 ]
-
 
 [mcp_servers.task_master]
 command = "npx"
