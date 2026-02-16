@@ -61,15 +61,10 @@ args = [
   "@perplexity-ai/mcp-server",
 ]
 
+
 [mcp_servers.task_master]
-command = "env"
-args = [
-  "PERPLEXITY_API_KEY=$PERPLEXITY_API_KEY",
-  "npx",
-  "-y",
-  "--package=task-master-ai",
-  "task-master-ai",
-]
+command = "npx"
+args = ["-y", "--package=task-master-ai", "task-master-ai"]
 
 
 # ──────────────────────────────────────────────────────────────
