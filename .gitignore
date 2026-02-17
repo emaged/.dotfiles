@@ -8,6 +8,7 @@ codex/.codex/models_cache.json
 codex/.codex/version.json
 codex/.codex/.personality_migration
 codex/.codex/sessions
+codex/.codex/shell_snapshots/
 
 codex/.codex/log/
 codex/.codex/tmp/
