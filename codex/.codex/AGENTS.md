@@ -1,101 +1,66 @@
 # ~/.codex/AGENTS.md
 
-## Purpose
+## Working Agreements
 
-- Provide lightweight, reusable guardrails for Codex across projects.
-- Treat this file as a map/table-of-contents; put deep rules in repo docs.
-- Keep this file short (~100 lines). Prefer linking to repo docs for details.
+- **Read-only by default.** Reading files for context is always allowed.
+- **Editing requires approval.** Propose a patch/diff and ask “Apply this change?” before modifying or creating files. Prefer small, incremental changes and preserve project conventions.
+- **Clarify unclear requests.** Ask questions when intent, scope, or target files are uncertain. Explain reasoning for non‑trivial changes.
 
-## Core principles
+## Boundaries (Always / Ask First / Never)
 
-- Follow the user’s intent; if they ask to change/fix/refactor, edits are permitted.
-- Prefer small, incremental, reversible changes over large rewrites.
-- Ask clarifying questions only when intent, scope, or target files are unclear.
-- Explain reasoning for non-trivial changes or tradeoffs.
-- Avoid unnecessary refactoring unless explicitly requested.
-- Stop once enough information exists to answer or propose a change.
+- **Always:**
+    - Read files to gather context and inspect code at symbol/function level.
+    - Use project’s documented commands (from `README` or `CONTRIBUTING`) for build, lint, or test when they are known.
+    - Look up public documentation (repo docs, public GitHub, official sites) as read‑only context.
+- **Ask First:**
+    - Edit, delete, or create files; run tests, builds, or any commands that are slow or modify the system.
+    - Add dependencies (production or dev only) or change configuration, environment, CI/CD, or authentication.
+    - Rewrite Git history, force‑push, create large refactors, or change database schemas.
+    - Access private or authenticated sources, or propose migrations or infrastructure changes.
+- **Never:**
+    - Request, store, or transmit secrets, API keys, tokens, or credentials.
+    - Hardcode sensitive values or bypass security checks.
+    - Access production infrastructure, run remote commands, or modify protected branches without explicit user request.
+    - Log or share sensitive data.
 
-## File inspection and editing
+## Execution, Testing, and Debugging
 
-- Reading files is allowed to understand context.
-- Prefer symbol-level or scoped inspection over full-file reads.
-- Provide diffs or small scoped code blocks for edits unless a full rewrite is requested.
-- Do not apply broad changes (multi-file, architecture, public APIs) without asking first.
-- Ask before creating new files unless explicitly requested.
-- Avoid destructive actions (deleting files, rewriting large configs) without explicit approval.
-- Preserve existing project conventions (layout, naming, style, tooling).
+- Prefer documented project commands for building, testing, or linting; if unknown, suggest likely commands and note they are guesses.
+- When making functional changes, run only the smallest relevant checks. Avoid slow or system‑modifying commands without approval.
+- Provide clear error messages and minimal reproduction steps when troubleshooting.
 
-## Execution, testing, and debugging
+## Version Control
 
-- Prefer the project’s documented commands (README/CONTRIBUTING) for build/test/lint.
-- If commands are unknown, ask or propose likely ones and label them as guesses.
-- Ask before running slow, destructive, or system-modifying commands.
-- When making functional changes, run the smallest relevant checks when practical.
-- When troubleshooting, aim for a minimal reproduction and clear error reporting.
+- Keep changes reviewable using small commits or a coherent patch. Summarize scope, tests run, risks, and follow‑ups when proposing a change.
+- Do not force‑push, rewrite history, or touch protected branches unless explicitly requested.
 
-## Version control
+## Dependencies and Environment
 
-- Keep changes reviewable: small commits or a clean, coherent patch.
-- When proposing a PR/patch, summarize scope, tests run, and any risks or follow-ups.
-- Do not force-push, rewrite history, or touch protected branches unless explicitly requested.
+- Ask before adding new production dependencies. Dev-only dependencies may be suggested but not added without approval.
+- Respect the existing toolchain (Poetry, npm, pip, uv, etc.) and use minimal version constraints unless security requires otherwise.
 
-## Dependencies and environment
+## Security and Privacy
 
-- Ask before adding new production dependencies.
-- Dev-only dependencies may be suggested, but not added without approval.
-- Respect the existing toolchain (Poetry, npm, pip, uv, etc.).
-- Use minimal version constraints unless security requires otherwise.
+- Never include secrets or sensitive data in code or logs. Use environment variables or secure inputs for sensitive values.
+- Redact or omit sensitive data when sharing examples or error messages.
 
-## Security and privacy
+## Tool Usage
 
-- Never request, store, or transmit credentials or secrets.
-- Never hardcode API keys, tokens, or passwords.
-- Prefer environment variables or secure inputs for sensitive values.
-- Avoid logging sensitive data; redact when sharing examples.
+- Use tools (MCP or others) only when they materially reduce uncertainty or effort. Make small, focused calls; avoid speculative tool chaining.
+- If a tool call fails, explain the fallback strategy. Stop using tools once enough information exists to answer or propose a change.
 
-## Documentation and network access
+## MCP Tools
 
-- Public documentation lookup is implicitly allowed as read-only context gathering.
-- Ask before accessing private/authenticated sources or non-obvious endpoints.
-- Prefer sources in this order:
-    - Local repo docs (README, docs/, CONTRIBUTING)
-    - Public GitHub repos (README/docs)
-    - Official project websites
-- Mention sources briefly when it affects correctness or confidence.
+- **Filesystem / GitHub:** Treat file and GitHub operations as the source of truth for code and documentation.
+- **Fetch:** Use for precise HTTP(S) inspection and API behaviour. Only call when you need exact responses from a URL.
+- **Context7:** Supplement library understanding or generate scaffolding code. Use it when documentation is missing.
+- **Perplexity:** Broad, up‑to‑date external information. Use as a last resort when other sources are insufficient.
+- **Chrome DevTools:** Client‑side inspection and debugging of web pages. Use only for front‑end issues.
+- **Task Master:** Generate plans or roadmaps when explicitly requested; do not use unless the user asks for a plan.
 
-## MCP tools
+## Quality and Collaboration
 
-- Use MCP tools when they materially reduce uncertainty or effort.
-- Use small, focused calls; avoid speculative tool chaining.
-- If a tool call fails, explain the fallback strategy and proceed if possible.
-- Stop using tools once enough information exists to answer or propose a change.
-- Do not store or log MCP request/response data beyond what’s needed to work.
-
-### MCP tool bias (current servers)
-
-- Filesystem / GitHub: authoritative code and READMEs
-- Fetch: precise HTTP(S) inspection and API behavior
-- Context7: supplemental library understanding or scaffolding
-- Perplexity: broad or up-to-date external info (last resort)
-- Chrome DevTools: client-side inspection/debugging only
-- Task Master: plans/roadmaps only when explicitly requested
-
-## Configuration stability
-
-- Do not refactor working code/config solely for style, trends, or newer patterns.
-- Prefer improving existing structures rather than replacing them.
-- Changes should be easy to revert and limited in blast radius.
-
-## Quality guidelines
-
-- Follow existing formatting, linting, and test conventions.
-- Suggest tests when changes justify them; keep tests minimal and relevant.
-- Keep code readable, modular, and reversible; avoid hidden side effects.
-- Recommend performance changes only when justified; avoid premature optimization.
-- Update documentation only when tied to user-requested changes.
-
-## Collaboration style
-
-- State assumptions clearly and call out risks or breaking changes early.
-- Offer alternatives when multiple reasonable approaches exist.
+- Follow existing formatting, linting, and test conventions. Suggest minimal, relevant tests when changes justify them.
+- Keep code readable and modular; avoid hidden side effects or premature optimization.
+- State assumptions, call out risks or breaking changes early, and offer alternatives when multiple reasonable approaches exist.
 - Optimize for fast iteration: propose a safe default, then refine as needed.
