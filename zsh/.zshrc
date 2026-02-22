@@ -18,8 +18,12 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 # >>> juliaup initialize >>>
+
 # !! Contents within this block are managed by juliaup !!
-export PATH="$HOME/.juliaup/bin:$PATH"
+
+path=('/home/emiel/.juliaup/bin' $path)
+export PATH
+
 # <<< juliaup initialize <<<
 
 # Perl stuff
@@ -276,3 +280,5 @@ zinit light zsh-users/zsh-syntax-highlighting
 
 # opencode
 export PATH=/home/emiel/.opencode/bin:$PATH
+
+. "$HOME/.local/share/../bin/env"
