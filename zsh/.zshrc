@@ -17,6 +17,9 @@ export PATH="$HOME/.local/scripts:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
+# SSH agent setup
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
