@@ -56,7 +56,6 @@
 - **Context7:** Supplement library understanding or generate scaffolding code. Use it when documentation is missing.
 - **Perplexity:** Broad, up‑to‑date external information. Use as a last resort when other sources are insufficient.
 - **Chrome DevTools:** Client‑side inspection and debugging of web pages. Use only for front‑end issues.
-- **Task Master:** Generate plans or roadmaps when explicitly requested; do not use unless the user asks for a plan.
 
 ## Quality and Collaboration
 
