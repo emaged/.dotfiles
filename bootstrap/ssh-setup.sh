@@ -1,23 +1,53 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Setting up systemd SSH agent..."
+echo "==> Enabling systemd user ssh-agent..."
 
-# Enable ssh-agent user service
-systemctl --user enable ssh-agent.service
-systemctl --user start ssh-agent.service
+systemctl --user enable --now ssh-agent.service
 
-echo "==> Ensuring SSH_AUTH_SOCK is exported in .zshrc..."
+# enable for lingering agent
+# echo "==> Enabling user lingering (keeps agent alive after logout)..."
+# loginctl enable-linger "$USER" >/dev/null 2>&1 || true
 
-if ! grep -q "SSH_AUTH_SOCK" "$HOME/.zshrc"; then
-  echo 'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"' >> "$HOME/.zshrc"
-  echo "Added SSH_AUTH_SOCK export to .zshrc"
+echo "==> Configuring environment.d for SSH_AUTH_SOCK..."
+
+ENV_DIR="$HOME/.config/environment.d"
+ENV_FILE="$ENV_DIR/ssh-agent.conf"
+
+mkdir -p "$ENV_DIR"
+
+if [[ ! -f "$ENV_FILE" ]] || ! grep -q "SSH_AUTH_SOCK" "$ENV_FILE"; then
+  echo 'SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket' > "$ENV_FILE"
+  echo "Created $ENV_FILE"
 else
-  echo "SSH_AUTH_SOCK already configured."
+  echo "environment.d already configured."
+fi
+
+echo "==> Configuring ~/.ssh/config..."
+
+SSH_CONFIG="$HOME/.ssh/config"
+mkdir -p "$HOME/.ssh"
+touch "$SSH_CONFIG"
+chmod 600 "$SSH_CONFIG"
+
+if ! grep -q "AddKeysToAgent yes" "$SSH_CONFIG"; then
+  cat >> "$SSH_CONFIG" <<'EOF'
+
+Host *
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/id_ed25519
+EOF
+  echo "Updated ~/.ssh/config"
+else
+  echo "~/.ssh/config already configured."
 fi
 
 echo
-echo "Now run:"
-echo "  ssh-add ~/.ssh/id_ed25519"
+echo "✅ SSH setup complete."
 echo
-echo "Enter your passphrase once. It will persist for the session."
+echo "Next steps:"
+echo "  1) Log out and log back in (or reboot)"
+echo "  2) Run: ssh your-server"
+echo
+echo "You will enter your passphrase once per boot."
+echo "No more manual ssh-add required."

@@ -18,10 +18,6 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
 
-if [[ -z "${SSH_CONNECTION}" ]]; then
-  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-fi
-
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!

@@ -21,6 +21,13 @@ sudo pacman -S --needed --noconfirm \
   udiskie \
   wget 
 
+if command -v yay &>/dev/null; then
+  echo "==> Installing AUR packages..."
+  yay -S --needed --noconfirm jetbrains-toolbox
+else
+  echo "==> yay not found, skipping AUR packages."
+fi
+
 echo "==> Ensuring pkgfile database is initialized..."
 if ! pkgfile -l bash &>/dev/null; then
   sudo pkgfile --update
