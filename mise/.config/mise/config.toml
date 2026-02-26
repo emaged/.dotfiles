@@ -1,5 +1,5 @@
 [tools]
 go = "latest"
-java = "latest"
+java = "11"
 node = "latest"
 python = "latest"
