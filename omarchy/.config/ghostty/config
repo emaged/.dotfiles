@@ -39,3 +39,6 @@ keybind = ctrl+shift+alt+right=move_tab:1
 # font-feature = -dlig
 # font-feature = -liga
 font-feature = -calt
+
+# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+async-backend = epoll
