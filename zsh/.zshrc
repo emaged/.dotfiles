@@ -57,12 +57,12 @@ export FZF_CTRL_T_OPTS="--preview \
 'if [[ -d {} ]]; then
    eza -T --level=1 --color=always {}
  elif [[ -f {} ]] && file --mime {} | grep -qv \"charset=binary\"; then
-   batcat --color=always --style=numbers --line-range=:500 {}
+   bat --color=always --style=numbers --line-range=:500 {}
  else
    file {}
  fi'"
 # Ctrl-R: history
-export FZF_CTRL_R_OPTS="--preview 'echo {} | batcat --language=sh --style=plain --color=always'"
+export FZF_CTRL_R_OPTS="--preview 'echo {} | bat --language=sh --style=plain --color=always'"
 # Alt-C: directories
 export FZF_ALT_C_OPTS="--preview 'eza -T --level=1 --color=always {}'"
 
@@ -242,7 +242,16 @@ fi
 # 6. Aliases
 # -------------------------------
 
-[ -f ~/.config/aliases/aliases ] && source ~/.config/aliases/aliases
+# Omarchy functions + aliases (safe)
+[[ -f ~/.local/share/omarchy/default/bash/functions ]] && \
+  source ~/.local/share/omarchy/default/bash/functions
+
+[[ -f ~/.local/share/omarchy/default/bash/aliases ]] && \
+  source ~/.local/share/omarchy/default/bash/aliases
+
+# Your overrides last
+[[ -f ~/.config/aliases/aliases ]] && \
+  source ~/.config/aliases/aliases
 
 # yazi cd to directory
 function y() {
@@ -277,7 +286,6 @@ eval "$(codex completion zsh)"
 # zsh-syntax-highlighting (Turbo, last)
 zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
-
 
 # opencode
 export PATH=/home/emiel/.opencode/bin:$PATH

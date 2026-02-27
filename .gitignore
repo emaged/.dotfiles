@@ -2,16 +2,12 @@
 .vscode/
 
 # Codex runtime state
-codex/.codex/auth.json
-codex/.codex/history.jsonl
-codex/.codex/models_cache.json
-codex/.codex/version.json
-codex/.codex/.personality_migration
-codex/.codex/sessions
-codex/.codex/shell_snapshots/
+# Ignore everything inside .codex
+codex/.codex/*
 
-codex/.codex/log/
-codex/.codex/tmp/
+# But keep these two files
+!codex/.codex/AGENTS.md
+!codex/.codex/config.toml
 
 # sway when on multiple pc's
 # sway/.config/sway/config

@@ -83,3 +83,6 @@ trust_level = "trusted"
 
 [projects."/home/emiel/Studie"]
 trust_level = "trusted"
+
+[projects."/home/emiel/.local/share/omarchy"]
+trust_level = "trusted"

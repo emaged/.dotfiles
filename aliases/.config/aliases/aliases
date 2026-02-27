@@ -8,7 +8,22 @@ alias suspend='sudo pm-suspend'
 # +-----+
 # | bat |
 # +-----+
-alias bat='batcat'
+# on Ubuntu only
+# alias bat='batcat'
+
+
+# +-------------+
+# | Directories |
+# +-------------+
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+open() (
+  xdg-open "$@" >/dev/null 2>&1 &
+)
+
 
 # +----+
 # | ls |
@@ -29,6 +44,8 @@ alias ll='eza -lbGF --git --color=auto --icons --group-directories-first'  # det
 # Long listing sorted by modification time, Git info, colors, icons, directories first
 alias llm='eza -lbG --git --sort=modified --color=auto --icons --group-directories-first'  # list by modification time
 
+alias llt='eza --tree --level=2 --long --icons --git'
+
 # Full long listing including hidden files, extended info, Git info, time in ISO format, color scale, icons
 alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --color=auto --icons --group-directories-first'  # all files, long info
 
@@ -43,6 +60,8 @@ alias lS='eza -1'  # single column listing
 
 # Tree view up to 2 levels deep
 alias lt='eza --tree --level=2'  # tree view of directories
+
+alias lta='lt -a'
 
 # Show all hidden files safely using eza's pattern matching
 alias l.='eza -a'  # show hidden files
@@ -59,7 +78,8 @@ alias rm='rm -Iv'
 # +-----+
 # | fzf |
 # +-----+
-alias fzfp="fzf --preview 'batcat --color=always {}' --preview-window '~3'"
+alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+alias eff='$EDITOR "$(ff)"'
 
 
 # +------+
@@ -67,54 +87,65 @@ alias fzfp="fzf --preview 'batcat --color=always {}' --preview-window '~3'"
 # +------+
 alias time='/usr/bin/time'
 
+
 # +--------+
 # | Neovim |
 # +--------+
-alias vim='nvim'
 alias vi='nvim'
+alias vim='nvim'
 
 alias nvim-lazy='NVIM_APPNAME="nvim-lazyvim" nvim'
 alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
 alias nvim-bare='NVIM_APPNAME="nvim-bare" nvim'
 alias nvim-omarchy='NVIM_APPNAME="nvim-omarchy" nvim'
 
-# +--------+
-# | Neovim |
-# +--------+
+
+# +-------+
+# | Tools |
+# +-------+
+alias c='opencode'
+alias cx='printf "\033[2J\033[3J\033[H" && claude --allow-dangerously-skip-permissions'
+alias d='docker'
+alias r='rails'
+alias ta='tmux attach || tmux new -s Work'
 alias t='tmux new-session -As "$(basename "$PWD")"'
+n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 
 # +-----+
 # | Git |
 # +-----+
-alias gs='git status'
-alias gss='git status -s'
+# core
+alias g='git'
 alias ga='git add'
-alias gp='git push'
-alias gpraise='git blame'
-alias gpo='git push origin'
-alias gpof='git push origin --force-with-lease'
-alias gpofn='git push origin --force-with-lease --no-verify'
-alias gpt='git push --tags'
-alias gtd='git tag --delete'
-alias gtdr='git push origin --delete'
-alias grb='git branch -r'                                                                           # display remote branch
-alias gplo='git pull origin'
-alias gb='git branch '
 alias gc='git commit'
 alias gca='git commit --amend'
 alias gcm='git commit -m'
+alias gcam='git commit -a -m'
+alias gcad='git commit -a --amend'
 alias gd='git diff'
+alias gs='git status'
+alias gss='git status -s'
+
+# rest
+alias gb='git branch '
+alias gbr='git branch -r'                                                                           # display remote branch
 alias gco='git checkout '
+alias gdif="git diff --no-index"                                                                   # Diff two files even if not in git repo! Can add -w (don't diff whitespaces)
+alias gj="git-jump"                                                                               # Open in vim quickfix list files of interest (git diff, merged...)
 alias gl='git log --oneline'
+alias glol='git log --graph --abbrev-commit --oneline --decorate'
+alias gtd='git tag --delete'
+alias gtdr='git push origin --delete'
+alias gp='git push'
+alias gpo='git push origin'
+alias gpof='git push origin --force-with-lease'
+alias gpofn='git push origin --force-with-lease --no-verify'
+alias gplo='git pull origin'
+alias gpt='git push --tags'
 alias gr='git remote'
 alias grs='git remote show'
-alias glol='git log --graph --abbrev-commit --oneline --decorate'
-alias gclean="git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d" # Delete local branch merged with master
-alias gblog="git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:red)%(refname:short)%(color:reset) - %(color:yellow)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:blue)%(committerdate:relative)%(color:reset))'"                                                             # git log for each branches
 alias gsub="git submodule update --remote"                                                        # pull submodules
-alias gj="git-jump"                                                                               # Open in vim quickfix list files of interest (git diff, merged...)
 alias gundo='git reset --soft HEAD~1'
-alias gdif="git diff --no-index"                                                                   # Diff two files even if not in git repo! Can add -w (don't diff whitespaces)
 
 
 # +--------+
