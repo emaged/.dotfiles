@@ -246,10 +246,11 @@ fi
 [[ -f ~/.local/share/omarchy/default/bash/functions ]] && \
   source ~/.local/share/omarchy/default/bash/functions
 
-[[ -f ~/.local/share/omarchy/default/bash/aliases ]] && \
-  source ~/.local/share/omarchy/default/bash/aliases
+# integrated into main aliases file
+# [[ -f ~/.local/share/omarchy/default/bash/aliases ]] && \
+#   source ~/.local/share/omarchy/default/bash/aliases
 
-# Your overrides last
+# overrides last
 [[ -f ~/.config/aliases/aliases ]] && \
   source ~/.config/aliases/aliases
 
