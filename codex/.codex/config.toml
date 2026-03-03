@@ -86,3 +86,9 @@ trust_level = "trusted"
 
 [projects."/home/emiel/.local/share/omarchy"]
 trust_level = "trusted"
+
+[projects."/home/emiel/Dropbox/projects/moocfi"]
+trust_level = "trusted"
+
+[projects."/home/emiel/.config/hypr"]
+trust_level = "trusted"
