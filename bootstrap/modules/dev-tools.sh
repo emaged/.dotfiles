@@ -19,7 +19,27 @@ sudo pacman -S --needed --noconfirm \
   pkgfile \
   tectonic \
   udiskie \
-  wget 
+  wget \
+  \
+  jdk-openjdk \
+  openjdk-doc \
+  openjdk-src \
+  \
+  jdk21-openjdk \
+  openjdk21-doc \
+  openjdk21-src \
+  \
+  jdk17-openjdk \
+  openjdk17-doc \
+  openjdk17-src \
+  \
+  jdk11-openjdk \
+  openjdk11-doc \
+  openjdk11-src \
+  \
+  jdk8-openjdk \
+  openjdk8-doc \
+  openjdk8-src
 
 if command -v yay &>/dev/null; then
   echo "==> Installing AUR packages..."
