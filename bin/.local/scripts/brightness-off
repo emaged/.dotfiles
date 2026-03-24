@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DISPLAYS=$(ddcutil detect 2>/dev/null | awk '/^Display / {print $2}')
+
+for d in $DISPLAYS; do
+  ddcutil setvcp 10 30 --display "$d" >/dev/null 2>&1
+done

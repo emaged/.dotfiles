@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/hypridle-brightness"
+mkdir -p "$STATE_DIR"
+
+DISPLAYS=$(ddcutil detect 2>/dev/null | awk '/^Display / {print $2}')
+
+for d in $DISPLAYS; do
+  current=$(
+    ddcutil getvcp 10 --display "$d" 2>/dev/null \
+      | sed -n 's/.*current value = *\([0-9]\+\).*/\1/p'
+  )
+
+  if [[ -n "${current:-}" ]]; then
+    echo "$current" > "$STATE_DIR/display-$d"
+    ddcutil setvcp 10 10 --display "$d" >/dev/null 2>&1
+  fi
+done

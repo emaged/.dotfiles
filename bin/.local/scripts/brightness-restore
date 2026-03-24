@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/hypridle-brightness"
+
+DISPLAYS=$(ddcutil detect 2>/dev/null | awk '/^Display / {print $2}')
+
+for d in $DISPLAYS; do
+  state_file="$STATE_DIR/display-$d"
+
+  if [[ -f "$state_file" ]]; then
+    value=$(cat "$state_file")
+    ddcutil setvcp 10 "$value" --display "$d" >/dev/null 2>&1
+  fi
+done

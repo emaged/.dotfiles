@@ -1,7 +1,7 @@
 # ──────────────────────────────────────────────────────────────
 #        C O D E X   C L I   &   I D E   C O N F I G 
 # ──────────────────────────────────────────────────────────────
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 personality = "pragmatic"
 
