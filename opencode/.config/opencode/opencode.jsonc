@@ -31,18 +31,6 @@
       ],
       "enabled": true,
     },
-    "task_master": {
-      "type": "local",
-      "command": [
-        "env",
-        "PERPLEXITY_API_KEY={env:PERPLEXITY_API_KEY}",
-        "npx",
-        "-y",
-        "--package=task-master-ai",
-        "task-master-ai",
-      ],
-      "enabled": true,
-    },
     "perplexity": {
       "type": "local",
       "command": [
@@ -71,8 +59,6 @@
       "enabled": true,
     },
   },
-  // Theme configuration
-  "theme": "catppuccin",
   "model": "openai/gpt-5.1-codex",
   "provider": {
     "openai": {
