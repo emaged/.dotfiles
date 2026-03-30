@@ -10,7 +10,7 @@ if ! command -v yay >/dev/null 2>&1; then
 fi
 
 # Install neovim-git (nightly)
-yay -S --needed --noconfirm neovim-git
+yay -S --needed --noconfirm neovim-nightly-bin
 
 echo "==> Installing Neovim Ruby provider..."
 
@@ -24,5 +24,8 @@ if gem list -i neovim >/dev/null 2>&1; then
 else
   gem install neovim
 fi
+
+echo "==> Installing LuaRocks..."
+sudo pacman -S --needed luarocks lua-luarocks
 
 echo "Neovim setup complete."

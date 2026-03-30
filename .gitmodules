@@ -1,5 +1,5 @@
 # This submodule intentionally tracks a branch (live repo)
 [submodule "nvim/.config/nvim"]
 	path = nvim/.config/nvim
-	url = git@github.com:emaged/nvim-config.git
+	url = git@github.com:emaged/nvim.git
 	branch = main
