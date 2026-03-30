@@ -97,6 +97,7 @@ alias vim='nvim'
 alias nvim-lazy='NVIM_APPNAME="nvim-lazyvim" nvim'
 alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
 alias nvim-bare='NVIM_APPNAME="nvim-bare" nvim'
+alias nvim-bak='NVIM_APPNAME="nvim-bak" nvim'
 alias nvim-omarchy='NVIM_APPNAME="nvim-omarchy" nvim'
 
 
