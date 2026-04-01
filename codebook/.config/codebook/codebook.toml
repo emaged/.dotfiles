@@ -1,8 +1,16 @@
-dictionaries = ["en_us", "nl_nl"]
+dictionaries = [
+    "en_us",
+    "nl_nl",
+]
 words = [
     "alacritty",
+    "astro",
+    "astrocommunity",
+    "basedpyright",
+    "catppuccin",
     "cjs",
     "cwd",
+    "dadbod",
     "dri",
     "fieldsets",
     "ghostty",
@@ -10,16 +18,31 @@ words = [
     "keymap",
     "keymaps",
     "libgl",
+    "neotest",
     "neovim",
+    "noice",
     "nvim",
+    "opencode",
     "pyproject",
     "pyright",
+    "undotree",
     "urlpatterns",
     "venv",
+    "vscode",
     "wsgi",
+    "yanky",
+    "yazi",
 ]
-flag_words = ["todo", "fixme", "succes"]
-ignore_paths = ["target/**/*", "**/*.json", ".git/**/*"]
+flag_words = [
+    "todo",
+    "fixme",
+    "succes",
+]
+ignore_paths = [
+    "target/**/*",
+    "**/*.json",
+    ".git/**/*",
+]
 ignore_patterns = [
     '\b[ATCG]+\b',
     '\d{3}-\d{2}-\d{4}',
