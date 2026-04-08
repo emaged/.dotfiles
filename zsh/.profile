@@ -12,3 +12,25 @@ export PATH="$HOME/.fzf/bin:$PATH"
 export PATH="$HOME/.local/scripts:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+
+
+. "$HOME/.local/share/../bin/env"
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+    *:/home/emiel/.juliaup/bin:*)
+        ;;
+
+    *)
+        export PATH=/home/emiel/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+esac
+
+# <<< juliaup initialize <<<
+
+
+# Added by Toolbox App
+export PATH="$PATH:/home/emiel/.local/share/JetBrains/Toolbox/scripts"
