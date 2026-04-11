@@ -4,6 +4,7 @@
 # Codex runtime state
 # Ignore everything inside .codex
 codex/.codex/*
+.codex
 
 # But keep these two files
 !codex/.codex/AGENTS.md
