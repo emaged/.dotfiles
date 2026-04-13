@@ -3,6 +3,7 @@ dictionaries = [
     "nl_nl",
 ]
 words = [
+    "aansprakelijkheids",
     "alacritty",
     "astro",
     "astrocommunity",
@@ -23,6 +24,7 @@ words = [
     "noice",
     "nvim",
     "opencode",
+    "poman",
     "pyproject",
     "pyright",
     "undotree",
