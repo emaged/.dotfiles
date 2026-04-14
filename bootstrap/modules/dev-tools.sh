@@ -39,7 +39,11 @@ sudo pacman -S --needed --noconfirm \
   \
   jdk8-openjdk \
   openjdk8-doc \
-  openjdk8-src
+  openjdk8-src \ 
+  \
+  java-openjfx \ 
+  java-openjfx-doc \
+  java-openjfx-src
 
 if command -v yay &>/dev/null; then
   echo "==> Installing AUR packages..."
