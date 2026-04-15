@@ -11,4 +11,6 @@ else
     echo "→ hyprland-plugins already installed"
 fi
 
+hyprpm update
+
 echo "hyprland plugins installed"
