@@ -1,0 +1,5 @@
+$hyprbarForeground = rgb({{ foreground_strip }})
+$hyprbarBackground = rgb({{ color8_strip }})
+$hyprbarClose = rgb({{ color1_strip }})
+$hyprbarFullscreen = rgb({{ color3_strip }})
+$hyprbarFloat = rgb({{ color4_strip }})

@@ -7,6 +7,7 @@ sudo pacman -S --needed --noconfirm \
   bat \
   bottom \
   cmake \
+  cpio \
   git-delta \
   gdu \
   glab \
