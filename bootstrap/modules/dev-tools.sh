@@ -14,6 +14,7 @@ sudo pacman -S --needed --noconfirm \
   imagemagick \
   inotify-tools \
   lua51 \
+  maven \
   meson \
   mkcert \
   ninja \
