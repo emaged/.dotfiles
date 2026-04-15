@@ -13,11 +13,6 @@ cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor, ssh-env
 
-# Command-finished notifications are handled by Ghostty instead of Starship.
-notify-on-command-finish = unfocused
-notify-on-command-finish-action = notify,no-bell
-notify-on-command-finish-after = 45s
-
 # keybinds
 keybind = ctrl+backspace=text:\x17
 
