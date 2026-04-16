@@ -1,0 +1,79 @@
+# ~/.editorconfig
+# Global fallback defaults (do NOT set root = true here)
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+indent_style = space
+indent_size = 4
+
+# --- Languages that commonly use 4 spaces ---
+
+[*.{py,java,c,cpp,h,hpp,rs,go}]
+indent_style = space
+indent_size = 4
+
+# JavaScript / TypeScript (your preference: 4)
+[*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}]
+indent_style = space
+indent_size = 4
+
+# Shell
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 4
+
+# Lua / Vim
+[*.lua]
+indent_style = space
+indent_size = 2
+
+[*.vim]
+indent_style = space
+indent_size = 2
+
+# --- 2-space ecosystems (common convention) ---
+
+# Web markup & styles
+[*.{html,css,scss,sass,less}]
+indent_style = space
+indent_size = 2
+
+# Data / config formats
+[*.{json,jsonc,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Markdown (also allow trailing spaces for line breaks)
+[*.md]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = false
+
+# Templates (Django / Jinja / HTML-based)
+[*.{jinja,jinja2,j2,django,htmldjango}]
+indent_style = space
+indent_size = 2
+
+# XML / SVG
+[*.{xml,xsd,xsl,svg}]
+indent_style = space
+indent_size = 2
+
+# --- Special cases ---
+
+# Makefiles must use tabs
+[Makefile]
+indent_style = tab
+
+[makefile]
+indent_style = tab
+
+[GNUmakefile]
+indent_style = tab
+
+[*.mk]
+indent_style = tab
