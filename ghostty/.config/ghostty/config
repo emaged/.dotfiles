@@ -17,7 +17,7 @@ shell-integration-features = no-cursor, ssh-env
 keybind = ctrl+backspace=text:\x17
 
 # fix for tmux, maps to alt + enter
-keybind = shift+enter=text:\x1b\r
+# keybind = shift+enter=text:\x1b\r
 
 keybind = performable:ctrl+shift+h=goto_split:left
 keybind = performable:ctrl+shift+j=goto_split:bottom

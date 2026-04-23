@@ -61,7 +61,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/emiel"]
-trust_level = "untrusted"
+trust_level = "trusted"
 
 [projects."/home/emiel/Dropbox/projects"]
 trust_level = "trusted"
