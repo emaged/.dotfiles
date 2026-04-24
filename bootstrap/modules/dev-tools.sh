@@ -5,6 +5,7 @@ echo "==> Installing development tools..."
 
 sudo pacman -S --needed --noconfirm \
   bat \
+  bc \
   bottom \
   cmake \
   cpio \
@@ -41,7 +42,7 @@ sudo pacman -S --needed --noconfirm \
   \
   jdk8-openjdk \
   openjdk8-doc \
-  openjdk8-src 
+  openjdk8-src
 
 if command -v yay &>/dev/null; then
   echo "==> Installing AUR packages..."
