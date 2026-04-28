@@ -110,7 +110,8 @@ function Install-WingetPackage {
         [Parameter(Mandatory = $true)]
         [string]$Id,
         [string]$Name = $Id,
-        [string]$Source = ''
+        [string]$Source = '',
+        [string]$Override = ''
     )
 
     Ensure-Winget
@@ -127,8 +128,12 @@ function Install-WingetPackage {
 
     if ($Source) {
         $arguments += @('--source', $Source)
-    } else {
+    } elseif (-not $Override) {
         $arguments += '--silent'
+    }
+
+    if ($Override) {
+        $arguments += @('--override', $Override)
     }
 
     & winget @arguments

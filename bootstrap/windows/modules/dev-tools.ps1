@@ -12,10 +12,13 @@ $wingetPackages = @(
     @{ Id = 'Apache.Maven'; Name = 'Maven' },
     @{ Id = 'ImageMagick.ImageMagick'; Name = 'ImageMagick' },
     @{ Id = 'GitLab.GLab'; Name = 'GitLab CLI' },
+    @{ Id = 'LLVM.LLVM'; Name = 'LLVM' },
     @{ Id = 'Microsoft.OpenJDK.21'; Name = 'Microsoft OpenJDK 21' },
     @{ Id = 'Microsoft.OpenJDK.17'; Name = 'Microsoft OpenJDK 17' },
     @{ Id = 'Microsoft.OpenJDK.11'; Name = 'Microsoft OpenJDK 11' },
     @{ Id = 'EclipseAdoptium.Temurin.8.JDK'; Name = 'Temurin JDK 8' },
+    @{ Id = 'RubyInstallerTeam.RubyWithDevKit.3.4'; Name = 'Ruby 3.4 with DevKit' },
+    @{ Id = 'Microsoft.VisualStudio.2022.BuildTools'; Name = 'Visual Studio 2022 Build Tools'; Override = '--passive --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended' },
     @{ Id = 'Kitware.CMake'; Name = 'CMake' },
     @{ Id = 'Ninja-build.Ninja'; Name = 'Ninja' },
     @{ Id = 'Clement.bottom'; Name = 'bottom' },
@@ -32,7 +35,11 @@ $wingetPackages = @(
 )
 
 foreach ($package in $wingetPackages) {
-    Install-WingetPackage -Id $package.Id -Name $package.Name
+    if ($package.ContainsKey('Override')) {
+        Install-WingetPackage -Id $package.Id -Name $package.Name -Override $package.Override
+    } else {
+        Install-WingetPackage -Id $package.Id -Name $package.Name
+    }
 }
 
 Ensure-Scoop
@@ -41,7 +48,6 @@ Ensure-ScoopBucket -Name 'main'
 $scoopPackages = @(
     'luarocks',
     'meson',
-    'ruby',
     'tectonic',
     'wget',
     'tree-sitter'
