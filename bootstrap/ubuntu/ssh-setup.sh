@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "==> Enabling systemd user ssh-agent..."
 
-systemctl --user enable --now ssh-agent.service
+systemctl --user enable --now ssh-agent.socket
 
 echo "==> Configuring environment.d for SSH_AUTH_SOCK..."
 

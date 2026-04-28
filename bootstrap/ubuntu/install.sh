@@ -13,14 +13,22 @@ run() {
 echo "==> Refreshing apt package lists..."
 sudo apt update
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$SCRIPT_DIR/modules/mise.sh"
+
+echo "==> ensuring mise..."
+ensure_mise
+
 run shell.sh
 run dev-tools.sh
 run uv.sh
 run pipx.sh
 run cargo_packages.sh
-run npm.sh
+run node.sh
 run julia.sh
 run neovim.sh
+run opencode.sh
 run starship.sh
 run tmux.sh
 run yazi.sh

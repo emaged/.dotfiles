@@ -1,21 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Installing Neovim..."
+echo "==> Installing Neovim via mise..."
 
-sudo apt install -y neovim ruby-full luarocks
+sudo apt update
+sudo apt install -y \
+    btm \
+    curl \
+    git \
+    lazygit \
+    ruby-full \
+    luarocks \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    python3-pynvim \
+    unzip \
+    xz-utils
+
+# Install mise if missing
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/mise.sh"
+ensure_mise
+
+echo "==> Installing Neovim nightly..."
+mise use -g neovim@nightly
 
 echo "==> Installing Neovim Ruby provider..."
-
-if ! command -v gem >/dev/null 2>&1; then
-  echo "Ruby not found. Install ruby-full first."
-  exit 1
-fi
-
-if gem list -i neovim >/dev/null 2>&1; then
-  echo "neovim Ruby gem already installed."
+if ! gem list -i neovim >/dev/null 2>&1; then
+    sudo gem install neovim
 else
-  sudo gem install neovim
+    echo "neovim Ruby gem already installed."
 fi
 
-echo "Neovim setup complete."
+echo "==> Neovim setup complete."
+nvim --version | head -n 1

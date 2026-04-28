@@ -9,6 +9,7 @@ sudo pacman -S --needed --noconfirm \
     bottom \
     cmake \
     cpio \
+    eza \
     git-delta \
     gdu \
     glab \

@@ -14,6 +14,8 @@
 
 path=('/home/emiel/.juliaup/bin' $path)
 export PATH
+# Tab completion for juliaup and julia channel selection
+[ -f "/home/emiel/.julia/juliaup/completions/zsh.zsh" ] && source "/home/emiel/.julia/juliaup/completions/zsh.zsh"
 
 # <<< juliaup initialize <<<
 

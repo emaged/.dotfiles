@@ -1,0 +1,5 @@
+[tools]
+neovim = "nightly"
+node = "latest"
+go = "latest"
+python = "latest"

@@ -1,7 +1,6 @@
 # -------------------------------
 # 1. PATH & Environment
 # -------------------------------
-
 # Base PATH additions
 export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
 export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
