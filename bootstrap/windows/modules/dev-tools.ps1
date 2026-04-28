@@ -18,7 +18,6 @@ $wingetPackages = @(
     @{ Id = 'Microsoft.OpenJDK.11'; Name = 'Microsoft OpenJDK 11' },
     @{ Id = 'EclipseAdoptium.Temurin.8.JDK'; Name = 'Temurin JDK 8' },
     @{ Id = 'RubyInstallerTeam.RubyWithDevKit.3.4'; Name = 'Ruby 3.4 with DevKit' },
-    @{ Id = 'Microsoft.VisualStudio.2022.BuildTools'; Name = 'Visual Studio 2022 Build Tools'; Override = '--passive --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended' },
     @{ Id = 'Kitware.CMake'; Name = 'CMake' },
     @{ Id = 'Ninja-build.Ninja'; Name = 'Ninja' },
     @{ Id = 'Clement.bottom'; Name = 'bottom' },
@@ -35,11 +34,7 @@ $wingetPackages = @(
 )
 
 foreach ($package in $wingetPackages) {
-    if ($package.ContainsKey('Override')) {
-        Install-WingetPackage -Id $package.Id -Name $package.Name -Override $package.Override
-    } else {
-        Install-WingetPackage -Id $package.Id -Name $package.Name
-    }
+    Install-WingetPackage -Id $package.Id -Name $package.Name
 }
 
 Ensure-Scoop
