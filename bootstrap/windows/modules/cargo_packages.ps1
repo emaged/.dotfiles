@@ -24,6 +24,7 @@ $crates = @(
     'ast-grep',
     'cargo-update',
     'du-dust',
+    'neovide',
     'selene',
     'trashy'
 )

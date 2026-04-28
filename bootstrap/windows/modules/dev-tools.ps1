@@ -39,7 +39,9 @@ Ensure-Scoop
 Ensure-ScoopBucket -Name 'main'
 
 $scoopPackages = @(
+    'luarocks',
     'meson',
+    'ruby',
     'tectonic',
     'wget',
     'tree-sitter'
@@ -47,16 +49,6 @@ $scoopPackages = @(
 
 foreach ($package in $scoopPackages) {
     Install-ScoopPackage -Package $package
-}
-
-$chocoPackages = @(
-    @{ Package = 'ruby'; Name = 'Ruby' },
-    @{ Package = 'luarocks'; Name = 'LuaRocks' },
-    @{ Package = 'neovide'; Name = 'Neovide' }
-)
-
-foreach ($package in $chocoPackages) {
-    Install-ChocoPackage -Package $package.Package -Name $package.Name
 }
 
 Write-Info 'Development tools installed.'

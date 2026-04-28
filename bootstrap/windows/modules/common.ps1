@@ -69,6 +69,10 @@ function Add-LineIfMissing {
     }
 
     $content = Get-Content -LiteralPath $Path -Raw
+    if ($null -eq $content) {
+        $content = ''
+    }
+
     if ($content -match [regex]::Escape($Line)) {
         return
     }
