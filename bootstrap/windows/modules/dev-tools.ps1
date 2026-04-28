@@ -41,6 +41,7 @@ Ensure-Scoop
 Ensure-ScoopBucket -Name 'main'
 
 $scoopPackages = @(
+    'ghostscript',
     'luarocks',
     'meson',
     'tectonic',
