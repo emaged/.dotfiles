@@ -25,8 +25,7 @@ $crates = @(
     'cargo-update',
     'du-dust',
     'selene',
-    'trashy',
-    'tree-sitter-cli'
+    'trashy'
 )
 
 foreach ($crate in $crates) {
@@ -37,6 +36,9 @@ foreach ($crate in $crates) {
 
     Write-Step "Installing $crate..."
     & cargo install $crate --locked
+    if ($LASTEXITCODE -ne 0) {
+        throw "cargo install failed for $crate"
+    }
 }
 
 Write-Info 'Cargo packages installation complete.'
