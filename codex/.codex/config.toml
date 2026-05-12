@@ -1,7 +1,7 @@
 # ──────────────────────────────────────────────────────────────
 #        C O D E X   C L I   &   I D E   C O N F I G 
 # ──────────────────────────────────────────────────────────────
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 personality = "pragmatic"
 

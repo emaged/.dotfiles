@@ -4,6 +4,7 @@ set -euo pipefail
 echo "==> Installing Firefox..."
 
 sudo pacman -S --needed --noconfirm firefox
+sudo pacman -S --needed --noconfirm firefox-developer-edition
 
 echo "==> Setting Firefox as default browser..."
 
