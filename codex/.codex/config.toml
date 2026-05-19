@@ -96,6 +96,9 @@ trust_level = "trusted"
 [projects."/home/emiel/.config"]
 trust_level = "trusted"
 
+[projects."/home/emiel/Dropbox/projects/fullstackopen"]
+trust_level = "trusted"
+
 [plugins."github@openai-curated"]
 enabled = true
 

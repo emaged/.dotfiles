@@ -19,6 +19,7 @@ words = [
     "keymap",
     "keymaps",
     "libgl",
+    "mcp",
     "neotest",
     "neovim",
     "noice",

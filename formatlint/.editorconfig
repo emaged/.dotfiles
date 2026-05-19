@@ -19,7 +19,7 @@ indent_size = 4
 # JavaScript / TypeScript (your preference: 4)
 [*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}]
 indent_style = space
-indent_size = 4
+indent_size = 2
 
 # Shell
 [*.{sh,bash,zsh}]
