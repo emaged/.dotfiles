@@ -1,5 +1,5 @@
 {
-    "tabWidth": 4,
+    "tabWidth": 2,
     "overrides": [
         {
             "files": [
@@ -7,7 +7,7 @@
                 "*.ts"
             ],
             "options": {
-                "tabWidth": 4
+                "tabWidth": 2
             }
         },
         {

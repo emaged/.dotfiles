@@ -94,6 +94,7 @@ alias time='/usr/bin/time'
 alias vi='nvim'
 alias vim='nvim'
 
+alias svim='nvim-stable'
 alias nvim-lazy='NVIM_APPNAME="nvim-lazyvim" nvim'
 alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
 alias nvim-bare='NVIM_APPNAME="nvim-bare" nvim'
