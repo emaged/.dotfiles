@@ -49,7 +49,8 @@ sudo pacman -S --needed --noconfirm \
 if command -v yay &>/dev/null; then
     echo "==> Installing AUR packages..."
     yay -S --needed --noconfirm \
-        jetbrains-toolbox
+        jetbrains-toolbox \
+        postman-bin
     # java-openjfx \
     # java-openjfx-doc \
     # java-openjfx-src
