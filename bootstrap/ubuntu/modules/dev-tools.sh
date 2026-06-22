@@ -60,6 +60,7 @@ install_available_packages \
     ripgrep \
     ruby-full \
     rustc \
+    snapd \
     software-properties-common \
     texlive-latex-base \
     udiskie \
@@ -76,6 +77,37 @@ install_available_packages \
     openjdk-11-source \
     openjdk-8-jdk \
     openjdk-8-source
+
+echo "==> Configuring the MongoDB 8.0 package repository..."
+. /etc/os-release
+
+case "${VERSION_CODENAME:-}" in
+    noble|jammy|focal) ;;
+    *)
+        echo "Unsupported Ubuntu release: ${VERSION_CODENAME:-unknown}"
+        exit 1
+        ;;
+esac
+
+curl -fsSL https://pgp.mongodb.com/server-8.0.asc |
+    sudo gpg --dearmor --yes \
+        --output /usr/share/keyrings/mongodb-server-8.0.gpg
+
+echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu ${VERSION_CODENAME}/mongodb-org/8.0 multiverse" |
+    sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list >/dev/null
+
+sudo apt update
+sudo apt install -y \
+    mongodb-atlas-cli \
+    mongodb-database-tools \
+    mongodb-mongosh
+
+echo "==> Installing Postman..."
+if ! snap list postman &>/dev/null; then
+    sudo snap install postman
+else
+    echo "Postman already installed."
+fi
 
 echo "==> Ensuring apt-file database is initialized..."
 sudo apt-file update

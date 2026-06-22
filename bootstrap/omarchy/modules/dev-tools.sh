@@ -50,6 +50,9 @@ if command -v yay &>/dev/null; then
     echo "==> Installing AUR packages..."
     yay -S --needed --noconfirm \
         jetbrains-toolbox \
+        mongodb-atlas-cli-bin \
+        mongodb-tools-bin \
+        mongosh-bin \
         postman-bin
     # java-openjfx \
     # java-openjfx-doc \
