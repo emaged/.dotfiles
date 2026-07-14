@@ -9,6 +9,8 @@ else
   sudo apt install -y firefox-esr
 fi
 
+sudo apt install -y geoclue-2.0
+
 echo "==> Setting Firefox as default browser..."
 
 desktop_id=""

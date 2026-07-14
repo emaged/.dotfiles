@@ -5,6 +5,7 @@ echo "==> Installing Firefox..."
 
 sudo pacman -S --needed --noconfirm firefox
 sudo pacman -S --needed --noconfirm firefox-developer-edition
+sudo pacman -S --needed --noconfirm geoclue
 
 echo "==> Setting Firefox as default browser..."
 
