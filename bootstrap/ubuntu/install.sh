@@ -34,6 +34,7 @@ run tmux.sh
 run yazi.sh
 run firefox.sh
 run brave.sh
+run vlc.sh
 run wayland.sh
 # run brightness_setup.sh
 

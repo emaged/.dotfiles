@@ -38,6 +38,7 @@ Run-Module 'starship.ps1'
 Run-Module 'yazi.ps1'
 Run-Module 'firefox.ps1'
 Run-Module 'brave.ps1'
+Run-Module 'vlc.ps1'
 
 Write-Host ''
 Write-Host 'Bootstrap complete.'
