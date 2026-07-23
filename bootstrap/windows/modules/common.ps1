@@ -34,12 +34,6 @@ function Test-Command {
     return $null -ne (Get-Command $Name -ErrorAction SilentlyContinue)
 }
 
-function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
-    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
 function Ensure-Directory {
     param(
         [Parameter(Mandatory = $true)]
@@ -85,10 +79,27 @@ function Add-LineIfMissing {
 }
 
 function Get-PowerShellProfilePaths {
-    return @(
-        (Join-Path $HOME 'Documents\WindowsPowerShell\profile.ps1'),
-        (Join-Path $HOME 'Documents\PowerShell\Profile.ps1')
+    $documents = [Environment]::GetFolderPath(
+        [Environment+SpecialFolder]::MyDocuments
     )
+
+    return @(
+        (Join-Path $documents 'PowerShell\Profile.ps1')
+    )
+}
+
+function Assert-NativeCommandSucceeded {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Description,
+        [Parameter(Mandatory = $true)]
+        [int]$ExitCode,
+        [int[]]$AllowedExitCodes = @(0)
+    )
+
+    if ($AllowedExitCodes -notcontains $ExitCode) {
+        throw "$Description failed with exit code $ExitCode."
+    }
 }
 
 function Ensure-Winget {
@@ -132,6 +143,15 @@ function Install-WingetPackage {
     }
 
     & winget @arguments
+    Assert-NativeCommandSucceeded `
+        -Description "WinGet installation of $Name" `
+        -ExitCode $LASTEXITCODE `
+        -AllowedExitCodes @(
+            0,
+            -1978335189, # No applicable update found
+            -1978335135, # Package already installed
+            -1978334963  # Another version is already installed
+        )
     Refresh-Path
 }
 
@@ -164,6 +184,9 @@ function Ensure-ScoopBucket {
 
     Write-Step "Adding Scoop bucket $Name..."
     & scoop bucket add $Name
+    Assert-NativeCommandSucceeded `
+        -Description "Adding Scoop bucket $Name" `
+        -ExitCode $LASTEXITCODE
 }
 
 function Get-ScoopAppName {
@@ -197,44 +220,8 @@ function Install-ScoopPackage {
 
     Write-Step "Installing $Name via Scoop..."
     & scoop install $Package
-    Refresh-Path
-}
-
-function Ensure-Chocolatey {
-    if (Test-Command choco) {
-        return $true
-    }
-
-    if (-not (Test-IsAdmin)) {
-        Write-Warning 'Skipping Chocolatey because this session is not elevated.'
-        return $false
-    }
-
-    Write-Step 'Installing Chocolatey...'
-    Set-ExecutionPolicy Bypass -Scope Process -Force
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    Refresh-Path
-
-    if (-not (Test-Command choco)) {
-        throw 'Chocolatey installation failed.'
-    }
-
-    return $true
-}
-
-function Install-ChocoPackage {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Package,
-        [string]$Name = $Package
-    )
-
-    if (-not (Ensure-Chocolatey)) {
-        return
-    }
-
-    Write-Step "Installing $Name via Chocolatey..."
-    & choco install $Package -y --no-progress
+    Assert-NativeCommandSucceeded `
+        -Description "Scoop installation of $Name" `
+        -ExitCode $LASTEXITCODE
     Refresh-Path
 }

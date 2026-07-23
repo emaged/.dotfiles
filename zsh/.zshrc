@@ -7,34 +7,35 @@
 # -------------------------------
 
 # Base PATH additions in ~/.profile
+typeset -U path PATH
 
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
 
-path=('/home/emiel/.juliaup/bin' $path)
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.local/scripts"
+  "$HOME/.cargo/bin"
+  "$HOME/.juliaup/bin"
+  "$HOME/.local/share/gem/ruby/3.4.0/bin"
+  "$HOME/go/bin"
+  "$HOME/.local/share/JetBrains/Toolbox/scripts"
+  $path
+)
 export PATH
-# Tab completion for juliaup and julia channel selection
-[ -f "/home/emiel/.julia/juliaup/completions/zsh.zsh" ] && source "/home/emiel/.julia/juliaup/completions/zsh.zsh"
 
 # <<< juliaup initialize <<<
-
-# Perl stuff
-PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH
-PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB
-PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT
-PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT
-PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT
-
-# Remove duplicate PATH entries
-typeset -U PATH
 
 # mise setup
 eval "$(mise activate zsh)"
 
 # Language & Tools
 export JAVA_HOME=/usr/lib/jvm/default
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+typeset -T PKG_CONFIG_PATH pkg_config_path
+typeset -U pkg_config_path
+pkg_config_path=(/usr/local/lib/pkgconfig ${pkg_config_path:#})
+export PKG_CONFIG_PATH
 
 # Editor
 export SUDO_EDITOR="nvim"
@@ -149,13 +150,28 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' switch-group '<' '>'
 # tmux pupup
 # zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-# zinit completions?
+# Refresh Zinit-managed completion links whenever the plugin updates
+zinit ice blockf atpull'zinit creinstall -q .'
 zinit light zsh-users/zsh-completions
 
-# poetry completions
+# Local generated completions
 fpath+=~/.zfunc
 
 autoload -Uz compinit;  compinit -C
+
+# Register the generated Codex completion independently of .zcompdump so it
+# works on both fresh and existing systems without forcing a cache rebuild.
+if [[ -r "$HOME/.zfunc/_codex" ]]; then
+  autoload -Uz _codex
+  compdef _codex codex
+fi
+
+# Register the bootstrap-generated Juliaup completion.
+if [[ -r "$HOME/.zfunc/_juliaup" ]]; then
+  autoload -Uz _juliaup
+  compdef _juliaup juliaup
+fi
+
 zinit cdreplay -q # recomended for performance?
 
 # source fzf.zsh
@@ -248,7 +264,9 @@ fi
 
 # yazi cd to directory
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	local tmp cwd
+	tmp="$(mktemp -t "yazi-cwd.XXXXXX")" || return
+
 	yazi "$@" --cwd-file="$tmp"
 	IFS= read -r -d '' cwd < "$tmp"
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
@@ -273,14 +291,8 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
-# codex completions 
-eval "$(codex completion zsh)"
+# Codex completion is generated into ~/.zfunc/_codex by the npm bootstrap.
 
 # zsh-syntax-highlighting (Turbo, last)
 zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
-
-# opencode
-export PATH=/home/emiel/.opencode/bin:$PATH
-
-. "$HOME/.local/share/../bin/env"

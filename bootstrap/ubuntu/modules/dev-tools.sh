@@ -36,7 +36,6 @@ install_available_packages \
     bat \
     bc \
     bottom \
-    cargo \
     ca-certificates \
     cmake \
     cpio \
@@ -59,7 +58,6 @@ install_available_packages \
     python3 \
     ripgrep \
     ruby-full \
-    rustc \
     snapd \
     software-properties-common \
     texlive-latex-base \

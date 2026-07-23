@@ -7,19 +7,29 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Refresh-Path
 
 if (-not (Test-Command cargo)) {
-    Write-Warning 'cargo not found. Install Rustup first or open a new shell after the Rustup installation completes.'
-    return
+    throw 'cargo not found after installing Rustup.'
 }
 
 if (Test-Command rustup) {
     Write-Step 'Ensuring the stable Rust toolchain is active...'
     & rustup toolchain install stable
+    Assert-NativeCommandSucceeded `
+        -Description 'Installing the stable Rust toolchain' `
+        -ExitCode $LASTEXITCODE
+
     & rustup default stable
+    Assert-NativeCommandSucceeded `
+        -Description 'Selecting the stable Rust toolchain' `
+        -ExitCode $LASTEXITCODE
 }
 
 Write-Step 'Installing cargo packages...'
 
 $installed = & cargo install --list
+Assert-NativeCommandSucceeded `
+    -Description 'Listing installed Cargo packages' `
+    -ExitCode $LASTEXITCODE
+
 $crates = @(
     'ast-grep',
     'cargo-update',

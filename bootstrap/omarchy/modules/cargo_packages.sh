@@ -13,12 +13,14 @@ crates=(
   tree-sitter-cli
 )
 
+installed_crates="$(cargo install --list)"
+
 for crate in "${crates[@]}"; do
-  if cargo install --list | grep -q "^${crate} "; then
+  if grep -q "^${crate} " <<<"$installed_crates"; then
     echo "$crate already installed"
   else
     echo "Installing $crate..."
-    cargo install "$crate"
+    cargo install "$crate" --locked
   fi
 done
 

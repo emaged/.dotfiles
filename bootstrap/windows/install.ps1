@@ -20,10 +20,6 @@ function Run-Module {
 Write-Host '==> Ensuring WinGet is available...'
 Ensure-Winget
 
-if (-not (Test-IsAdmin)) {
-    Write-Warning 'This PowerShell session is not elevated. Chocolatey installation and Chocolatey-backed packages will be skipped.'
-}
-
 Run-Module 'shell.ps1'
 Run-Module 'dev-tools.ps1'
 Run-Module 'mise.ps1'
@@ -39,6 +35,7 @@ Run-Module 'yazi.ps1'
 Run-Module 'firefox.ps1'
 Run-Module 'brave.ps1'
 Run-Module 'vlc.ps1'
+Run-Module 'profile.ps1'
 
 Write-Host ''
 Write-Host 'Bootstrap complete.'

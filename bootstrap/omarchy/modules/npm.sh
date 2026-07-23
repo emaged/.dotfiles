@@ -24,12 +24,33 @@ packages=(
 )
 
 for pkg in "${packages[@]}"; do
-  if npm list -g --depth=0 | grep -q "$(basename "$pkg")@"; then
+  if npm list -g --depth=0 "$pkg" >/dev/null 2>&1; then
     echo "$pkg already installed"
   else
     echo "Installing $pkg..."
     npm install -g "$pkg"
   fi
 done
+
+echo "==> Generating Codex Zsh completions..."
+
+codex_bin="$(npm prefix -g)/bin/codex"
+completion_dir="$HOME/.zfunc"
+completion_tmp="$(mktemp)"
+
+if [[ -x "$codex_bin" ]]; then
+  mkdir -p "$completion_dir"
+
+  if "$codex_bin" completion zsh >"$completion_tmp"; then
+    install -m 0644 "$completion_tmp" "$completion_dir/_codex"
+    echo "Codex Zsh completions generated."
+  else
+    echo "Warning: failed to generate Codex Zsh completions." >&2
+  fi
+else
+  echo "Warning: global Codex executable not found at $codex_bin." >&2
+fi
+
+rm -f "$completion_tmp"
 
 echo "Global npm packages installation complete."

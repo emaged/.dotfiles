@@ -4,10 +4,17 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common.ps1')
 
-& (Join-Path $ScriptDir 'mise.ps1')
+if (
+    [Environment]::GetEnvironmentVariable('DOTFILES_MISE_READY') -ne '1'
+) {
+    & (Join-Path $ScriptDir 'mise.ps1')
+}
 
 Write-Step 'Installing Neovim via mise...'
 & mise use -g neovim@nightly
+Assert-NativeCommandSucceeded `
+    -Description 'Installing Neovim via mise' `
+    -ExitCode $LASTEXITCODE
 
 Write-Step 'Installing Neovim Ruby provider...'
 
@@ -19,7 +26,11 @@ if (-not (Test-Command gem)) {
 }
 
 $rubyVersion = (& ruby -e 'print RUBY_VERSION') 2>$null
-if ($LASTEXITCODE -eq 0 -and $rubyVersion -match '^4\.') {
+Assert-NativeCommandSucceeded `
+    -Description 'Reading the Ruby version' `
+    -ExitCode $LASTEXITCODE
+
+if ($rubyVersion -match '^4\.') {
     throw "Ruby $rubyVersion is active. Use RubyInstaller 3.4 with DevKit for the Neovim Ruby provider; the current Neovim Ruby dependencies fail to build against this Ruby."
 }
 
