@@ -80,7 +80,13 @@ echo "==> Configuring the MongoDB 8.0 package repository..."
 . /etc/os-release
 
 case "${VERSION_CODENAME:-}" in
-    noble|jammy|focal) ;;
+    noble|jammy|focal)
+        mongodb_repo_codename="$VERSION_CODENAME"
+        ;;
+    resolute)
+        mongodb_repo_codename="noble"
+        echo "MongoDB has no Resolute repository; using Noble packages."
+        ;;
     *)
         echo "Unsupported Ubuntu release: ${VERSION_CODENAME:-unknown}"
         exit 1
@@ -91,7 +97,7 @@ curl -fsSL https://pgp.mongodb.com/server-8.0.asc |
     sudo gpg --dearmor --yes \
         --output /usr/share/keyrings/mongodb-server-8.0.gpg
 
-echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu ${VERSION_CODENAME}/mongodb-org/8.0 multiverse" |
+echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu ${mongodb_repo_codename}/mongodb-org/8.0 multiverse" |
     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list >/dev/null
 
 sudo apt update
