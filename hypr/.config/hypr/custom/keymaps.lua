@@ -22,7 +22,15 @@ o.bind("SUPER + ALT + B", "Tmux keybindings", "omarchy-menu-tmux-keybindings")
 o.bind(
   "SUPER + ALT + T",
   "Toggle window bars",
-  [[bash -c 'hyprctl keyword plugin:hyprbars:enabled $(hyprctl getoption plugin:hyprbars:enabled -j | jq -r ".int | if . == 1 then 0 else 1 end")']]
+  function()
+    hl.config({
+      plugin = {
+        hyprbars = {
+          enabled = not hl.get_config("plugin.hyprbars.enabled"),
+        },
+      },
+    })
+  end
 )
 
 -- Vim-style focus movement.
