@@ -62,6 +62,7 @@ alias lS='eza -1'  # single column listing
 alias lt='eza --tree --level=2'  # tree view of directories
 
 alias lta='lt -a'
+alias lsa='ls -a'
 
 # Show all hidden files safely using eza's pattern matching
 alias l.='eza -a'  # show hidden files
@@ -80,6 +81,20 @@ alias rm='rm -Iv'
 # +-----+
 alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
 alias eff='$EDITOR "$(ff)"'
+sff() {
+  if (( $# == 0 )); then
+    echo "Usage: sff <destination> (e.g. sff host:/tmp/)"
+    return 1
+  fi
+
+  local file
+  file=$(find . -type f -printf '%T@\t%p\n' |
+    sort -rn |
+    cut -f2- |
+    ff) &&
+    [[ -n $file ]] &&
+    scp "$file" "$1"
+}
 
 
 # +--------+
@@ -99,9 +114,12 @@ alias nvim-omarchy='NVIM_APPNAME="nvim-omarchy" nvim'
 # +-------+
 # | Tools |
 # +-------+
+alias a='omarchy-agent --inline'
 alias c='opencode'
 alias cx='printf "\033[2J\033[3J\033[H" && claude --allow-dangerously-skip-permissions'
 alias d='docker'
+alias h='herdr'
+alias mup='MISE_MINIMUM_RELEASE_AGE=0 mise up'
 alias r='rails'
 alias ta='tmux attach || tmux new -s Work'
 alias t='tmux new-session -As "$(basename "$PWD")"'
@@ -146,6 +164,11 @@ alias gr='git remote'
 alias grs='git remote show'
 alias gsub="git submodule update --remote"                                                        # pull submodules
 alias gundo='git reset --soft HEAD~1'
+
+# Omarchy worktree helpers are loaded as ga()/gd(), but those names are
+# shadowed by the personal Git aliases above. Expose them without conflicts.
+gwa() { \ga "$@" }
+gwd() { \gd "$@" }
 
 
 # +--------+

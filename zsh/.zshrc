@@ -42,6 +42,12 @@ export SUDO_EDITOR="nvim"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
+# Omarchy shell environment.
+export BROWSER="${BROWSER:-omarchy-launch-browser}"
+export BAT_THEME=ansi
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 # FZF configuration
 # Global defaults
 export FZF_DEFAULT_OPTS="--height=60% --style=default"
@@ -226,7 +232,7 @@ function zvm_after_init() {
 # 5. History Configuration
 # -------------------------------
 
-HISTSIZE=5000       
+HISTSIZE=32768
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 setopt appendhistory
