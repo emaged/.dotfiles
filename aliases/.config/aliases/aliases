@@ -120,10 +120,13 @@ alias cx='printf "\033[2J\033[3J\033[H" && claude --allow-dangerously-skip-permi
 alias d='docker'
 alias h='herdr'
 alias mup='MISE_MINIMUM_RELEASE_AGE=0 mise up'
+alias o='codex'
 alias r='rails'
 alias ta='tmux attach || tmux new -s Work'
 alias t='tmux new-session -As "$(basename "$PWD")"'
+alias ia='tdl a'
 alias ic='tdl c'
+alias io='tdl o'
 alias ix='tdl cx'
 alias icx='tdl c cx'
 n() { if [ "$#" -eq 0 ]; then command nvim ; else command nvim "$@"; fi; }
