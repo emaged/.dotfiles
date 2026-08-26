@@ -52,12 +52,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/usr/lib/chatgpt/resources/cua_node/lib/node_modul
 NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/home/emiel/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
 CODEX_HOME = "/home/emiel/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "0"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
+BROWSER_USE_CODEX_APP_VERSION = "26.820.60940"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.820.60940/scripts/browser-service.mjs"}'
 CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
 
@@ -167,7 +168,6 @@ source_type = "local"
 source = "/home/emiel/.dotfiles/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-08-19T10:40:33Z"
 source_type = "local"
 source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -175,12 +175,11 @@ source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai
 js_repl = false
 
 [shell_environment_policy.set]
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
-NODE_REPL_TRUSTED_CODE_PATHS = "/home/emiel/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
 
 [desktop]
 conversationDetailMode = "STEPS_PROSE"
 sansFontSize = 14
 codeFontSize = 13
 ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
