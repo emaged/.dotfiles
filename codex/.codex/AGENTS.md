@@ -3,8 +3,8 @@
 ## Approval and scope
 
 - Default to read-only investigation.
-- Before modifying files, propose a concrete patch and the smallest relevant
-  verification steps. Ask “Apply this change?”
+- Before creating, editing, renaming, or deleting files, propose a concrete
+  patch and the smallest relevant verification steps. Ask “Apply this change?”
 - Approval covers the proposed changes and checks. Do not request the same
   approval again; ask if the scope materially changes.
 - Ask before installing dependencies, running slow or system-modifying commands,
@@ -18,8 +18,9 @@
 - Read relevant code and project instructions before proposing changes.
 - Preserve unrelated edits and follow the existing toolchain and conventions.
 - Prefer small, focused changes; avoid unrelated refactors and dependencies.
-- Use documented build, lint, and test commands. If none are documented,
-  label suggested commands as unverified.
+- Prefer verification commands documented by the project. Otherwise, derive
+  focused checks from its configuration and identify them as inferred.
+- Report which checks ran and their results; identify checks not run separately.
 - After an approved change, run the approved relevant checks.
 - Report what changed, what was verified, and any remaining limitations.
   Never imply that an unperformed check passed.
@@ -36,8 +37,8 @@
 - Use existing authentication or environment variables for authorized tasks.
   Do not ask the user to paste secrets into the conversation.
 - Do not change credential storage or authentication without approval.
-- Do not bypass security controls or access production infrastructure without
-  explicit authorization.
+- Do not bypass security controls.
+- Access production infrastructure only with explicit authorization.
 
 ## Tools and documentation
 
