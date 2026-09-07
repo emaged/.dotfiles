@@ -73,3 +73,51 @@ This is for debugging purposes.
 TS_LOG=file | echo # echo will echo to stdout, file will write to TS_LOG_FILE
 TS_LOG_FILE=<file> # will write logs to <file> Defaults to ~/.local/share/tmux-sessionizer/tmux-sessionizer.logs
 ```
+
+# Development environment updates
+
+Run `update-dev` as your normal user, primarily on Omarchy. It also supports
+the user tools installed by the Ubuntu bootstrap.
+
+```sh
+update-dev --dry-run
+update-dev
+update-dev cargo pipx npm
+```
+
+The dry run prints commands and checks local tool availability/package ownership.
+It does not contact registries, check available versions, or run updaters.
+
+Supported components: `zinit`, `mise`, `rustup`, `cargo`, `pipx`, `uv`, `npm`,
+`julia`, and `starship`. Missing tools are skipped. Steps run sequentially;
+failures are reported at the end and produce a nonzero exit status. A failure
+does not prevent independent components from updating.
+
+- System-owned binaries use your normal OS update process. The script detects
+  pacman and dpkg ownership and does not invoke sudo or install dependencies.
+- mise runs from your home directory so the invoking project's configuration
+  is not selected. It respects configured versions and keeps old runtimes:
+  pipx environments and other tools may still reference their paths. A `latest`
+  constraint can include major releases.
+- Before mise updates, npm globals are recorded. If the global prefix changes,
+  registry packages are installed at their previous versions in the new prefix.
+  npm itself is supplied by the Node installation and is not migrated.
+  Linked/local packages or a broken npm inventory stop the mise step for manual
+  handling. Migration also happens when only the `mise` component is selected.
+- The npm component runs `npm update -g` using the home-level mise Node when
+  available. This follows npm's normal update rules, rather than reinstalling
+  every package with an explicit `@latest` request.
+- Python updates cover pipx tools (including injected packages) and uv tools.
+  They do not update system Python packages or project virtual environments.
+- Zinit is loaded directly without sourcing `.zshrc`. Set `ZINIT_HOME` to its
+  parent directory if it is outside the usual locations (for example,
+  `ZINIT_HOME="$HOME/.local/share/zinit"`).
+- Cargo updates require the bootstrap's existing `cargo-update` installation.
+  Compilation can take time. Rust toolchains are updated only if rustup exists.
+- Standalone Starship is refreshed through its official installer only when its
+  existing binary and directory are writable and it is in `~/.local/bin` or
+  `/usr/local/bin`. System packages and other installation methods are skipped.
+- Neovim/Mason/Treesitter and tmux plugins, pinned themes, and project dependency
+  updates remain manual in this first version.
+
+Open a new shell after runtime upgrades to refresh your active tool paths.

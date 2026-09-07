@@ -1,0 +1,281 @@
+#!/usr/bin/env bash
+# Update user-installed development tools; system packages use the OS updater.
+set -uo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: update-dev [--dry-run] [COMPONENT ...]
+
+Without components, update all supported tools that are installed.
+Components: zinit mise rustup cargo pipx uv npm julia starship
+
+  -n, --dry-run  Print planned commands without running updates or network checks.
+  -h, --help     Show this help.
+
+Examples:
+  update-dev --dry-run
+  update-dev cargo pipx npm
+
+Run as your normal user. System packages and project dependencies are excluded.
+mise runs from your home directory, respects version constraints, and keeps old
+runtimes. npm packages are copied at their existing versions if Node's global
+prefix changes, then npm update -g applies normal npm update rules.
+Editor/tmux plugins and pinned themes remain manual in this first version.
+EOF
+}
+
+dry_run=false
+components=()
+for arg in "$@"; do
+  case "$arg" in
+    -n|--dry-run) dry_run=true ;;
+    -h|--help) usage; exit 0 ;;
+    zinit|mise|rustup|cargo|pipx|uv|npm|julia|starship) components+=("$arg") ;;
+    *) printf 'Unknown argument: %s\n' "$arg" >&2; usage >&2; exit 2 ;;
+  esac
+done
+if [[ ${#components[@]} -eq 0 ]]; then
+  components=(zinit mise rustup cargo pipx uv npm julia starship)
+fi
+if [[ $EUID -eq 0 && $dry_run == false ]]; then
+  printf 'Run this script as your normal user, without sudo.\n' >&2
+  exit 2
+fi
+
+# Resolve user tools when launched from a non-interactive shell.
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$HOME/.juliaup/bin:$PATH"
+results=()
+failed=0
+npm_ready=true
+
+skip() { results+=("SKIP  $1"); printf '  Skipping: %s\n' "$1"; }
+fail() { results+=("FAIL  $1"); printf '  Failed: %s\n' "$1" >&2; failed=$((failed + 1)); }
+have() { command -v "$1" >/dev/null 2>&1; }
+require() { have "$1" || { skip "$1 is not installed"; return 1; }; }
+
+run() {
+  local label=$1 status
+  shift
+  printf '\n==> %s\n  ' "$label"
+  printf '%q ' "$@"
+  printf '\n'
+  if $dry_run; then
+    results+=("PLAN  $label")
+  elif "$@"; then
+    results+=("OK    $label")
+  else
+    status=$?
+    fail "$label (exit $status)"
+    return "$status"
+  fi
+}
+
+system_owned() {
+  local path resolved
+  path=$(command -v "$1") || return 1
+  resolved=$(readlink -f "$path") || return 1
+  if have pacman && { pacman -Qo "$path" >/dev/null 2>&1 || pacman -Qo "$resolved" >/dev/null 2>&1; }; then
+    return 0
+  fi
+  if have dpkg-query && { dpkg-query -S "$path" >/dev/null 2>&1 || dpkg-query -S "$resolved" >/dev/null 2>&1; }; then
+    return 0
+  fi
+  return 1
+}
+
+update_zinit() {
+  require zsh || return 0
+  local init=${ZINIT_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/zinit}/zinit.git/zinit.zsh
+  if [[ ! -f $init && -z ${ZINIT_HOME:-} ]]; then
+    init=$HOME/.zinit/bin/zinit.zsh
+  fi
+  [[ -f $init ]] || { skip 'Zinit installation not found (set ZINIT_HOME if needed)'; return 0; }
+  # Avoid sourcing .zshrc, which can install tools and start interactive plugins.
+  run 'Zinit manager' zsh -f -c 'source "$1" && zinit self-update' update-dev "$init"
+  run 'Zinit plugins and snippets' zsh -f -c 'source "$1" && zinit update --all' update-dev "$init"
+}
+
+# Use the home-level mise Node even when invoked inside a project with a pin.
+# mise where only resolves an installed tool; it does not install one.
+node_bin_dir() {
+  local directory
+  if have mise && directory=$(mise -C "$HOME" where node 2>/dev/null) && [[ -x $directory/bin/npm ]]; then
+    printf '%s/bin\n' "$directory"
+  elif have npm; then
+    dirname "$(command -v npm)"
+  else
+    return 1
+  fi
+}
+
+update_mise() {
+  require mise || return 0
+  local old_bin='' new_bin old_prefix='' new_prefix snapshot specs='' package
+  local packages=()
+  if system_owned mise; then
+    skip 'mise itself is managed by the system package manager'
+  else
+    run 'mise itself' mise self-update || return 1
+  fi
+  if $dry_run; then
+    run 'mise tools (home configuration)' mise -C "$HOME" upgrade --no-prune
+    printf '  If Node changes npm prefix, preserve existing registry packages in the new prefix.\n'
+    return 0
+  fi
+
+  # Capture before upgrading: old npm may disappear from PATH when Node changes.
+  if old_bin=$(node_bin_dir); then
+    if ! old_prefix=$(PATH="$old_bin:$PATH" "$old_bin/npm" prefix -g) ||
+       ! old_prefix=$(readlink -f "$old_prefix") ||
+       ! snapshot=$(PATH="$old_bin:$PATH" "$old_bin/npm" ls -g --depth=0 --json); then
+      fail 'Could not snapshot npm globals; mise upgrade was skipped'
+      npm_ready=false
+      return 1
+    fi
+    # Refuse linked/local packages instead of silently replacing them from npm.
+    if ! specs=$(PATH="$old_bin:$PATH" node -e '
+      let input = "";
+      process.stdin.on("data", chunk => input += chunk);
+      process.stdin.on("end", () => {
+        const dependencies = JSON.parse(input).dependencies || {};
+        for (const [name, pkg] of Object.entries(dependencies)) {
+          if (name === "npm") continue;
+          if (pkg.link || pkg.resolved?.startsWith("file:") ||
+              !/^(@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(name) ||
+              !/^\d+\.\d+\.\d+[-+a-z0-9.]*$/i.test(pkg.version || "")) {
+            throw new Error(`Cannot migrate global package ${name}; handle its Node upgrade manually.`);
+          }
+          console.log(`${name}@${pkg.version}`);
+        }
+      });
+    ' <<<"$snapshot"); then
+      fail 'Could not prepare npm migration; mise upgrade was skipped'
+      npm_ready=false
+      return 1
+    fi
+    while IFS= read -r package; do
+      [[ -z $package ]] || packages+=("$package")
+    done <<<"$specs"
+  fi
+
+  # Even a failed upgrade may have upgraded Node before another tool failed.
+  run 'mise tools (home configuration)' mise -C "$HOME" upgrade --no-prune
+  if [[ -n $old_bin ]]; then
+    if ! new_bin=$(node_bin_dir) ||
+       ! new_prefix=$(PATH="$new_bin:$PATH" "$new_bin/npm" prefix -g) ||
+       ! new_prefix=$(readlink -f "$new_prefix"); then
+      fail 'Could not resolve npm after mise upgrade; old runtimes were retained'
+      npm_ready=false
+      return 1
+    fi
+    if [[ $old_prefix != "$new_prefix" && ${#packages[@]} -gt 0 ]]; then
+      if ! run 'Preserve npm globals in new Node installation' env "PATH=$new_bin:$PATH" \
+        "$new_bin/npm" install -g -- "${packages[@]}"; then
+        npm_ready=false
+        printf '  Previous packages remain in %s\n' "$old_prefix" >&2
+        return 1
+      fi
+    fi
+  fi
+}
+
+update_rustup() {
+  require rustup || return 0
+  run 'Rust toolchains' rustup update
+}
+
+update_cargo() {
+  require cargo || return 0
+  require cargo-install-update || return 0
+  run 'Cargo-installed executables' cargo install-update --all --git --locked
+}
+
+update_pipx() {
+  require pipx || return 0
+  run 'pipx tools and injected packages' pipx upgrade-all --include-injected
+}
+
+update_uv() {
+  require uv || return 0
+  if system_owned uv; then
+    skip 'uv itself is managed by the system package manager'
+  else
+    run 'uv itself' uv self update
+  fi
+  run 'uv-installed tools' uv tool upgrade --all
+}
+
+update_npm() {
+  $npm_ready || { skip 'npm update: resolve the earlier migration failure first'; return 0; }
+  if $dry_run; then
+    require npm || return 0
+    run 'Global npm packages (home Node)' npm update -g
+    return 0
+  fi
+  local directory
+  directory=$(node_bin_dir) || { skip 'npm is not installed'; return 0; }
+  run 'Global npm packages (home Node)' env "PATH=$directory:$PATH" "$directory/npm" update -g
+}
+
+update_julia() {
+  require juliaup || return 0
+  if system_owned juliaup; then
+    skip 'Juliaup itself is managed by the system package manager'
+  else
+    run 'Juliaup itself' juliaup self update
+  fi
+  run 'Julia channels' juliaup update
+}
+
+update_starship() {
+  require starship || return 0
+  if system_owned starship; then
+    skip 'Starship is managed by the system package manager'
+    return 0
+  fi
+  local binary directory installer status
+  binary=$(command -v starship)
+  directory=$(dirname "$binary")
+  # Only refresh the standalone locations used by this bootstrap.
+  if [[ $directory != "$HOME/.local/bin" && $directory != /usr/local/bin ]] || [[ -L $binary ]]; then
+    skip 'Starship uses another installation method; update it through its owner'
+    return 0
+  fi
+  if [[ ! -w $directory || ! -w $binary ]]; then
+    skip "Starship at $binary needs administrator permissions; update it separately"
+    return 0
+  fi
+  require curl || return 0
+  if $dry_run; then
+    printf '  Would download https://starship.rs/install.sh to a temporary file.\n'
+    run 'Standalone Starship' sh '<downloaded installer>' --yes --bin-dir "$directory"
+    return 0
+  fi
+  installer=$(mktemp) || { fail 'Could not create Starship installer temporary file'; return 1; }
+  if run 'Download Starship installer' curl --fail --silent --show-error --location \
+    https://starship.rs/install.sh --output "$installer"; then
+    run 'Standalone Starship' sh "$installer" --yes --bin-dir "$directory"
+    status=$?
+  else
+    status=1
+  fi
+  rm -f -- "$installer"
+  return "$status"
+}
+
+# Fixed order makes runtime upgrades precede tool upgrades, regardless of CLI order.
+for component in zinit mise rustup cargo pipx uv npm julia starship; do
+  for selected in "${components[@]}"; do
+    if [[ $selected == "$component" ]]; then
+      "update_$component"
+      break
+    fi
+  done
+done
+
+printf '\nUpdate summary:\n'
+printf '  %s\n' "${results[@]}"
+if [[ $failed -gt 0 ]]; then
+  printf '\n%d step(s) failed. See output above.\n' "$failed" >&2
+  exit 1
+fi
