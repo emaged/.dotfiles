@@ -3,7 +3,7 @@
 # +--------+
 alias shutdown='sudo shutdown now'
 alias restart='sudo reboot'
-alias suspend='sudo pm-suspend'
+alias suspend='systemctl suspend'
 
 # +-----+
 # | bat |

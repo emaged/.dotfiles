@@ -10,17 +10,21 @@ italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 size = 12.5
 
 [window]
+# padding.y = 14
+# padding.x = 14
 decorations = "None"
-
-[terminal]
-osc52 = "CopyPaste"
 
 [keyboard]
 bindings = [
     { key = "Insert", mods = "Shift", action = "Paste" },
     { key = "Insert", mods = "Control", action = "Copy" },
-    { key = "Period", mods = "Control", chars = "\u001b[46;5u" },
+    # Send Shift+Return as CSI-u so TUIs can distinguish it from Return without treating it as Alt+Return.
+    { key = "Return", mods = "Shift", chars = "\u001B[13;2u" },
+    # Legacy encoding sends Alt+Shift+Return the same as Alt+Return; send CSI-u so tmux can match M-S-Enter.
+    { key = "Return", mods = "Alt|Shift", chars = "\u001B[13;4u" },
+    { key = "Enter", mods = "Shift", chars = "\u001b\r" },
+    { key = "Back", mods = "Control", chars = "\u0017" },
 ]
 
-# Send Shift+Return as CSI-u so TUIs can distinguish it from Return without treating it as Alt+Return.
-{ key = "Return", mods = "Shift", chars = "\u001B[13;2u" }
+[terminal]
+osc52 = "CopyPaste"

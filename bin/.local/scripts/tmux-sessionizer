@@ -197,6 +197,7 @@ set_pane_id() {
 cleanup_dead_panes() {
     init_pane_cache
     local temp_file="${PANE_CACHE_FILE}.tmp"
+    : > "$temp_file" || return 1
 
     while IFS=: read -r idx split pane_id; do
         if tmux list-panes -a -F "#{pane_id}" 2>/dev/null | grep -q "^${pane_id}$"; then
@@ -204,7 +205,7 @@ cleanup_dead_panes() {
         fi
     done < "$PANE_CACHE_FILE"
 
-    mv "$temp_file" "$PANE_CACHE_FILE" 2>/dev/null || touch "$PANE_CACHE_FILE"
+    mv "$temp_file" "$PANE_CACHE_FILE"
 }
 
 sanity_check
@@ -222,6 +223,7 @@ fi
 
 # utility function to find directories
 find_dirs() {
+    local entry path depth
     # list TMUX sessions
     if [[ -n "${TMUX}" ]]; then
         current_session=$(tmux display-message -p '#S')
@@ -234,6 +236,7 @@ find_dirs() {
     # if the path ends with :number, it will search for directories with a max depth of number ;)
     # if there is no number, it will search for directories with a max depth defined by TS_MAX_DEPTH or 1 if not set
     for entry in "${TS_SEARCH_PATHS[@]}"; do
+        depth="${TS_MAX_DEPTH:-1}"
         # Check if entry as :number as suffix then adapt the maxdepth parameter
         if [[ "$entry" =~ ^([^:]+):([0-9]+)$ ]]; then
             path="${BASH_REMATCH[1]}"
@@ -253,14 +256,18 @@ handle_session_cmd() {
         exit 1
     fi
 
-    current_session=$(tmux display-message -p '#S')
+    current_session=$(tmux display-message -p '#S') || exit $?
+    if [[ -z "$current_session" ]]; then
+        echo "Error: could not determine the current tmux session." >&2
+        exit 1
+    fi
 
     if [[ -n "$split_type" ]]; then
         handle_split_session_cmd "$current_session"
     else
         handle_window_session_cmd "$current_session"
     fi
-    exit 0
+    exit $?
 }
 
 handle_window_session_cmd() {
@@ -273,22 +280,29 @@ handle_window_session_cmd() {
         switch_to "$target"
     else
         log "executing session command: tmux neww -dt $target $session_cmd"
-        tmux neww -dt $target "$session_cmd"
-        hydrate "$target" "$selected"
-        tmux select-window -t $target
+        tmux neww -dt "$target" "$session_cmd" || return $?
+        hydrate "$target" "$selected" || return $?
+        tmux select-window -t "$target"
     fi
 }
 
 handle_split_session_cmd() {
     local current_session="$1"
-    cleanup_dead_panes
+    local cache_scope
+    cache_scope=$(tmux display-message -p -t "=$current_session" '#{pid}-#{session_id}') || return 1
+    [[ "$cache_scope" =~ ^[0-9]+-\$[0-9]+$ ]] || return 1
+    # Bash local variables are visible to the cache helper functions.
+    # Ignore the legacy cache, which did not identify the owning session.
+    local PANE_CACHE_FILE="$PANE_CACHE_DIR/panes-$cache_scope.cache"
+    cleanup_dead_panes || return 1
 
     # Check if pane already exists
-    local existing_pane_id=$(get_pane_id "$session_idx" "$split_type")
+    local existing_pane_id
+    existing_pane_id=$(get_pane_id "$session_idx" "$split_type")
 
-    if [[ -n "$existing_pane_id" ]] && tmux list-panes -a -F "#{pane_id}" 2>/dev/null | grep -q "^${existing_pane_id}$"; then
+    if [[ -n "$existing_pane_id" ]] && tmux list-panes -s -t "=$current_session" -F "#{pane_id}" 2>/dev/null | grep -Fxq -- "$existing_pane_id"; then
         log "switching to existing pane $existing_pane_id"
-        tmux select-pane -t "$existing_pane_id"
+        tmux select-pane -t "$existing_pane_id" || return $?
         if [[ -z $TMUX ]]; then
             tmux attach-session -t "$current_session"
         else
@@ -304,12 +318,15 @@ handle_split_session_cmd() {
         fi
 
         log "creating new split: tmux split-window $split_flag -c $(pwd) $session_cmd"
-        local new_pane_id=$(tmux split-window $split_flag -c "$(pwd)" -P -F "#{pane_id}" "$session_cmd")
+        local new_pane_id
+        new_pane_id=$(tmux split-window "$split_flag" -t "=$current_session" -c "$(pwd)" -P -F "#{pane_id}" "$session_cmd") || return $?
 
-        if [[ -n "$new_pane_id" ]]; then
-            set_pane_id "$session_idx" "$split_type" "$new_pane_id"
-            log "created pane $new_pane_id for session_idx=$session_idx split_type=$split_type"
+        if [[ -z "$new_pane_id" ]]; then
+            echo "Error: tmux did not return a pane ID for the new split." >&2
+            return 1
         fi
+        set_pane_id "$session_idx" "$split_type" "$new_pane_id" || return $?
+        log "created pane $new_pane_id for session_idx=$session_idx split_type=$split_type"
     fi
 }
 
