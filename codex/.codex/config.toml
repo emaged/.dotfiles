@@ -162,6 +162,9 @@ trust_level = "trusted"
 [projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat-3"]
 trust_level = "trusted"
 
+[projects."/home/emiel/.config/tmux"]
+trust_level = "trusted"
+
 [plugins."github@openai-curated"]
 enabled = true
 
