@@ -27,10 +27,12 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.fetch]
+enabled = false
 command = "uvx"
 args = ["mcp-server-fetch"]
 
 [mcp_servers.filesystem]
+enabled = false
 command = "npx"
 args = [
     "-y",
@@ -39,6 +41,10 @@ args = [
     "/home/emiel/.config/nvim",
     "/home/emiel/.dotfiles",
 ]
+
+[mcp_servers.1password]
+command = "/opt/1Password/1password-mcp"
+
 
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
@@ -163,6 +169,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/emiel/.config/tmux"]
+trust_level = "trusted"
+
+[projects."/home/emiel/Dropbox"]
 trust_level = "trusted"
 
 [plugins."github@openai-curated"]

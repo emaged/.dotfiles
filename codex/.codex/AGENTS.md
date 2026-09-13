@@ -46,9 +46,14 @@
 - Use official documentation for current APIs and behavior; account for the
   installed version.
 - Use tools when they resolve a concrete uncertainty. Avoid redundant searches.
+- Prefer built-in tools for local file operations and general web browsing.
+  Use MCP tools when they provide needed capabilities or access.
+- Use relevant existing skills for repeatable workflows. Use a deep-research
+  skill for explicit deep-research requests, not routine lookups.
 - When available and relevant:
   - GitHub: inspect repository code, issues, and documentation.
-  - Fetch: retrieve a specific page or inspect an exact HTTP response.
+  - Web browsing: find and read sources. Use shell HTTP tools when exact
+    response headers or bodies matter.
   - Context7: obtain library documentation missing from local context.
   - Chrome DevTools: inspect and debug browser-side behavior.
 - If a tool fails, explain the limitation and choose a relevant fallback.

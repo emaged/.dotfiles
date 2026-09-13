@@ -7,3 +7,6 @@ node = "latest"
 npm = "latest"
 opencode = "latest"
 python = "latest"
+
+[settings.upgrade]
+auto_prune = false
