@@ -89,7 +89,7 @@ The dry run prints commands and checks local tool availability/package ownership
 It does not contact registries, check available versions, or run updaters.
 
 Supported components: `zinit`, `mise`, `rustup`, `cargo`, `pipx`, `uv`, `npm`,
-`julia`, and `starship`. Missing tools are skipped. Steps run sequentially;
+and `starship`. Missing tools are skipped. Steps run sequentially;
 failures are reported at the end and produce a nonzero exit status. A failure
 does not prevent independent components from updating.
 

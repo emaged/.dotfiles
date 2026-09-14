@@ -7,7 +7,7 @@ usage() {
 Usage: update-dev [--dry-run] [COMPONENT ...]
 
 Without components, update all supported tools that are installed.
-Components: zinit mise rustup cargo pipx uv npm julia starship
+Components: zinit mise rustup cargo pipx uv npm starship
 
   -n, --dry-run  Print planned commands without running updates or network checks.
   -h, --help     Show this help.
@@ -30,12 +30,12 @@ for arg in "$@"; do
   case "$arg" in
     -n|--dry-run) dry_run=true ;;
     -h|--help) usage; exit 0 ;;
-    zinit|mise|rustup|cargo|pipx|uv|npm|julia|starship) components+=("$arg") ;;
+    zinit|mise|rustup|cargo|pipx|uv|npm|starship) components+=("$arg") ;;
     *) printf 'Unknown argument: %s\n' "$arg" >&2; usage >&2; exit 2 ;;
   esac
 done
 if [[ ${#components[@]} -eq 0 ]]; then
-  components=(zinit mise rustup cargo pipx uv npm julia starship)
+  components=(zinit mise rustup cargo pipx uv npm starship)
 fi
 if [[ $EUID -eq 0 && $dry_run == false ]]; then
   printf 'Run this script as your normal user, without sudo.\n' >&2
@@ -43,7 +43,7 @@ if [[ $EUID -eq 0 && $dry_run == false ]]; then
 fi
 
 # Resolve user tools when launched from a non-interactive shell.
-export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$HOME/.juliaup/bin:$PATH"
+export PATH="$HOME/.local/bin:${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
 results=()
 failed=0
 npm_ready=true
@@ -217,16 +217,6 @@ update_npm() {
   run 'Global npm packages (home Node)' env "PATH=$directory:$PATH" "$directory/npm" update -g
 }
 
-update_julia() {
-  require juliaup || return 0
-  if system_owned juliaup; then
-    skip 'Juliaup itself is managed by the system package manager'
-  else
-    run 'Juliaup itself' juliaup self update
-  fi
-  run 'Julia channels' juliaup update
-}
-
 update_starship() {
   require starship || return 0
   if system_owned starship; then
@@ -264,7 +254,7 @@ update_starship() {
 }
 
 # Fixed order makes runtime upgrades precede tool upgrades, regardless of CLI order.
-for component in zinit mise rustup cargo pipx uv npm julia starship; do
+for component in zinit mise rustup cargo pipx uv npm starship; do
   for selected in "${components[@]}"; do
     if [[ $selected == "$component" ]]; then
       "update_$component"
