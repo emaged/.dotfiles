@@ -2,7 +2,7 @@
 #        C O D E X   C L I   &   I D E   C O N F I G
 # ──────────────────────────────────────────────────────────────
 model = "gpt-6-astra"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 personality = "pragmatic"
 
 ### Server Configurations
