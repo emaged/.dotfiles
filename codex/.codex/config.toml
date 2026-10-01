@@ -174,6 +174,9 @@ trust_level = "trusted"
 [projects."/home/emiel/Dropbox"]
 trust_level = "trusted"
 
+[projects."/home/emiel/Dropbox/projects/coursera/algorithms/hello"]
+trust_level = "trusted"
+
 [plugins."github@openai-curated"]
 enabled = true
 
