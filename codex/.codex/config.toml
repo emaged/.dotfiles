@@ -5,238 +5,233 @@ model = "gpt-6-astra"
 model_reasoning_effort = "high"
 personality = "pragmatic"
 
-### Server Configurations
-[mcp_servers.context7]
-url = "https://mcp.context7.com/mcp"
-bearer_token_env_var = "CONTEXT7_API_KEY"
+  ### Server Configurations
+  [mcp_servers.context7]
+    url = "https://mcp.context7.com/mcp"
+    bearer_token_env_var = "CONTEXT7_API_KEY"
 
-[mcp_servers.chrome-devtools]
-command = "npx"
-args = ["chrome-devtools-mcp@latest", "--headless", "--isolated"]
+  [mcp_servers.chrome-devtools]
+    command = "npx"
+    args = ["chrome-devtools-mcp@latest", "--headless", "--isolated"]
 
-[mcp_servers.chrome-devtools.tools.navigate_page]
-approval_mode = "approve"
+      [mcp_servers.chrome-devtools.tools.navigate_page]
+        approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.take_snapshot]
-approval_mode = "approve"
+      [mcp_servers.chrome-devtools.tools.take_snapshot]
+        approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.click]
-approval_mode = "approve"
+      [mcp_servers.chrome-devtools.tools.click]
+        approval_mode = "approve"
 
-[mcp_servers.chrome-devtools.tools.evaluate_script]
-approval_mode = "approve"
+      [mcp_servers.chrome-devtools.tools.evaluate_script]
+        approval_mode = "approve"
 
-[mcp_servers.fetch]
-enabled = false
-command = "uvx"
-args = ["mcp-server-fetch"]
+  [mcp_servers.fetch]
+    enabled = false
+    command = "uvx"
+    args = ["mcp-server-fetch"]
 
-[mcp_servers.filesystem]
-enabled = false
-command = "npx"
-args = [
-    "-y",
-    "@modelcontextprotocol/server-filesystem",
-    "/home/emiel/Dropbox/projects",
-    "/home/emiel/.config/nvim",
-    "/home/emiel/.dotfiles",
-]
+  [mcp_servers.filesystem]
+    enabled = false
+    command = "npx"
+    args = ["-y", "@modelcontextprotocol/server-filesystem", "/home/emiel/Dropbox/projects", "/home/emiel/.config/nvim", "/home/emiel/.dotfiles"]
 
-[mcp_servers.1password]
-command = "/opt/1Password/1password-mcp"
+  [mcp_servers.1password]
+    command = "/opt/1Password/1password-mcp"
 
+  [mcp_servers.github]
+    url = "https://api.githubcopilot.com/mcp/"
+    bearer_token_env_var = "GITHUB_PERSONAL_ACCESS_TOKEN"
 
-[mcp_servers.github]
-url = "https://api.githubcopilot.com/mcp/"
-bearer_token_env_var = "GITHUB_PERSONAL_ACCESS_TOKEN"
+  [mcp_servers.node_repl]
+    args = []
+    command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
+    startup_timeout_sec = 120
 
-[mcp_servers.node_repl]
-args = []
-command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
-startup_timeout_sec = 120
+    [mcp_servers.node_repl.env]
+      NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+      NODE_REPL_NODE_MODULE_DIRS = "/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+      NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
+      NODE_REPL_TRUSTED_CODE_PATHS = "/home/emiel/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+      CODEX_HOME = "/home/emiel/.codex"
+      BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+      BROWSER_USE_TINYSKY_ENABLED = "1"
+      NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+      NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+      BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+      BROWSER_USE_CODEX_APP_VERSION = "26.908.40834"
+      NODE_REPL_TRUSTED_SERVICES = "{\"browser\":\"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.908.40834/scripts/browser-service.mjs\"}"
+      CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
-[mcp_servers.node_repl.env]
-NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = "/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
-NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "/home/emiel/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
-CODEX_HOME = "/home/emiel/.codex"
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-BROWSER_USE_TINYSKY_ENABLED = "1"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
-NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.908.40834"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.908.40834/scripts/browser-service.mjs"}'
-CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
+  [mcp_servers.cua_repl]
+    command = "/usr/lib/chatgpt/ChatGPT"
+    enabled = false
 
-[mcp_servers.cua_repl]
-command = "/usr/lib/chatgpt/ChatGPT"
-enabled = false
+  [mcp_servers.idea]
+    url = "http://127.0.0.1:64342/stream"
 
+  # ──────────────────────────────────────────────────────────────
+  #                     T R U S T   M O D E L
+  # ──────────────────────────────────────────────────────────────
+  [projects."/home/emiel/projects"]
+    trust_level = "trusted"
 
-# ──────────────────────────────────────────────────────────────
-#                     T R U S T   M O D E L
-# ──────────────────────────────────────────────────────────────
-[projects."/home/emiel/projects"]
-trust_level = "trusted"
+  [projects."/home/emiel/.config/nvim"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.config/nvim"]
-trust_level = "trusted"
+  [projects."/home/emiel/.codex"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.codex"]
-trust_level = "trusted"
+  [projects."/home/emiel/.dotfiles"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.dotfiles"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/Vault"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/Vault"]
-trust_level = "trusted"
+  [projects."/home/emiel"]
+    trust_level = "trusted"
 
-[projects."/home/emiel"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/CS50web"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/CS50web"]
-trust_level = "trusted"
+  [projects."/home/emiel/.dotfiles/.git/modules/nvim/.config"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.dotfiles/.git/modules/nvim/.config"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/tests"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/tests"]
-trust_level = "trusted"
+  [projects."/home/emiel/.local/share/mise/installs/node/25.6.1/bin"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.local/share/mise/installs/node/25.6.1/bin"]
-trust_level = "trusted"
+  [projects."/home/emiel/.dotfiles/nvim/.config/nvim"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.dotfiles/nvim/.config/nvim"]
-trust_level = "trusted"
+  [projects."/home/emiel/Studie"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Studie"]
-trust_level = "trusted"
+  [projects."/home/emiel/.local/share/omarchy"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.local/share/omarchy"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/moocfi"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/moocfi"]
-trust_level = "trusted"
+  [projects."/home/emiel/.config/hypr"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.config/hypr"]
-trust_level = "trusted"
+  [projects."/home/emiel/.config"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.config"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/fullstackopen"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/fullstackopen"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/fullstackopen/part2/courseinfo"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/fullstackopen/part2/courseinfo"]
-trust_level = "trusted"
+  [projects."/home/emiel/Work"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Work"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-2"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-2"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/referenced-chatgpt-conversation-this-is-an"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/referenced-chatgpt-conversation-this-is-an"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-3"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-3"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-4"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-4"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-5"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-27/realtime-voice-chat-5"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-28/realtime-voice-chat"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-28/realtime-voice-chat"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat-2"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat-2"]
-trust_level = "trusted"
+  [projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat-3"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Documents/Codex/2026-08-30/realtime-voice-chat-3"]
-trust_level = "trusted"
+  [projects."/home/emiel/.config/tmux"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/.config/tmux"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox"]
-trust_level = "trusted"
+  [projects."/home/emiel/Dropbox/projects/coursera/algorithms/hello"]
+    trust_level = "trusted"
 
-[projects."/home/emiel/Dropbox/projects/coursera/algorithms/hello"]
-trust_level = "trusted"
+  [plugins."github@openai-curated"]
+    enabled = true
 
-[plugins."github@openai-curated"]
-enabled = true
+  [plugins."sites@openai-bundled"]
+    enabled = true
 
-[plugins."sites@openai-bundled"]
-enabled = true
+  [plugins."browser@openai-bundled"]
+    enabled = true
 
-[plugins."browser@openai-bundled"]
-enabled = true
+  [plugins."visualize@openai-bundled"]
+    enabled = true
 
-[plugins."visualize@openai-bundled"]
-enabled = true
+  [plugins."documents@openai-primary-runtime"]
+    enabled = true
 
-[plugins."documents@openai-primary-runtime"]
-enabled = true
+  [plugins."pdf@openai-primary-runtime"]
+    enabled = true
 
-[plugins."pdf@openai-primary-runtime"]
-enabled = true
+  [plugins."spreadsheets@openai-primary-runtime"]
+    enabled = true
 
-[plugins."spreadsheets@openai-primary-runtime"]
-enabled = true
+  [plugins."presentations@openai-primary-runtime"]
+    enabled = true
 
-[plugins."presentations@openai-primary-runtime"]
-enabled = true
+  [plugins."template-creator@openai-primary-runtime"]
+    enabled = true
 
-[plugins."template-creator@openai-primary-runtime"]
-enabled = true
+  [plugins."google-calendar@openai-curated"]
+    enabled = true
 
-[plugins."google-calendar@openai-curated"]
-enabled = true
-
-[plugins."slack@openai-curated"]
-enabled = true
+  [plugins."slack@openai-curated"]
+    enabled = true
 
 [tui]
-screen_reader_detection_done = true
+  screen_reader_detection_done = true
 
-[tui.model_availability_nux]
-"gpt-5.5" = 4
-"gpt-5.6-sol" = 4
-gpt-6-astra = 4
-"gpt-6.1-sol" = 4
+  [tui.model_availability_nux]
+    "gpt-5.5" = 4
+    "gpt-5.6-sol" = 4
+    gpt-6-astra = 4
+    "gpt-6.1-sol" = 4
 
-[marketplaces.openai-bundled]
-last_updated = "2026-08-19T10:39:56Z"
-source_type = "local"
-source = "/home/emiel/.dotfiles/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
+  [marketplaces.openai-bundled]
+    last_updated = "2026-08-19T10:39:56Z"
+    source_type = "local"
+    source = "/home/emiel/.dotfiles/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
-[marketplaces.openai-primary-runtime]
-source_type = "local"
-source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+  [marketplaces.openai-primary-runtime]
+    source_type = "local"
+    source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [features]
-js_repl = false
+  js_repl = false
 
-[shell_environment_policy.set]
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
+  [shell_environment_policy.set]
+    NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 
 [desktop]
-conversationDetailMode = "STEPS_PROSE"
-sansFontSize = 14
-codeFontSize = 13
-ambient-suggestions-enabled = true
-followUpQueueMode = "queue"
+  conversationDetailMode = "STEPS_PROSE"
+  sansFontSize = 14
+  codeFontSize = 13
+  ambient-suggestions-enabled = true
+  followUpQueueMode = "queue"
