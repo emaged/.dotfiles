@@ -26,6 +26,7 @@ run brave.sh
 run vlc.sh
 run wayland.sh
 run brightness_setup.sh
+run omarchy-plugins.sh
 
 echo
 echo "Bootstrap complete."
