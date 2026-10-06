@@ -5,8 +5,10 @@ hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.unbind("SUPER + L")
 hl.unbind("SUPER + ALT + K")
+hl.unbind("SUPER + SHIFT + W")
 
 o.bind("SUPER + SHIFT + V", "VS Code", "code")
+o.bind("SUPER + SHIFT + W", "Typora", { launch = "typora --enable-wayland-ime" })
 
 o.bind(
   "SUPER + CTRL + SHIFT + L",
