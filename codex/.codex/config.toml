@@ -2,7 +2,7 @@
 #        C O D E X   C L I   &   I D E   C O N F I G
 # ──────────────────────────────────────────────────────────────
 model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "ultra"
 personality = "pragmatic"
 
   ### Server Configurations
@@ -235,3 +235,4 @@ personality = "pragmatic"
   codeFontSize = 13
   ambient-suggestions-enabled = true
   followUpQueueMode = "queue"
+appearanceTheme = "light"
