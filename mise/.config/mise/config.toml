@@ -5,6 +5,7 @@ gh = "latest"
 go = "latest"
 node = "latest"
 npm = "latest"
+"npm:@mermaid-js/mermaid-cli" = "latest"
 opencode = "latest"
 python = "latest"
 
