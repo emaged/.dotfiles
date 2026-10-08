@@ -3,13 +3,27 @@
 The `starship` and `zsh` packages contain the saved Starship palettes and fzf
 shell configuration. This package supplies their `theme-set.d` hooks:
 
-- `starship.sh` selects the saved palette for the active theme. For a new theme,
-  it generates a palette from Omarchy's colors and saves it in `starship.toml`.
+- `starship.sh` reads `~/.config/starship.toml` as the base and writes
+  `~/.local/state/starship/starship.toml` with the active theme selected.
+  Unknown themes get a palette generated from Omarchy's colors in that local
+  copy. The base config and its saved palettes are never modified by the hook.
 - `fzf.sh` writes `~/.config/fzf/theme.opts`. It uses the official Catppuccin role
   mapping, saved theme accents from Starship, and Omarchy's active surfaces and
   text colors. fzf reads the options file on each invocation.
 
-The fzf options file is generated locally; it does not belong in Git.
+Both generated files are local runtime files; neither belongs in Git.
+
+On Omarchy, `.zshrc` rebuilds the Starship copy on startup and selects it with
+`STARSHIP_CONFIG`. An explicit override pointing elsewhere is preserved.
+Without an active Omarchy theme, or if generation fails, Starship uses its
+normal config. Theme switches refresh the generated file for existing shells.
+
+Edit `~/.config/starship.toml` to change the prompt or saved palettes, then
+open a new shell or run the Starship hook below to refresh the generated copy.
+Edits made directly to the generated file (including through `starship config`
+while it is selected) are overwritten on the next rebuild. Unknown themes
+are regenerated from their current colors; add a palette to the base config
+if you want to keep a customized version.
 
 ## Install with GNU Stow
 
@@ -48,5 +62,5 @@ bash "$HOME/.config/omarchy/hooks/theme-set.d/fzf.sh"
 This requires an installed Omarchy session with an active theme, Python 3.11 or
 newer, and fzf with `FZF_DEFAULT_OPTS_FILE` support. Future theme switches run
 the hooks automatically. Existing shells need a one-time `.zshrc` reload or
-restart to adopt the fzf options file; an already-open fzf interface retains
-its current colors.
+restart to adopt the generated Starship config and fzf options file; an
+already-open fzf interface retains its current colors.

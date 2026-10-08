@@ -301,6 +301,16 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
       "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
     zle -N zle-keymap-select "";
 fi
+# Keep Omarchy's active palette in a generated config; honor explicit overrides.
+if [[ -z "${STARSHIP_CONFIG:-}" ||
+      "${STARSHIP_CONFIG:-}" == "$HOME/.local/state/starship/starship.toml" ]]; then
+    unset STARSHIP_CONFIG
+    if [[ -r "$HOME/.local/state/omarchy/current/theme.name" &&
+          -r "$HOME/.config/omarchy/hooks/theme-set.d/starship.sh" ]] &&
+       bash "$HOME/.config/omarchy/hooks/theme-set.d/starship.sh"; then
+        export STARSHIP_CONFIG="$HOME/.local/state/starship/starship.toml"
+    fi
+fi
 eval "$(starship init zsh)"
 
 # Codex completion is generated into ~/.zfunc/_codex by the npm bootstrap.

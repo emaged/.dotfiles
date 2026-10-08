@@ -1,6 +1,6 @@
 #!/bin/bash
-# Select a saved Starship palette after Omarchy changes themes.
-# Unknown themes get a palette generated once from their active colors.toml.
+# Generate a local Starship config without modifying the tracked base.
+# Unknown themes get a palette generated from their active colors.toml.
 set -euo pipefail
 
 python3 - "$@" <<'PY'
@@ -17,6 +17,7 @@ import tomllib
 current = Path.home() / ".local/state/omarchy/current"
 theme_file = current / "theme.name"
 config = (Path.home() / ".config/starship.toml").resolve(strict=True)
+destination = Path.home() / ".local/state/starship/starship.toml"
 roles = {
     "red": "red", "peach": "orange", "yellow": "yellow", "green": "green",
     "sapphire": "cyan", "lavender": "blue", "crust": "background",
@@ -70,7 +71,7 @@ def update():
             palettes[palette_name] = palette
             updated = original.rstrip() + (
                 f"\n\n# Generated from Omarchy theme {theme}: colors.toml\n"
-                "# Delete this palette table to regenerate it on the next theme switch.\n"
+                "# Regenerated from the active theme on each config rebuild.\n"
                 f"[palettes.{palette_name}]\n"
             )
             updated += "".join(f'{key} = "{value}"\n' for key, value in palette.items())
@@ -78,7 +79,7 @@ def update():
         if not roles.keys() <= palettes[palette_name].keys():
             raise ValueError(f"Palette {palette_name!r} is missing prompt colors")
 
-        # Saved palettes require changing only this one top-level setting.
+        # Select the palette in the generated copy.
         if expected.get("palette") != palette_name:
             updated, count = re.subn(
                 r"(?m)^palette[ \t]*=[^\r\n]*",
@@ -90,22 +91,24 @@ def update():
         if tomllib.loads(updated) != expected:
             raise ValueError("Palette update would change unrelated Starship settings")
 
+        updated = "# Generated from ~/.config/starship.toml; edit that file instead.\n" + updated
+
         # Theme staging and hooks run separately; retry if colors changed while read.
         if current_theme() != theme:
             continue
-        if updated == original:
-            return
         if config.read_text() != original:
             raise ValueError("Starship config changed during update; leaving it untouched")
+        if destination.is_file() and destination.read_text() == updated:
+            return
 
-        # Replace the resolved target, preserving the dotfiles symlink and file mode.
+        # Publish the generated copy atomically; never write to the base config.
         temporary = None
         try:
-            with tempfile.NamedTemporaryFile(mode="w", dir=config.parent, delete=False) as output:
+            with tempfile.NamedTemporaryFile(mode="w", dir=destination.parent, delete=False) as output:
                 temporary = Path(output.name)
                 os.fchmod(output.fileno(), stat.S_IMODE(config.stat().st_mode))
                 output.write(updated)
-            os.replace(temporary, config)
+            os.replace(temporary, destination)
         finally:
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
@@ -114,8 +117,9 @@ def update():
 
 
 try:
-    # Lock the stable directory instead of the config inode, which is replaced.
-    lock = os.open(config.parent, os.O_RDONLY)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    # Serialize theme hooks and shell startup using the stable output directory.
+    lock = os.open(destination.parent, os.O_RDONLY)
     try:
         fcntl.flock(lock, fcntl.LOCK_EX)
         update()
