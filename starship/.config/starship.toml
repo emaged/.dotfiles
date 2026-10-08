@@ -148,7 +148,7 @@ style = "bg:lavender"
 format = '[[  $time ](fg:crust bg:lavender)]($style)'
 
 [line_break]
-disabled = false 
+disabled = false
 
 [character]
 disabled = false
@@ -278,3 +278,231 @@ surface0 = "#363a4f"
 base = "#24273a"
 mantle = "#1e2030"
 crust = "#181926"
+
+# Omarchy theme palettes. The hook selects these by name without changing their colors.
+# The original prompt uses Catppuccin color names; other palettes adapt those aliases.
+# Upstream colors are kept exact; fallback palettes use the installed Omarchy resolver.
+
+# Generated fallback from installed /usr/share/omarchy/themes/ethereal/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_ethereal]
+red = "#ED5B5A"
+peach = "#eb8b54"
+yellow = "#E9BB4F"
+green = "#92a593"
+sapphire = "#a3bfd1"
+lavender = "#7d82d9"
+crust = "#060B1E"
+
+# Upstream Everforest (dark, medium); aliases: red, orange, yellow, green, aqua, blue, bg0.
+# Source: https://github.com/sainnhe/everforest/blob/master/palette.md
+[palettes.omarchy_everforest]
+red = "#e67e80"
+peach = "#e69875"
+yellow = "#dbbc7f"
+green = "#a7c080"
+sapphire = "#83c092"
+lavender = "#7fbbb3"
+crust = "#2d353b"
+
+# Upstream Flexoki light palette (600 accents); aliases: red, orange, yellow, green, cyan, blue, paper.
+# Source: https://stephango.com/flexoki
+[palettes.omarchy_flexoki_light]
+red = "#af3029"
+peach = "#bc5215"
+yellow = "#ad8301"
+green = "#66800b"
+sapphire = "#24837b"
+lavender = "#205ea6"
+crust = "#fffcf0"
+
+# Upstream Gruvbox Material (dark, medium); aliases: red, orange, yellow, green, aqua, blue, bg0.
+# Source: https://github.com/sainnhe/gruvbox-material/blob/master/autoload/gruvbox_material.vim
+[palettes.omarchy_gruvbox]
+red = "#ea6962"
+peach = "#e78a4e"
+yellow = "#d8a657"
+green = "#a9b665"
+sapphire = "#89b482"
+lavender = "#7daea3"
+crust = "#282828"
+
+# Generated fallback from installed /usr/share/omarchy/themes/hackerman/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_hackerman]
+red = "#50f872"
+peach = "#50f7a3"
+yellow = "#50f7d4"
+green = "#4fe88f"
+sapphire = "#7cf8f7"
+lavender = "#829dd4"
+crust = "#0B0C16"
+
+# Upstream Kanagawa Wave palette; aliases: autumnRed, surimiOrange, boatYellow2,
+# autumnGreen, waveAqua1, crystalBlue, sumiInk3.
+# Source: https://github.com/rebelot/kanagawa.nvim/blob/master/lua/kanagawa/colors.lua
+[palettes.omarchy_kanagawa]
+red = "#c34043"
+peach = "#ffa066"
+yellow = "#c0a36e"
+green = "#76946a"
+sapphire = "#6a9589"
+lavender = "#7e9cd8"
+crust = "#1f1f28"
+
+# Generated fallback from installed /usr/share/omarchy/themes/last-horizon/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_last_horizon]
+red = "#c38b7b"
+peach = "#6B5E73"
+yellow = "#6B5E73"
+green = "#87a9b0"
+sapphire = "#a5a0b6"
+lavender = "#b59790"
+crust = "#0c0b0c"
+
+# Generated fallback from installed /usr/share/omarchy/themes/lumon/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_lumon]
+red = "#4d86b0"
+peach = "#8bc9eb"
+yellow = "#6fa4c9"
+green = "#5e95bc"
+sapphire = "#b4e4f6"
+lavender = "#6fb8e3"
+crust = "#16242d"
+
+# Generated fallback from installed /usr/share/omarchy/themes/lupine/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_lupine]
+red = "#c900c4"
+peach = "#026fde"
+yellow = "#026fde"
+green = "#4a2fd0"
+sapphire = "#0c67de"
+lavender = "#3264eb"
+crust = "#fafafa"
+
+# Generated fallback from installed /usr/share/omarchy/themes/matte-black/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_matte_black]
+red = "#D35F5F"
+peach = "#c63d3d"
+yellow = "#b91c1c"
+green = "#FFC107"
+sapphire = "#bebebe"
+lavender = "#e68e0d"
+crust = "#121212"
+
+# Upstream Miasma terminal palette; aliases: red, magenta, yellow, green, cyan, blue, background.
+# The warm magenta supplies peach; upstream has no separate orange.
+# Source: https://github.com/xero/miasma.nvim/blob/main/extras/miasma.toml
+[palettes.omarchy_miasma]
+red = "#685742"
+peach = "#bb7744"
+yellow = "#b36d43"
+green = "#5f875f"
+sapphire = "#c9a554"
+lavender = "#78824b"
+crust = "#222222"
+
+# Upstream Nord palette; aliases: nord11, nord12, nord13, nord14, nord8, nord9, nord0.
+# Source: https://github.com/nordtheme/nord/blob/develop/src/nord.scss
+[palettes.omarchy_nord]
+red = "#bf616a"
+peach = "#d08770"
+yellow = "#ebcb8b"
+green = "#a3be8c"
+sapphire = "#88c0d0"
+lavender = "#81a1c1"
+crust = "#2e3440"
+
+# Generated fallback from installed /usr/share/omarchy/themes/osaka-jade/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_osaka_jade]
+red = "#FF5345"
+peach = "#a2734b"
+yellow = "#459451"
+green = "#549e6a"
+sapphire = "#2DD5B7"
+lavender = "#509475"
+crust = "#111c18"
+
+# Generated fallback from installed /usr/share/omarchy/themes/retro-82/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_retro_82]
+red = "#f85525"
+peach = "#faa968"
+yellow = "#e97b3c"
+green = "#028391"
+sapphire = "#8cbfb8"
+lavender = "#3f8f8a"
+crust = "#05182e"
+
+# Generated fallback from installed /usr/share/omarchy/themes/ristretto/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_ristretto]
+red = "#fd6883"
+peach = "#fb9a77"
+yellow = "#f9cc6c"
+green = "#adda78"
+sapphire = "#85dacc"
+lavender = "#f38d70"
+crust = "#2c2525"
+
+# Upstream Rose Pine Dawn; aliases: love, rose, gold, pine, foam, iris, base.
+# Source: https://github.com/rose-pine/starship/blob/main/rose-pine-dawn.toml
+# Base: https://github.com/rose-pine/rose-pine-palette/blob/main/dist/css/rose-pine.css
+[palettes.omarchy_rose_pine_dawn]
+red = "#b4637a"
+peach = "#d7827e"
+yellow = "#ea9d34"
+green = "#286983"
+sapphire = "#56949f"
+lavender = "#907aa9"
+crust = "#faf4ed"
+
+# Generated fallback from installed /usr/share/omarchy/themes/solitude/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_solitude]
+red = "#565d60"
+peach = "#d9dbdc"
+yellow = "#d9dbdc"
+green = "#9fa5a9"
+sapphire = "#707070"
+lavender = "#798186"
+crust = "#101315"
+
+# Upstream Tokyo Night (Night); aliases: red, orange, yellow, green, cyan, blue, bg.
+# Source: https://github.com/folke/tokyonight.nvim/blob/main/lua/tokyonight/colors/storm.lua
+# Night background: https://github.com/folke/tokyonight.nvim/blob/main/lua/tokyonight/colors/night.lua
+[palettes.omarchy_tokyo_night]
+red = "#f7768e"
+peach = "#ff9e64"
+yellow = "#e0af68"
+green = "#9ece6a"
+sapphire = "#7dcfff"
+lavender = "#7aa2f7"
+crust = "#1a1b26"
+
+# Generated fallback from installed /usr/share/omarchy/themes/vantablack/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_vantablack]
+red = "#a4a4a4"
+peach = "#b9b9b9"
+yellow = "#cecece"
+green = "#b6b6b6"
+sapphire = "#b0b0b0"
+lavender = "#8d8d8d"
+crust = "#000000"
+
+# Generated fallback from installed /usr/share/omarchy/themes/white/colors.toml
+# Aliases: red, orange, yellow, green, cyan, blue, background.
+[palettes.omarchy_white]
+red = "#2a2a2a"
+peach = "#4a4a4a"
+yellow = "#4a4a4a"
+green = "#3a3a3a"
+sapphire = "#3e3e3e"
+lavender = "#1a1a1a"
+crust = "#ffffff"
