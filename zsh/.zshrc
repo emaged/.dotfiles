@@ -318,3 +318,5 @@ eval "$(starship init zsh)"
 # zsh-syntax-highlighting (Turbo, last)
 zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
+
+. "$HOME/.local/share/../bin/env"
