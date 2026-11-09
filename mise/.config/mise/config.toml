@@ -1,13 +1,8 @@
 [tools]
-claude = "latest"
-codex = "latest"
-gh = "latest"
 go = "latest"
-node = "latest"
+herdr = "latest"
 npm = "latest"
 "npm:@mermaid-js/mermaid-cli" = "latest"
-opencode = "latest"
 python = "latest"
 
 [settings.upgrade]
-auto_prune = false

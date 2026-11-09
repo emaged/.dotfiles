@@ -236,3 +236,8 @@ personality = "pragmatic"
   ambient-suggestions-enabled = true
   followUpQueueMode = "queue"
 appearanceTheme = "light"
+
+[hooks.state]
+
+[hooks.state."/home/emiel/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:bcedcbd7b6fe241dc8f29d4c6574c87c0567dc0daaca643a03cf1dce72996462"

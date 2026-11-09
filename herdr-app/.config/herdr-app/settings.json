@@ -1,0 +1,13 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": true
+  },
+  "font_ligatures": false,
+  "minimum_contrast": 1.0,
+  "pane_scrollbars": false,
+  "theme": "emiel-terminal",
+  "colors": {
+    "accent": "#89b4fa"
+  }
+}

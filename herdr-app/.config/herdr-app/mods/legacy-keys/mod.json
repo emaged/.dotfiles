@@ -1,0 +1,11 @@
+{
+  "place": "none",
+  "title": "Legacy shortcuts",
+  "overlay": {
+    "kind": "popup",
+    "at": "top",
+    "offset": 46,
+    "width": 640,
+    "height": 320
+  }
+}

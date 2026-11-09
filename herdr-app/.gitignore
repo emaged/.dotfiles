@@ -1,0 +1,17 @@
+# Track personal configuration only; Herdr also writes generated files here.
+*
+!.config/
+!.config/herdr-app/
+!.config/herdr-app/keys.json
+!.config/herdr-app/layouts/
+!.config/herdr-app/layouts/emiel.json
+!.config/herdr-app/layouts/emiel.svg
+!.config/herdr-app/mods/
+!.config/herdr-app/mods/legacy-keys/
+!.config/herdr-app/mods/legacy-keys/bindings.js
+!.config/herdr-app/mods/legacy-keys/main.js
+!.config/herdr-app/mods/legacy-keys/mod.json
+!.config/herdr-app/settings.json
+!.config/herdr-app/themes/
+!.config/herdr-app/themes/emiel-terminal.json
+!.gitignore
