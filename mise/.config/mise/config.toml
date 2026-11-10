@@ -2,7 +2,7 @@
 go = "latest"
 herdr = "latest"
 npm = "latest"
-"npm:@mermaid-js/mermaid-cli" = "latest"
+"npm:@mermaid-js/mermaid-cli" = { version = "latest", trust_policy_excludes = ["chromium-bidi@157.0.8090-0"] }
 python = "latest"
 
 [settings.upgrade]

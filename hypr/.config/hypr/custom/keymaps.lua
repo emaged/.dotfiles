@@ -5,35 +5,35 @@ hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.unbind("SUPER + L")
 hl.unbind("SUPER + ALT + K")
+hl.unbind("SUPER + ALT + L")
+-- The title-bar plugin registers its Super+M binding after this file.
+hl.unbind("SUPER + M")
 hl.unbind("SUPER + SHIFT + W")
+
+-- Keep displaced defaults available alongside the custom shortcuts.
+o.bind("SUPER + CTRL + ALT + L", "Cycle workspace layout back", "omarchy-hyprland-workspace-layout-toggle back")
+o.bind("SUPER + SHIFT + ALT + W", "Omawrite", { launch = "omawrite" })
+o.bind("SUPER + CTRL + M", "Minimize window to the dock", "omarchy-hyprland-window-minimize")
 
 o.bind("SUPER + SHIFT + V", "VS Code", "code")
 o.bind("SUPER + SHIFT + W", "Typora", { launch = "typora --enable-wayland-ime" })
 
-o.bind(
-  "SUPER + CTRL + SHIFT + L",
-  "Toggle workspace layout",
-  "omarchy-hyprland-workspace-layout-toggle"
-)
+o.bind("SUPER + CTRL + SHIFT + L", "Toggle workspace layout", "omarchy-hyprland-workspace-layout-toggle")
 o.bind("SUPER + CTRL + J", "Toggle window split", hl.dsp.layout("togglesplit"))
 o.bind("SUPER + B", "Show key bindings", "omarchy-menu-keybindings")
 
 o.bind("SUPER + ALT + B", "Tmux keybindings", "omarchy-menu-tmux-keybindings")
 
 -- Toggle Hyprbars when the plugin is loaded.
-o.bind(
-  "SUPER + ALT + T",
-  "Toggle window bars",
-  function()
-    hl.config({
-      plugin = {
-        hyprbars = {
-          enabled = not hl.get_config("plugin.hyprbars.enabled"),
-        },
+o.bind("SUPER + ALT + T", "Toggle window bars", function()
+  hl.config({
+    plugin = {
+      hyprbars = {
+        enabled = not hl.get_config("plugin.hyprbars.enabled"),
       },
-    })
-  end
-)
+    },
+  })
+end)
 
 -- Vim-style focus movement.
 o.bind("SUPER + H", "Move focus left", hl.dsp.focus({ direction = "l" }))

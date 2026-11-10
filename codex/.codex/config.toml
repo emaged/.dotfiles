@@ -46,6 +46,7 @@ personality = "pragmatic"
   [mcp_servers.node_repl]
     args = []
     command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
+env_vars = ["BROWSER_USE_ACCESS_EXECUTOR_ID", "BROWSER_USE_ACCESS_PIPE_PATH", "BROWSER_USE_ACCESS_VERIFYING_IDENTITY"]
     startup_timeout_sec = 120
 
     [mcp_servers.node_repl.env]
@@ -59,8 +60,8 @@ personality = "pragmatic"
       NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
       NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
       BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-      BROWSER_USE_CODEX_APP_VERSION = "26.930.41038"
-      NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.930.41038/scripts/browser-service.mjs"}'
+      BROWSER_USE_CODEX_APP_VERSION = "26.1029.61003"
+      NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.1029.61003/scripts/browser-service.mjs"}'
       CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
   [mcp_servers.cua_repl]
@@ -172,6 +173,9 @@ personality = "pragmatic"
   [projects."/home/emiel/Dropbox/projects/coursera/algorithms/hello"]
     trust_level = "trusted"
 
+[projects."/home/emiel/Dropbox/seop"]
+trust_level = "trusted"
+
   [plugins."github@openai-curated"]
     enabled = true
 
@@ -219,9 +223,9 @@ personality = "pragmatic"
     source_type = "local"
     source = "/home/emiel/.dotfiles/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
-  [marketplaces.openai-primary-runtime]
-    source_type = "local"
-    source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+[marketplaces.openai-primary-runtime]
+source_type = "local"
+source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [features]
   js_repl = false
