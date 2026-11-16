@@ -2,7 +2,7 @@
 #        C O D E X   C L I   &   I D E   C O N F I G
 # ──────────────────────────────────────────────────────────────
 model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "max"
 personality = "pragmatic"
 
   ### Server Configurations
@@ -60,8 +60,8 @@ env_vars = ["BROWSER_USE_ACCESS_EXECUTOR_ID", "BROWSER_USE_ACCESS_PIPE_PATH", "B
       NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
       NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
       BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-      BROWSER_USE_CODEX_APP_VERSION = "26.1029.61003"
-      NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.1029.61003/scripts/browser-service.mjs"}'
+      BROWSER_USE_CODEX_APP_VERSION = "26.1103.60933"
+      NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.1103.60933/scripts/browser-service.mjs"}'
       CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
   [mcp_servers.cua_repl]
@@ -176,6 +176,12 @@ env_vars = ["BROWSER_USE_ACCESS_EXECUTOR_ID", "BROWSER_USE_ACCESS_PIPE_PATH", "B
 [projects."/home/emiel/Dropbox/seop"]
 trust_level = "trusted"
 
+[projects."/home/emiel/Dropbox/projects/cyber"]
+trust_level = "trusted"
+
+[projects."/home/emiel/.config/Code/User/globalStorage/moocfi.test-my-code/workspaces/.tmc"]
+trust_level = "trusted"
+
   [plugins."github@openai-curated"]
     enabled = true
 
@@ -239,9 +245,12 @@ source = "/home/emiel/.cache/codex-runtimes/codex-primary-runtime/plugins/openai
   codeFontSize = 13
   ambient-suggestions-enabled = true
   followUpQueueMode = "queue"
-appearanceTheme = "light"
+appearanceTheme = "system"
 
 [hooks.state]
 
 [hooks.state."/home/emiel/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:bcedcbd7b6fe241dc8f29d4c6574c87c0567dc0daaca643a03cf1dce72996462"
+
+[notice]
+hide_rate_limit_model_nudge = true

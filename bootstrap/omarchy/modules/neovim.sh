@@ -1,31 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing Neovim (nightly via neovim-git)..."
-
-# Ensure yay exists
-if ! command -v yay >/dev/null 2>&1; then
-  echo "ERROR: yay is not installed. Install yay first."
-  exit 1
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+echo '==> Installing Neovim nightly...'
+omarchy pkg aur add neovim-nightly-bin
+omarchy pkg add ruby luarocks
+if ! gem list -i neovim >/dev/null 2>&1; then
+  gem install --user-install neovim --no-document
 fi
-
-# Install neovim-git (nightly)
-yay -S --needed --noconfirm neovim-nightly-bin
-
-echo "==> Installing Neovim Ruby provider..."
-
-if ! command -v gem >/dev/null 2>&1; then
-  echo "Ruby not found. Install ruby first."
-  exit 1
+gem_user_dir=$(ruby -r rubygems -e 'print Gem.user_dir')
+if [[ -x "$gem_user_dir/bin/neovim-ruby-host" ]]; then
+  link_command neovim-ruby-host "$gem_user_dir/bin/neovim-ruby-host"
 fi
-
-if gem list -i neovim >/dev/null 2>&1; then
-  echo "neovim Ruby gem already installed."
-else
-  gem install neovim
-fi
-
-echo "==> Installing LuaRocks..."
-sudo pacman -S --needed luarocks lua-luarocks
-
-echo "Neovim setup complete."

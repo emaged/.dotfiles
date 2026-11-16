@@ -37,6 +37,5 @@ Ensure-Mise
 Write-Step 'Configuring mise activation for PowerShell...'
 Enable-MiseForPowerShell
 
-$env:DOTFILES_MISE_READY = '1'
 
 Write-Info 'mise available for installation...'

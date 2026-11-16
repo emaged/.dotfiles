@@ -1,59 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing cargo native build dependencies..."
-sudo apt update
-sudo apt install -y \
-    build-essential \
-    ca-certificates \
-    curl \
-    pkg-config \
-    libssl-dev \
-    libfreetype6-dev \
-    libfontconfig1-dev \
-    clang \
-    libclang-dev
-
-echo "==> Installing cargo packages..."
-
-if ! command -v rustup &>/dev/null; then
-    echo "==> Installing rustup..."
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs |
-        sh -s -- -y
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+sudo apt-get install -y build-essential pkg-config libssl-dev libfreetype6-dev \
+  libfontconfig1-dev clang libclang-dev cmake ninja-build libasound2-dev libexpat1-dev \
+  libxcb-composite0-dev libbz2-dev libsndio-dev libglut-dev libxmu-dev libxi-dev libxcursor-dev
+if [[ $(dpkg --print-architecture) == amd64 ]]; then
+  sudo apt-get install -y gcc-multilib g++-multilib
 fi
-
-if [[ -r "$HOME/.cargo/env" ]]; then
-    source "$HOME/.cargo/env"
+if ! have cargo && ! have rustup; then
+  run_installer https://sh.rustup.rs sh -y --no-modify-path --default-toolchain stable
 fi
-
-if ! command -v cargo &>/dev/null; then
-    echo "Rust installation failed."
-    exit 1
-fi
-
-echo "==> Updating Rust toolchain..."
-rustup update stable
-rustup default stable
-
-crates=(
-    ast-grep
-    cargo-update
-    du-dust
-    neovide
-    selene
-    trashy
-    tree-sitter-cli
-)
-
-installed_crates="$(cargo install --list)"
-
-for crate in "${crates[@]}"; do
-    if grep -q "^${crate} " <<<"$installed_crates"; then
-        echo "$crate already installed"
-    else
-        echo "Installing $crate..."
-        cargo install "$crate" --locked
-    fi
-done
-
-echo "Cargo packages installation complete."
+have cargo || die 'Cargo is unavailable after installing Rust.'
+install_cargo_packages

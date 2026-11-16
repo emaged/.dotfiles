@@ -1,75 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing global npm packages..."
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/mise.sh"
-
-ensure_mise
-
-echo "==> Installing Node.js via mise..."
-mise use -g node@latest
-
-eval "$(mise activate bash)"
-hash -r
-
-if ! command -v node >/dev/null 2>&1; then
-    echo "node not found after mise install."
-    exit 1
-fi
-
-if ! command -v npm >/dev/null 2>&1; then
-    echo "npm not found after mise Node install."
-    exit 1
-fi
-
-packages=(
-    "@openai/codex"
-    "@mermaid-js/mermaid-cli"
-    "@github/copilot"
-    browser-sync
-    eslint
-    eslint-config-prettier
-    eslint_d
-    htmlhint
-    http-server
-    live-server
-    mcp-hub
-    neovim
-    prettier
-)
-
-for pkg in "${packages[@]}"; do
-    name="$pkg"
-
-    if npm list -g --depth=0 "$name" >/dev/null 2>&1; then
-        echo "$pkg already installed"
-    else
-        echo "Installing $pkg..."
-        npm install -g "$pkg"
-    fi
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+ensure_mise_tool node
+have npm || die 'npm is unavailable after installing Node.'
+ensure_user_npm_prefix
+load_packages npm
+for package in "${packages[@]}"; do
+  if npm list -g --depth=0 "$package" >/dev/null 2>&1; then
+    printf '%s already installed\n' "$package"
+  else
+    npm install -g -- "$package"
+  fi
 done
-
-echo "==> Generating Codex Zsh completions..."
-
-codex_bin="$(npm prefix -g)/bin/codex"
-completion_dir="$HOME/.zfunc"
-completion_tmp="$(mktemp)"
-
-if [[ -x "$codex_bin" ]]; then
-    mkdir -p "$completion_dir"
-
-    if "$codex_bin" completion zsh >"$completion_tmp"; then
-        install -m 0644 "$completion_tmp" "$completion_dir/_codex"
-        echo "Codex Zsh completions generated."
-    else
-        echo "Warning: failed to generate Codex Zsh completions." >&2
-    fi
-else
-    echo "Warning: global Codex executable not found at $codex_bin." >&2
-fi
-
-rm -f "$completion_tmp"
-
-echo "Global npm packages installation complete."
+generate_completion codex codex completion zsh

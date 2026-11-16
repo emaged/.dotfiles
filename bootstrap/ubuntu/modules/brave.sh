@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "==> Installing Brave..."
 
-sudo apt install -y curl
+sudo apt-get install -y curl
 
 KEYRING="/usr/share/keyrings/brave-browser-archive-keyring.gpg"
 SOURCE_FILE="/etc/apt/sources.list.d/brave-browser-release.sources"
@@ -22,7 +22,7 @@ else
   echo "Brave apt source already present."
 fi
 
-sudo apt update
-sudo apt install -y brave-browser
+sudo apt-get update
+sudo apt-get install -y brave-browser
 
 echo "Brave installed."

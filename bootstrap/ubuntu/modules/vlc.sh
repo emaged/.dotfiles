@@ -3,6 +3,6 @@ set -euo pipefail
 
 echo "==> Installing VLC..."
 
-sudo apt install -y vlc
+sudo apt-get install -y vlc
 
 echo "VLC installed."

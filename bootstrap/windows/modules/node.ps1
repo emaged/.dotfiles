@@ -4,45 +4,28 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common.ps1')
 
-if (
-    [Environment]::GetEnvironmentVariable('DOTFILES_MISE_READY') -ne '1'
-) {
+if (-not (Test-Command mise)) {
     & (Join-Path $ScriptDir 'mise.ps1')
 }
 
 Write-Step 'Installing Node.js via mise...'
-& mise use -g node@latest
-Assert-NativeCommandSucceeded `
-    -Description 'Installing Node.js via mise' `
-    -ExitCode $LASTEXITCODE
+Ensure-MiseTool -Tool 'node' -Version 'latest'
 
-$packages = @(
-    '@openai/codex',
-    '@mermaid-js/mermaid-cli',
-    '@github/copilot',
-    'browser-sync',
-    'eslint',
-    'eslint-config-prettier',
-    'eslint_d',
-    'htmlhint',
-    'http-server',
-    'live-server',
-    'mcp-hub',
-    'neovim',
-    'prettier'
-)
+Ensure-UserNpmPrefix
+
+$packages = @(Read-PackageList -Name 'npm')
 
 Write-Step 'Installing global npm packages...'
 
 foreach ($package in $packages) {
-    & mise exec -- npm list -g --depth=0 $package *> $null
+    & mise -C $HOME exec node -- npm list -g --depth=0 $package *> $null
     if ($LASTEXITCODE -eq 0) {
         Write-Info "$package already installed"
         continue
     }
 
     Write-Step "Installing $package..."
-    & mise exec -- npm install -g $package
+    & mise -C $HOME exec node -- npm install -g $package
     Assert-NativeCommandSucceeded `
         -Description "Installing npm package $package" `
         -ExitCode $LASTEXITCODE
@@ -58,7 +41,7 @@ Ensure-Directory -Path $completionDirectory
 $completionTemporaryPath = [IO.Path]::GetTempFileName()
 
 try {
-    $completion = & mise exec -- codex completion powershell
+    $completion = & mise -C $HOME exec node -- codex completion powershell
     Assert-NativeCommandSucceeded `
         -Description 'Generating Codex PowerShell completions' `
         -ExitCode $LASTEXITCODE

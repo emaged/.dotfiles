@@ -1,30 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing tmux..."
-sudo apt install -y git tmux
-
-echo "==> Setting up tmux environment..."
-
-TPM_DIR="$HOME/.tmux/plugins/tpm"
-
-if [[ -d "$TPM_DIR/.git" ]]; then
-  echo "Updating TPM..."
-  git -C "$TPM_DIR" pull --ff-only
-else
-  echo "Installing TPM..."
-  git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+# Keep the distro package for runtime libraries; use a recent tmux for these dotfiles.
+sudo apt-get install -y git tmux
+ensure_mise_tool tmux
+version=$(tmux -V)
+version=${version#tmux }
+if ! dpkg --compare-versions "$version" ge 3.6; then
+  die "tmux $version is pinned below the dotfiles minimum (3.6). Select a compatible version in mise."
 fi
-
-CATPPUCCIN_DIR="$HOME/.config/tmux/plugins/catppuccin/tmux"
-
-if [[ -d "$CATPPUCCIN_DIR/.git" ]]; then
-  echo "Catppuccin already installed (version pinned)."
-else
-  echo "Installing Catppuccin tmux theme..."
-  mkdir -p "$HOME/.config/tmux/plugins/catppuccin"
-  git clone -b v2.1.3 https://github.com/catppuccin/tmux.git \
-    "$CATPPUCCIN_DIR"
-fi
-
-echo "tmux setup complete."
+plugins="$HOME/.config/tmux/plugins"
+mkdir -p "$plugins"
+for plugin in tpm tmux-powerkit; do
+  case "$plugin" in
+    tpm) url=https://github.com/tmux-plugins/tpm.git ;;
+    tmux-powerkit) url=https://github.com/fabioluciano/tmux-powerkit.git ;;
+  esac
+  if [[ -d "$plugins/$plugin/.git" ]]; then
+    printf '%s already installed\n' "$plugin"
+  elif [[ -e "$plugins/$plugin" || -L "$plugins/$plugin" ]]; then
+    die "Refusing to replace $plugins/$plugin"
+  else
+    git clone "$url" "$plugins/$plugin"
+  fi
+done
+echo 'tmux plugins match the dotfiles configuration. Existing plugin checkouts were retained.'

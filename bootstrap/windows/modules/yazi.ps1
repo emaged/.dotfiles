@@ -24,4 +24,20 @@ foreach ($package in $wingetPackages) {
 Ensure-Scoop
 Install-ScoopPackage -Package 'resvg'
 
+
+# Yazi requires file(1); Git for Windows supplies it outside the default PATH.
+if (-not $env:YAZI_FILE_ONE) {
+    $git = (Get-Command git -ErrorAction Stop).Source
+    $gitRoot = Split-Path -Parent (Split-Path -Parent $git)
+    $file = Join-Path $gitRoot 'usr\bin\file.exe'
+    if (-not (Test-Path -LiteralPath $file)) {
+        throw 'Git file.exe was not found. Set YAZI_FILE_ONE to Git\usr\bin\file.exe, then rerun this module.'
+    }
+    [Environment]::SetEnvironmentVariable('YAZI_FILE_ONE', $file, 'User')
+    $env:YAZI_FILE_ONE = $file
+}
+
+if (-not (Test-Path -LiteralPath $env:YAZI_FILE_ONE)) {
+    throw 'YAZI_FILE_ONE points to a missing file. Correct it before running Yazi.'
+}
 Write-Info 'Yazi installation complete.'

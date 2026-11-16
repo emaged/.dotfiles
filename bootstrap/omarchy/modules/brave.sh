@@ -9,6 +9,6 @@ if ! command -v yay >/dev/null 2>&1; then
 fi
 
 # -S installs without partial upgrade issues (avoid -Sy)
-yay -S --needed --noconfirm brave-bin
+omarchy pkg aur add brave-bin
 
 echo "Brave installed."

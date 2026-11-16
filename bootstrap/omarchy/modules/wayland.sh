@@ -3,6 +3,6 @@ set -euo pipefail
 
 echo "==> Installing Wayland utilities..."
 
-sudo pacman -S --needed --noconfirm wl-clip-persist
+omarchy pkg add wl-clip-persist
 
 echo "Wayland utilities installed."

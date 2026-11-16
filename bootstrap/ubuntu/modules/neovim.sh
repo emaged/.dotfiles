@@ -1,39 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing Neovim via mise..."
-
-sudo apt update
-sudo apt install -y \
-    btm \
-    curl \
-    git \
-    lazygit \
-    ruby-full \
-    luarocks \
-    python3 \
-    python3-pip \
-    python3-venv \
-    python3-dev \
-    python3-pynvim \
-    unzip \
-    xz-utils
-
-# Install mise if missing
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/mise.sh"
-ensure_mise
-
-echo "==> Installing Neovim nightly..."
-mise use -g neovim@nightly
-
-echo "==> Installing Neovim Ruby provider..."
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+sudo apt-get install -y ruby-full ruby-dev build-essential luarocks python3 python3-venv unzip xz-utils
+ensure_mise_tool neovim nightly
+# Install the provider as the user and expose its executable without sudo gem.
 if ! gem list -i neovim >/dev/null 2>&1; then
-    sudo gem install neovim
-else
-    echo "neovim Ruby gem already installed."
+  gem install --user-install neovim --no-document
 fi
-
-echo "==> Neovim setup complete."
-nvim --version | head -n 1
+gem_user_dir=$(ruby -r rubygems -e 'print Gem.user_dir')
+if [[ -x "$gem_user_dir/bin/neovim-ruby-host" ]]; then
+  link_command neovim-ruby-host "$gem_user_dir/bin/neovim-ruby-host"
+fi
+nvim --version

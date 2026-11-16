@@ -1,119 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+echo '==> Installing development tools...'
+sudo apt-get install -y apt-file bat bc btm cmake cpio fd-find gnupg \
+  imagemagick inotify-tools lua5.1 maven meson mkcert ninja-build python3 \
+  ruby-full ruby-dev build-essential ripgrep wget zoxide software-properties-common texlive-latex-base openjfx openjfx-source udiskie wev
 
-apt_has_package() {
-    apt-cache show "$1" >/dev/null 2>&1
-}
-
-install_available_packages() {
-    local available=()
-    local missing=()
-    local pkg
-
-    for pkg in "$@"; do
-        if apt_has_package "$pkg"; then
-            available+=("$pkg")
-        else
-            missing+=("$pkg")
-        fi
-    done
-
-    if ((${#available[@]})); then
-        sudo apt install -y "${available[@]}"
-    fi
-
-    if ((${#missing[@]})); then
-        echo "Skipping unavailable packages: ${missing[*]}"
-    fi
-}
-
-echo "==> Installing development tools..."
-
-sudo apt update
-
-install_available_packages \
-    apt-file \
-    bat \
-    bc \
-    bottom \
-    ca-certificates \
-    cmake \
-    cpio \
-    curl \
-    eza \
-    fd-find \
-    gdu \
-    git-delta \
-    glab \
-    gnupg \
-    imagemagick \
-    inotify-tools \
-    lua5.1 \
-    maven \
-    meson \
-    mkcert \
-    ninja-build \
-    openjfx \
-    openjfx-source \
-    python3 \
-    ripgrep \
-    ruby-full \
-    snapd \
-    software-properties-common \
-    texlive-latex-base \
-    udiskie \
-    wev \
-    wget \
-    zoxide
-
-install_available_packages \
-    openjdk-21-jdk \
-    openjdk-21-source \
-    openjdk-17-jdk \
-    openjdk-17-source \
-    openjdk-11-jdk \
-    openjdk-11-source \
-    openjdk-8-jdk \
-    openjdk-8-source
-
-echo "==> Configuring the MongoDB 8.0 package repository..."
-. /etc/os-release
-
-case "${VERSION_CODENAME:-}" in
-    noble|jammy|focal)
-        mongodb_repo_codename="$VERSION_CODENAME"
-        ;;
-    resolute)
-        mongodb_repo_codename="noble"
-        echo "MongoDB has no Resolute repository; using Noble packages."
-        ;;
-    *)
-        echo "Unsupported Ubuntu release: ${VERSION_CODENAME:-unknown}"
-        exit 1
-        ;;
-esac
-
-curl -fsSL https://pgp.mongodb.com/server-8.0.asc |
-    sudo gpg --dearmor --yes \
-        --output /usr/share/keyrings/mongodb-server-8.0.gpg
-
-echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu ${mongodb_repo_codename}/mongodb-org/8.0 multiverse" |
-    sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list >/dev/null
-
-sudo apt update
-sudo apt install -y \
-    mongodb-atlas-cli \
-    mongodb-database-tools \
-    mongodb-mongosh
-
-echo "==> Installing Postman..."
-if ! snap list postman &>/dev/null; then
-    sudo snap install postman
+# These packages vary between LTS archives; retain the same CLI capabilities.
+for tool in eza gdu glab lazygit; do
+  if apt_has_package "$tool"; then
+    sudo apt-get install -y "$tool"
+  else
+    ensure_mise_tool "$tool"
+  fi
+done
+if apt_has_package git-delta; then
+  sudo apt-get install -y git-delta
 else
-    echo "Postman already installed."
+  ensure_mise_tool delta
 fi
 
-echo "==> Ensuring apt-file database is initialized..."
-sudo apt-file update
+if apt_has_package tectonic; then
+  sudo apt-get install -y tectonic
+else
+  ensure_mise_tool github:tectonic-typesetting/tectonic
+fi
 
-echo "Development tools installed."
+optional_missing=()
+for version in 21 17 11 8; do
+  for suffix in jdk source; do
+    package="openjdk-$version-$suffix"
+    if apt_has_package "$package"; then
+      sudo apt-get install -y "$package"
+    else
+      optional_missing+=("$package")
+    fi
+  done
+done
+if ((${#optional_missing[@]})); then
+  printf 'Optional Java packages unavailable in this release: %s\n' "${optional_missing[*]}"
+fi
+
+link_command bat /usr/bin/batcat
+link_command fd /usr/bin/fdfind
+sudo apt-file update
+echo 'Development tools installed.'

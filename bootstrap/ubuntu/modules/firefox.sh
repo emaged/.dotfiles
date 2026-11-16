@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 
 echo "==> Installing Firefox..."
 
-if apt-cache show firefox >/dev/null 2>&1; then
-  sudo apt install -y firefox
+if apt_has_package firefox; then
+  sudo apt-get install -y firefox
 else
-  sudo apt install -y firefox-esr
+  sudo apt-get install -y firefox-esr
 fi
 
-sudo apt install -y geoclue-2.0
+sudo apt-get install -y geoclue-2.0 xdg-utils
 
 echo "==> Setting Firefox as default browser..."
 
@@ -21,13 +22,13 @@ for candidate in firefox.desktop firefox_firefox.desktop firefox-esr.desktop; do
   fi
 done
 
-if [[ -n "$desktop_id" ]]; then
-  xdg-settings set default-web-browser "$desktop_id" || true
-  xdg-mime default "$desktop_id" x-scheme-handler/http || true
-  xdg-mime default "$desktop_id" x-scheme-handler/https || true
-  xdg-mime default "$desktop_id" text/html || true
+if [[ -n "$desktop_id" && -n ${DISPLAY:-}${WAYLAND_DISPLAY:-} ]]; then
+  xdg-settings set default-web-browser "$desktop_id"
+  xdg-mime default "$desktop_id" x-scheme-handler/http
+  xdg-mime default "$desktop_id" x-scheme-handler/https
+  xdg-mime default "$desktop_id" text/html
 else
-  echo "Firefox desktop file not found; skipping default browser setup."
+  echo "No desktop session or Firefox desktop file; skipping default browser setup."
 fi
 
-echo "Firefox installation and default configuration complete."
+echo "Firefox setup finished."

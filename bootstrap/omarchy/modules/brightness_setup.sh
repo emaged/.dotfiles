@@ -3,11 +3,11 @@ set -euo pipefail
 
 echo "==> Installing ddcutil..."
 
-sudo pacman -S --needed --noconfirm ddcutil
+omarchy pkg add ddcutil
 
 echo "==> Ensuring i2c-dev module is loaded..."
 
-if ! lsmod | grep -q i2c_dev; then
+if [[ ! -d /sys/module/i2c_dev ]]; then
   sudo modprobe i2c-dev
 fi
 
@@ -15,7 +15,9 @@ echo "i2c-dev" | sudo tee /etc/modules-load.d/i2c-dev.conf >/dev/null
 
 echo "==> Adding user to i2c group..."
 
-if ! groups "$USER" | grep -q i2c; then
+sudo groupadd -f i2c
+user_groups=$(id -nG "$USER")
+if [[ " $user_groups " != *' i2c '* ]]; then
   sudo usermod -aG i2c "$USER"
   echo "User added to i2c group."
   echo "⚠️ You must log out and log back in for this to take effect."

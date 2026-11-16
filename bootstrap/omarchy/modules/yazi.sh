@@ -17,6 +17,6 @@ packages=(
   imagemagick
 )
 
-sudo pacman -S --needed --noconfirm "${packages[@]}"
+omarchy pkg add "${packages[@]}"
 
 echo "Yazi installation complete."

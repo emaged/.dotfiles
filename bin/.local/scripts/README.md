@@ -85,7 +85,9 @@ update-dev
 update-dev cargo pipx npm
 ```
 
-The dry run prints commands and checks local tool availability/package ownership.
+The dry run prints commands and checks local tool availability/package ownership
+and the current npm global prefix. It resolves the same npm executable as a real
+run; a later mise upgrade may change that path.
 It does not contact registries, check available versions, or run updaters.
 
 Supported components: `zinit`, `mise`, `rustup`, `cargo`, `pipx`, `uv`, `npm`,
@@ -98,20 +100,31 @@ does not prevent independent components from updating.
 - mise runs from your home directory so the invoking project's configuration
   is not selected. It respects configured versions and keeps old runtimes:
   pipx environments and other tools may still reference their paths. A `latest`
-  constraint can include major releases.
+  constraint can include major releases. A failed mise self-update is reported
+  but does not prevent its installed version from updating tools.
 - Before mise updates, npm globals are recorded. If the global prefix changes,
   registry packages are installed at their previous versions in the new prefix.
   npm itself is supplied by the Node installation and is not migrated.
-  Linked/local packages or a broken npm inventory stop the mise step for manual
-  handling. Migration also happens when only the `mise` component is selected.
+  Linked/local/Git packages or a broken npm inventory stop the mise step for
+  manual handling. Migration also happens when only the `mise` component is
+  selected. System-owned or unwritable source prefixes are skipped. A migration
+  into a protected destination fails and retains the previous packages.
 - The npm component runs `npm update -g` using the home-level mise Node when
   available. This follows npm's normal update rules, rather than reinstalling
-  every package with an explicit `@latest` request.
+  every package with an explicit `@latest` request. The global prefix and any
+  existing `bin`, `lib`, and `lib/node_modules` directories must be user-owned and
+  writable; system prefixes are skipped.
 - Python updates cover pipx tools (including injected packages) and uv tools.
   They do not update system Python packages or project virtual environments.
+- mise-managed uv binaries and shims are updated by the `mise` component; system
+  uv binaries use the OS updater. Other uv installations attempt self-update
+  with shell profile changes disabled. uv's specific unsupported-installation
+  error is a skip; other failures are reported. uv tools are still updated in
+  either case. Dry runs label this self-update as conditional without probing it.
 - Zinit is loaded directly without sourcing `.zshrc`. Set `ZINIT_HOME` to its
   parent directory if it is outside the usual locations (for example,
-  `ZINIT_HOME="$HOME/.local/share/zinit"`).
+  `ZINIT_HOME="$HOME/.local/share/zinit"`). Its self-update changelog does not
+  open a pager.
 - Cargo updates require the bootstrap's existing `cargo-update` installation.
   Compilation can take time. Rust toolchains are updated only if rustup exists.
 - Standalone Starship is refreshed through its official installer only when its

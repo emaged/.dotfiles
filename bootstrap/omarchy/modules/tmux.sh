@@ -10,7 +10,7 @@ if ! command -v omarchy &>/dev/null; then
 fi
 
 echo "==> Installing tmux..."
-sudo pacman -S --needed --noconfirm tmux
+omarchy pkg add tmux
 
 echo "==> Setting up tmux environment..."
 

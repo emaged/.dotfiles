@@ -5,39 +5,22 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common.ps1')
 
 Refresh-Path
-
-if (-not (Test-Command cargo)) {
-    throw 'cargo not found after installing Rustup.'
-}
-
-if (Test-Command rustup) {
-    Write-Step 'Ensuring the stable Rust toolchain is active...'
-    & rustup toolchain install stable
-    Assert-NativeCommandSucceeded `
-        -Description 'Installing the stable Rust toolchain' `
-        -ExitCode $LASTEXITCODE
-
-    & rustup default stable
-    Assert-NativeCommandSucceeded `
-        -Description 'Selecting the stable Rust toolchain' `
-        -ExitCode $LASTEXITCODE
+Assert-MsvcBuildTools
+if (-not (Test-Command rustup)) { throw 'Rustup is unavailable; run the dev-tools module first.' }
+& rustup run stable cargo --version *> $null
+if ($LASTEXITCODE -ne 0) {
+    & rustup toolchain install stable --profile minimal
+    Assert-NativeCommandSucceeded -Description 'Installing stable Rust' -ExitCode $LASTEXITCODE
 }
 
 Write-Step 'Installing cargo packages...'
 
-$installed = & cargo install --list
+$installed = & rustup run stable cargo install --list
 Assert-NativeCommandSucceeded `
     -Description 'Listing installed Cargo packages' `
     -ExitCode $LASTEXITCODE
 
-$crates = @(
-    'ast-grep',
-    'cargo-update',
-    'du-dust',
-    'neovide',
-    'selene',
-    'trashy'
-)
+$crates = @(Read-PackageList -Name 'cargo')
 
 foreach ($crate in $crates) {
     if ($installed -match "(?m)^$([regex]::Escape($crate)) v") {
@@ -46,7 +29,7 @@ foreach ($crate in $crates) {
     }
 
     Write-Step "Installing $crate..."
-    & cargo install $crate --locked
+    & rustup run stable cargo install $crate --locked
     if ($LASTEXITCODE -ne 0) {
         throw "cargo install failed for $crate"
     }

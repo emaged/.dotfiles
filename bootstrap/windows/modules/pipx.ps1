@@ -4,57 +4,44 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common.ps1')
 
-if (
-    [Environment]::GetEnvironmentVariable('DOTFILES_MISE_READY') -ne '1'
-) {
+if (-not (Test-Command mise)) {
     & (Join-Path $ScriptDir 'mise.ps1')
 }
 
 Write-Step 'Installing Python via mise...'
-& mise use -g python@latest
-Assert-NativeCommandSucceeded `
-    -Description 'Installing Python via mise' `
-    -ExitCode $LASTEXITCODE
+Ensure-MiseTool -Tool 'python' -Version 'latest'
 
 Write-Step 'Ensuring pipx is installed...'
-& mise exec -- python -m pip install --upgrade pip
+& mise -C $HOME exec python -- python -m pip install --upgrade pip
 Assert-NativeCommandSucceeded `
     -Description 'Upgrading pip' `
     -ExitCode $LASTEXITCODE
 
-& mise exec -- python -m pip install --user pipx
+& mise -C $HOME exec python -- python -m pip install --user pipx
 Assert-NativeCommandSucceeded `
     -Description 'Installing pipx' `
     -ExitCode $LASTEXITCODE
 
-& mise exec -- python -m pipx ensurepath
+& mise -C $HOME exec python -- python -m pipx ensurepath
 Assert-NativeCommandSucceeded `
     -Description 'Adding pipx to PATH' `
     -ExitCode $LASTEXITCODE
 
 Refresh-Path
 
-$packages = @(
-    'black',
-    'djlint',
-    'hererocks',
-    'ipython',
-    'poetry',
-    'pynvim',
-    'pytest',
-    'ruff'
-)
+$packages = @(Read-PackageList -Name 'pipx')
 
 Write-Step 'Installing / upgrading pipx packages...'
 
+$inventory = & mise -C $HOME exec python -- python -m pipx list --json
+Assert-NativeCommandSucceeded -Description 'Listing pipx environments' -ExitCode $LASTEXITCODE
+$installed = @(($inventory | ConvertFrom-Json).venvs.PSObject.Properties | ForEach-Object { $_.Name })
 foreach ($package in $packages) {
-    & mise exec -- python -m pipx upgrade $package
-    if ($LASTEXITCODE -ne 0) {
-        & mise exec -- python -m pipx install $package
-        Assert-NativeCommandSucceeded `
-            -Description "Installing pipx package $package" `
-            -ExitCode $LASTEXITCODE
+    if ($installed -contains $package) {
+        & mise -C $HOME exec python -- python -m pipx upgrade $package
+    } else {
+        & mise -C $HOME exec python -- python -m pipx install $package
     }
+    Assert-NativeCommandSucceeded -Description "Installing/upgrading pipx package $package" -ExitCode $LASTEXITCODE
 }
-
-Write-Info 'pipx packages installed/upgraded to latest.'
+Write-Info 'pipx packages installed/upgraded.'

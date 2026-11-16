@@ -1,31 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing Yazi and dependencies..."
-
-sudo apt install -y \
-  ffmpeg \
-  7zip \
-  file \
-  fd-find \
-  fzf \
-  imagemagick \
-  jq \
-  poppler-utils \
-  ripgrep \
-  wl-clipboard \
-  zoxide
-
-if apt-cache show yazi >/dev/null 2>&1; then
-  sudo apt install -y yazi
-  echo "Yazi installed via apt."
-elif command -v cargo &>/dev/null; then
-  echo "==> yazi package not available via apt, installing with cargo..."
-  cargo install yazi-build --locked
-  echo "Yazi installed via cargo fallback."
-else
-  echo "Yazi package is not available via apt and cargo is not installed."
-  echo "Skipping Yazi binary installation."
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+sudo apt-get install -y ffmpeg 7zip file fd-find imagemagick jq poppler-utils ripgrep wl-clipboard zoxide
+link_command fd /usr/bin/fdfind
+# Noble's fzf is older than Yazi's minimum; mise provides a current binary.
+ensure_mise_tool fzf
+ensure_mise_tool yazi
+ensure_mise_tool resvg
+if ! command -v magick >/dev/null 2>&1; then
+  echo 'NOTE: ImageMagick 6 provides reduced Yazi previews. Full font/HEIC/JXL previews require ImageMagick 7.1.1+.' >&2
 fi
-
-echo "Yazi installation complete."

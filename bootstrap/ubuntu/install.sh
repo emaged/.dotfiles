@@ -1,42 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="$ROOT_DIR/modules"
-
-run() {
-    echo
-    echo "==> $1"
-    "$MODULE_DIR/$1"
+PLATFORM='ubuntu'
+DEFAULT_MODULES=(prerequisites mise shell dev-tools uv pipx cargo_packages node julia neovim opencode starship tmux yazi mongodb postman firefox brave vlc wayland)
+OPTIONAL_MODULES=(brightness_setup hyprland)
+SKIPPABLE_MODULES=(mongodb)
+declare -A MODULE_DEPS=(
+  [mise]='prerequisites'
+  [shell]='prerequisites'
+  [dev-tools]='mise'
+  [uv]='prerequisites'
+  [pipx]='prerequisites'
+  [cargo_packages]='prerequisites'
+  [node]='mise'
+  [julia]='prerequisites'
+  [neovim]='mise node pipx'
+  [opencode]='node'
+  [starship]='prerequisites'
+  [tmux]='mise'
+  [yazi]='mise'
+  [mongodb]='prerequisites'
+  [postman]='prerequisites'
+  [firefox]='prerequisites'
+  [brave]='prerequisites'
+  [vlc]='prerequisites'
+  [wayland]='prerequisites'
+  [brightness_setup]='prerequisites'
+  [hyprland]='prerequisites'
+)
+check_platform() {
+  source /etc/os-release
+  [[ ${ID:-} == ubuntu ]] || { printf 'This installer requires Ubuntu.\n' >&2; return 2; }
+  case ${VERSION_CODENAME:-} in noble|resolute) ;; *) printf 'Supported Ubuntu releases: 24.04 and 26.04 LTS.\n' >&2; return 2 ;; esac
+  if [[ -n ${WSL_DISTRO_NAME:-} ]] || grep -qi microsoft /proc/sys/kernel/osrelease; then
+    printf 'Use wsl/install.sh inside WSL.\n' >&2; return 2
+  fi
 }
-
-echo "==> Refreshing apt package lists..."
-sudo apt update
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-source "$SCRIPT_DIR/modules/mise.sh"
-
-echo "==> ensuring mise..."
-ensure_mise
-
-run shell.sh
-run dev-tools.sh
-run uv.sh
-run pipx.sh
-run cargo_packages.sh
-run node.sh
-run julia.sh
-run neovim.sh
-run opencode.sh
-run starship.sh
-run tmux.sh
-run yazi.sh
-run firefox.sh
-run brave.sh
-run vlc.sh
-run wayland.sh
-# run brightness_setup.sh
-
-echo
-echo "Bootstrap complete."
+source "$ROOT_DIR/lib/runner.sh"
+bootstrap_main "$@"

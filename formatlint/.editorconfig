@@ -56,7 +56,12 @@ trim_trailing_whitespace = false
 # Templates (Django / Jinja / HTML-based)
 [*.{jinja,jinja2,j2,django,htmldjango}]
 indent_style = space
-indent_size = 2
+indent_size = 4
+
+# HTML files inside template directories
+[**/templates/**.html]
+indent_style = space
+indent_size = 4
 
 # XML / SVG
 [*.{xml,xsd,xsl,svg}]

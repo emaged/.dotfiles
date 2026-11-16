@@ -7,7 +7,6 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Step 'Installing development tools...'
 
 $wingetPackages = @(
-    @{ Id = 'Git.Git'; Name = 'Git' },
     @{ Id = 'Rustlang.Rustup'; Name = 'Rustup' },
     @{ Id = 'Apache.Maven'; Name = 'Maven' },
     @{ Id = 'ImageMagick.ImageMagick'; Name = 'ImageMagick' },

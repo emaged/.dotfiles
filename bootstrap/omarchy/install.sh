@@ -1,32 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="$ROOT_DIR/modules"
-
-run() {
-  echo
-  echo "==> $1"
-  "$MODULE_DIR/$1"
+PLATFORM='omarchy'
+DEFAULT_MODULES=(prerequisites mise shell dev-tools uv pipx cargo_packages npm julia neovim opencode starship tmux yazi firefox brave vlc wayland)
+OPTIONAL_MODULES=(brightness_setup omarchy-plugins hyprland)
+SKIPPABLE_MODULES=()
+declare -A MODULE_DEPS=(
+  [mise]='prerequisites'
+  [shell]='prerequisites'
+  [dev-tools]='prerequisites'
+  [uv]='mise'
+  [pipx]='prerequisites'
+  [cargo_packages]='prerequisites'
+  [npm]='mise'
+  [julia]='prerequisites'
+  [neovim]='npm pipx'
+  [opencode]='mise'
+  [starship]='prerequisites'
+  [tmux]='prerequisites'
+  [yazi]='prerequisites'
+  [firefox]='prerequisites'
+  [brave]='prerequisites'
+  [vlc]='prerequisites'
+  [wayland]='prerequisites'
+  [brightness_setup]='prerequisites'
+  [omarchy-plugins]='prerequisites'
+  [hyprland]='prerequisites'
+)
+check_platform() {
+  command -v omarchy >/dev/null && command -v pacman >/dev/null || {
+    printf 'This installer requires an existing Omarchy installation.\n' >&2; return 2;
+  }
 }
-
-run shell.sh
-run dev-tools.sh
-run uv.sh
-run pipx.sh
-run cargo_packages.sh
-run npm.sh
-run julia.sh
-run neovim.sh
-run starship.sh
-run tmux.sh
-run yazi.sh
-run firefox.sh
-run brave.sh
-run vlc.sh
-run wayland.sh
-run brightness_setup.sh
-run omarchy-plugins.sh
-
-echo
-echo "Bootstrap complete."
+source "$ROOT_DIR/lib/runner.sh"
+bootstrap_main "$@"

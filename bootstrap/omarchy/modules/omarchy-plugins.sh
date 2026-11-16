@@ -21,14 +21,19 @@ install_plugin() {
   omarchy plugin add "$url" --enable --yes
 }
 
+[[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] || {
+  echo 'Run this optional module from an active Omarchy desktop session.' >&2
+  exit 1
+}
 echo "==> Installing Omarchy plugins..."
 
 install_plugin omaplug https://github.com/fross100/omaplug.git
 install_plugin jankeesvw.notification-center https://github.com/jankeesvw/omarchy-notification-center.git
-install_plugin marcho78.titlebars https://github.com/marcho78/omarchy-titlebars.git
-
-# Setup is safe to repeat and builds hyprbars for the installed Hyprland version.
-echo "==> Setting up Title Bars..."
-"$PLUGINS_DIR/marcho78.titlebars/bin/titlebars" setup
+if pacman -Q omarchy-hyprland-titlebars >/dev/null 2>&1; then
+  echo 'Omarchy supplies titlebars; skipping legacy hyprbars setup.'
+else
+  install_plugin marcho78.titlebars https://github.com/marcho78/omarchy-titlebars.git
+  "$PLUGINS_DIR/marcho78.titlebars/bin/titlebars" setup
+fi
 
 echo "Omarchy plugin setup complete."

@@ -53,5 +53,5 @@ if (Test-Command juliaup) {
 
     Write-Info 'Julia installation complete.'
 } else {
-    Write-Warning 'Julia was handed off to the Microsoft Store. If juliaup is not visible yet, reopen PowerShell after the Store install finishes.'
+    throw 'Juliaup is not available after the Store installation. Finish the Store installation, reopen PowerShell, and rerun the julia module.'
 }

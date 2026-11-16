@@ -1,0 +1,7 @@
+# Packages for this platform only; keep intentional differences documented.
+ast-grep
+cargo-update
+du-dust
+neovide
+selene
+trashy

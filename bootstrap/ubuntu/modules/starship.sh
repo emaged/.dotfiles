@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Installing starship..."
-
-if command -v starship &>/dev/null; then
-  echo "starship already installed"
-  exit 0
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+if ! have starship; then
+  mkdir -p "$HOME/.local/bin"
+  run_installer https://starship.rs/install.sh sh --yes --bin-dir "$HOME/.local/bin"
 fi
-
-curl -sS https://starship.rs/install.sh | sh -s -- -y
-
-echo "starship installation complete."

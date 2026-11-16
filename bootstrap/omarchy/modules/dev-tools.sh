@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "==> Installing development tools..."
 
-sudo pacman -S --needed --noconfirm \
+omarchy pkg add \
     bat \
     bc \
     bottom \
@@ -48,7 +48,7 @@ sudo pacman -S --needed --noconfirm \
 
 if command -v yay &>/dev/null; then
     echo "==> Installing AUR packages..."
-    yay -S --needed --noconfirm \
+    omarchy pkg aur add \
         jetbrains-toolbox \
         mongodb-atlas-cli-bin \
         mongodb-tools-bin \
@@ -58,7 +58,8 @@ if command -v yay &>/dev/null; then
     # java-openjfx-doc \
     # java-openjfx-src
 else
-    echo "==> yay not found, skipping AUR packages."
+    echo "ERROR: yay is required for the requested AUR packages." >&2
+    exit 1
 fi
 
 echo "==> Ensuring pkgfile database is initialized..."

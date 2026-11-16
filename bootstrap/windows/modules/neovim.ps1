@@ -4,25 +4,19 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common.ps1')
 
-if (
-    [Environment]::GetEnvironmentVariable('DOTFILES_MISE_READY') -ne '1'
-) {
+if (-not (Test-Command mise)) {
     & (Join-Path $ScriptDir 'mise.ps1')
 }
 
 Write-Step 'Installing Neovim via mise...'
-& mise use -g neovim@nightly
-Assert-NativeCommandSucceeded `
-    -Description 'Installing Neovim via mise' `
-    -ExitCode $LASTEXITCODE
+Ensure-MiseTool -Tool 'neovim' -Version 'nightly'
 
 Write-Step 'Installing Neovim Ruby provider...'
 
 Refresh-Path
 
 if (-not (Test-Command gem)) {
-    Write-Warning 'Ruby is not available. Rerun dev-tools.ps1 to install RubyInstaller with DevKit for the Neovim Ruby provider.'
-    return
+    throw 'Ruby is unavailable. Run the dev-tools module before installing the Neovim Ruby provider.'
 }
 
 $rubyVersion = (& ruby -e 'print RUBY_VERSION') 2>$null

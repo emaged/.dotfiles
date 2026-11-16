@@ -53,12 +53,18 @@ fail() { results+=("FAIL  $1"); printf '  Failed: %s\n' "$1" >&2; failed=$((fail
 have() { command -v "$1" >/dev/null 2>&1; }
 require() { have "$1" || { skip "$1 is not installed"; return 1; }; }
 
-run() {
-  local label=$1 status
+show_command() {
+  local label=$1
   shift
   printf '\n==> %s\n  ' "$label"
   printf '%q ' "$@"
   printf '\n'
+}
+
+run() {
+  local label=$1 status
+  shift
+  show_command "$label" "$@"
   if $dry_run; then
     results+=("PLAN  $label")
   elif "$@"; then
@@ -83,6 +89,18 @@ system_owned() {
   return 1
 }
 
+mise_owned() {
+  local path resolved directory data_dir installs_dir shims_dir
+  path=$(command -v "$1") || return 1
+  resolved=$(readlink -f -- "$path") || return 1
+  directory=$(readlink -f -- "$(dirname -- "$path")") || return 1
+  data_dir=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
+  installs_dir=$(readlink -m -- "$data_dir/installs") || return 1
+  shims_dir=$(readlink -m -- "$data_dir/shims") || return 1
+  # Shims can resolve to a system-owned mise binary, so check their directory too.
+  [[ $resolved == "$installs_dir/"* || $directory == "$shims_dir" ]]
+}
+
 update_zinit() {
   require zsh || return 0
   local init=${ZINIT_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/zinit}/zinit.git/zinit.zsh
@@ -91,7 +109,7 @@ update_zinit() {
   fi
   [[ -f $init ]] || { skip 'Zinit installation not found (set ZINIT_HOME if needed)'; return 0; }
   # Avoid sourcing .zshrc, which can install tools and start interactive plugins.
-  run 'Zinit manager' zsh -f -c 'source "$1" && zinit self-update' update-dev "$init"
+  run 'Zinit manager' zsh -f -c 'source "$1" && zinit self-update --no-pager' update-dev "$init"
   run 'Zinit plugins and snippets' zsh -f -c 'source "$1" && zinit update --all' update-dev "$init"
 }
 
@@ -108,6 +126,24 @@ node_bin_dir() {
   fi
 }
 
+npm_prefix() {
+  local directory=$1 prefix
+  prefix=$(PATH="$directory:$PATH" "$directory/npm" prefix -g) || return 1
+  [[ -n $prefix ]] || return 1
+  readlink -f -- "$prefix"
+}
+
+npm_user_prefix() {
+  local prefix=$1 directory
+  case "$prefix" in /|/usr|/usr/local) return 1 ;; esac
+  [[ -d $prefix && -O $prefix && -w $prefix ]] || return 1
+  for directory in "$prefix/bin" "$prefix/lib" "$prefix/lib/node_modules"; do
+    if [[ -e $directory || -L $directory ]]; then
+      [[ -d $directory && -O $directory && -w $directory ]] || return 1
+    fi
+  done
+}
+
 update_mise() {
   require mise || return 0
   local old_bin='' new_bin old_prefix='' new_prefix snapshot specs='' package
@@ -115,7 +151,7 @@ update_mise() {
   if system_owned mise; then
     skip 'mise itself is managed by the system package manager'
   else
-    run 'mise itself' mise self-update || return 1
+    run 'mise itself' mise self-update
   fi
   if $dry_run; then
     run 'mise tools (home configuration)' mise -C "$HOME" upgrade --no-prune
@@ -125,50 +161,64 @@ update_mise() {
 
   # Capture before upgrading: old npm may disappear from PATH when Node changes.
   if old_bin=$(node_bin_dir); then
-    if ! old_prefix=$(PATH="$old_bin:$PATH" "$old_bin/npm" prefix -g) ||
-       ! old_prefix=$(readlink -f "$old_prefix") ||
-       ! snapshot=$(PATH="$old_bin:$PATH" "$old_bin/npm" ls -g --depth=0 --json); then
-      fail 'Could not snapshot npm globals; mise upgrade was skipped'
+    if ! old_prefix=$(npm_prefix "$old_bin"); then
+      fail 'Could not resolve npm globals; mise upgrade was skipped'
       npm_ready=false
       return 1
     fi
-    # Refuse linked/local packages instead of silently replacing them from npm.
-    if ! specs=$(PATH="$old_bin:$PATH" node -e '
-      let input = "";
-      process.stdin.on("data", chunk => input += chunk);
-      process.stdin.on("end", () => {
-        const dependencies = JSON.parse(input).dependencies || {};
-        for (const [name, pkg] of Object.entries(dependencies)) {
-          if (name === "npm") continue;
-          if (pkg.link || pkg.resolved?.startsWith("file:") ||
-              !/^(@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(name) ||
-              !/^\d+\.\d+\.\d+[-+a-z0-9.]*$/i.test(pkg.version || "")) {
-            throw new Error(`Cannot migrate global package ${name}; handle its Node upgrade manually.`);
+    if ! npm_user_prefix "$old_prefix"; then
+      skip "npm globals at $old_prefix are system-owned or not writable; no migration"
+      old_bin=''
+    else
+      if ! snapshot=$(PATH="$old_bin:$PATH" "$old_bin/npm" ls -g --depth=0 --json); then
+        fail 'Could not snapshot npm globals; mise upgrade was skipped'
+        npm_ready=false
+        return 1
+      fi
+      # Refuse linked/local/Git sources instead of replacing them from a registry.
+      if ! specs=$(PATH="$old_bin:$PATH" node -e '
+        let input = "";
+        process.stdin.on("data", chunk => input += chunk);
+        process.stdin.on("end", () => {
+          const dependencies = JSON.parse(input).dependencies || {};
+          for (const [name, pkg] of Object.entries(dependencies)) {
+            if (name === "npm") continue;
+            const resolved = pkg.resolved || pkg._resolved;
+            if (pkg.link || (resolved && !/^https?:\/\//i.test(resolved)) ||
+                !/^(@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(name) ||
+                !/^\d+\.\d+\.\d+[-+a-z0-9.]*$/i.test(pkg.version || "")) {
+              throw new Error(`Cannot migrate global package ${name}; handle its Node upgrade manually.`);
+            }
+            console.log(`${name}@${pkg.version}`);
           }
-          console.log(`${name}@${pkg.version}`);
-        }
-      });
-    ' <<<"$snapshot"); then
-      fail 'Could not prepare npm migration; mise upgrade was skipped'
-      npm_ready=false
-      return 1
+        });
+      ' <<<"$snapshot"); then
+        fail 'Could not prepare npm migration; mise upgrade was skipped'
+        npm_ready=false
+        return 1
+      fi
+      while IFS= read -r package; do
+        [[ -z $package ]] || packages+=("$package")
+      done <<<"$specs"
     fi
-    while IFS= read -r package; do
-      [[ -z $package ]] || packages+=("$package")
-    done <<<"$specs"
   fi
 
   # Even a failed upgrade may have upgraded Node before another tool failed.
   run 'mise tools (home configuration)' mise -C "$HOME" upgrade --no-prune
   if [[ -n $old_bin ]]; then
     if ! new_bin=$(node_bin_dir) ||
-       ! new_prefix=$(PATH="$new_bin:$PATH" "$new_bin/npm" prefix -g) ||
-       ! new_prefix=$(readlink -f "$new_prefix"); then
+       ! new_prefix=$(npm_prefix "$new_bin"); then
       fail 'Could not resolve npm after mise upgrade; old runtimes were retained'
       npm_ready=false
       return 1
     fi
     if [[ $old_prefix != "$new_prefix" && ${#packages[@]} -gt 0 ]]; then
+      if ! npm_user_prefix "$new_prefix"; then
+        fail "Cannot migrate npm globals to $new_prefix: prefix is system-owned or not writable"
+        npm_ready=false
+        printf '  Previous packages remain in %s\n' "$old_prefix" >&2
+        return 1
+      fi
       if ! run 'Preserve npm globals in new Node installation' env "PATH=$new_bin:$PATH" \
         "$new_bin/npm" install -g -- "${packages[@]}"; then
         npm_ready=false
@@ -197,23 +247,45 @@ update_pipx() {
 
 update_uv() {
   require uv || return 0
-  if system_owned uv; then
+  local output status
+  if mise_owned uv; then
+    skip 'uv itself is managed by mise; use update-dev mise'
+  elif system_owned uv; then
     skip 'uv itself is managed by the system package manager'
+  elif $dry_run; then
+    run 'uv itself (if installed by the standalone installer)' env UV_NO_MODIFY_PATH=1 uv self update
   else
-    run 'uv itself' uv self update
+    show_command 'uv itself' env UV_NO_MODIFY_PATH=1 uv self update
+    if output=$(UV_NO_MODIFY_PATH=1 uv self update 2>&1); then
+      [[ -z $output ]] || printf '%s\n' "$output"
+      results+=("OK    uv itself")
+    else
+      status=$?
+      # uv validates its install receipt before contacting the update server.
+      # Only this specific diagnostic is a skip; network/permission errors fail.
+      if [[ $output == *'Self-update is only available for uv binaries installed via the standalone installation scripts.'* ]]; then
+        skip 'uv itself uses another installation method; update it through its package manager'
+      else
+        printf '%s\n' "$output" >&2
+        fail "uv itself (exit $status)"
+      fi
+    fi
   fi
   run 'uv-installed tools' uv tool upgrade --all
 }
 
 update_npm() {
   $npm_ready || { skip 'npm update: resolve the earlier migration failure first'; return 0; }
-  if $dry_run; then
-    require npm || return 0
-    run 'Global npm packages (home Node)' npm update -g
+  local directory prefix
+  directory=$(node_bin_dir) || { skip 'npm is not installed'; return 0; }
+  if ! prefix=$(npm_prefix "$directory"); then
+    fail 'Could not resolve npm global prefix'
+    return 1
+  fi
+  if ! npm_user_prefix "$prefix"; then
+    skip "npm globals at $prefix are system-owned or not writable"
     return 0
   fi
-  local directory
-  directory=$(node_bin_dir) || { skip 'npm is not installed'; return 0; }
   run 'Global npm packages (home Node)' env "PATH=$directory:$PATH" "$directory/npm" update -g
 }
 

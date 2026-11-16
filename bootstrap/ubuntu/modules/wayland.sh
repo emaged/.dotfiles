@@ -3,6 +3,6 @@ set -euo pipefail
 
 echo "==> Installing Wayland utilities..."
 
-sudo apt install -y wl-clipboard
+sudo apt-get install -y wl-clipboard
 
 echo "Wayland utilities installed."

@@ -1,38 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-echo "==> Ensuring pipx is installed..."
-
-if ! command -v pipx &>/dev/null; then
-  echo "Installing pipx via apt..."
-  sudo apt install -y pipx
-else
-  echo "pipx already installed"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
+if ! have pipx; then
+  sudo apt-get install -y pipx
 fi
-
-pipx ensurepath >/dev/null 2>&1 || true
-
-echo "==> Installing / upgrading pipx packages..."
-
-packages=(
-  black
-  djlint
-  hererocks
-  ipython
-  poetry
-  pynvim
-  pytest
-  ruff
-)
-
-for pkg in "${packages[@]}"; do
-  if pipx list | grep -q "$pkg"; then
-    echo "Upgrading $pkg..."
-    pipx upgrade "$pkg"
+pipx ensurepath
+inventory=$(pipx list --json)
+installed=$(/usr/bin/python3 -c 'import json,sys; print("\n".join(json.load(sys.stdin)["venvs"]))' <<<"$inventory")
+load_packages pipx
+for package in "${packages[@]}"; do
+  if grep -Fxq -- "$package" <<<"$installed"; then
+    pipx upgrade "$package"
   else
-    echo "Installing $pkg..."
-    pipx install "$pkg"
+    pipx install "$package"
   fi
 done
-
-echo "pipx packages installed/upgraded to latest."

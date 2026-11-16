@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "==> Installing VLC..."
 
-sudo pacman -S --needed --noconfirm vlc
-sudo pacman -S --needed --noconfirm vlc-plugins-all
+omarchy pkg add vlc
+omarchy pkg add vlc-plugins-all
 
 echo "VLC installed."

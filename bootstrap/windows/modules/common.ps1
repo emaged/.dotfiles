@@ -1,5 +1,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Native commands are checked explicitly, including expected nonzero inventory results.
+$PSNativeCommandUseErrorActionPreference = $false
 
 function Write-Step {
     param(
@@ -22,7 +24,11 @@ function Write-Info {
 function Refresh-Path {
     $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
     $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
-    $env:Path = "$machinePath;$userPath"
+    $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $paths = foreach ($entry in ("$env:Path;$machinePath;$userPath" -split ';')) {
+        if ($entry -and $seen.Add($entry)) { $entry }
+    }
+    $env:Path = $paths -join ';'
 }
 
 function Test-Command {
@@ -67,7 +73,7 @@ function Add-LineIfMissing {
         $content = ''
     }
 
-    if ($content -match [regex]::Escape($Line)) {
+    if (($content -split '\r?\n') -contains $Line) {
         return
     }
 
@@ -121,7 +127,7 @@ function Install-WingetPackage {
         [Parameter(Mandatory = $true)]
         [string]$Id,
         [string]$Name = $Id,
-        [string]$Source = ''
+        [string]$Source = 'winget'
     )
 
     Ensure-Winget
@@ -136,11 +142,8 @@ function Install-WingetPackage {
         '--disable-interactivity'
     )
 
-    if ($Source) {
-        $arguments += @('--source', $Source)
-    } else {
-        $arguments += '--silent'
-    }
+    $arguments += @('--source', $Source)
+    if ($Source -ne 'msstore') { $arguments += '--silent' }
 
     & winget @arguments
     Assert-NativeCommandSucceeded `
@@ -177,10 +180,9 @@ function Ensure-ScoopBucket {
     )
 
     Ensure-Scoop
-    $bucketList = & scoop bucket list 2>$null
-    if ($bucketList -match "(?m)^$([regex]::Escape($Name))\s") {
-        return
-    }
+    $bucketList = @(& scoop bucket list)
+    Assert-NativeCommandSucceeded -Description 'Listing Scoop buckets' -ExitCode $LASTEXITCODE -AllowedExitCodes @(0, 2)
+    if ($bucketList | Where-Object { $_.Name -eq $Name }) { return }
 
     Write-Step "Adding Scoop bucket $Name..."
     & scoop bucket add $Name
@@ -211,9 +213,13 @@ function Install-ScoopPackage {
 
     Ensure-Scoop
     $appName = Get-ScoopAppName -Package $Package
-    $installed = & scoop list $appName 2>$null
-
-    if ($LASTEXITCODE -eq 0 -and $installed) {
+    $installed = @(& scoop list "^$([regex]::Escape($appName))$")
+    Assert-NativeCommandSucceeded -Description 'Listing Scoop applications' -ExitCode $LASTEXITCODE -AllowedExitCodes @(0, 1)
+    $matching = @($installed | Where-Object { $_.Name -eq $appName })
+    if ($matching | Where-Object { $_.Info -match 'Install failed' }) {
+        throw "Scoop has a failed installation of $appName. Repair it before rerunning bootstrap."
+    }
+    if ($matching.Count -gt 0) {
         Write-Info "$Name already installed"
         return
     }
@@ -224,4 +230,58 @@ function Install-ScoopPackage {
         -Description "Scoop installation of $Name" `
         -ExitCode $LASTEXITCODE
     Refresh-Path
+}
+
+
+function Read-PackageList {
+    param([Parameter(Mandatory = $true)][string]$Name)
+    $path = Join-Path (Join-Path $PSScriptRoot '..\packages') "$Name.txt"
+    $packages = @(Get-Content -LiteralPath $path | ForEach-Object { $_.Trim() } |
+        Where-Object { $_ -and -not $_.StartsWith('#') })
+    if ($packages.Count -eq 0 -or ($packages -match '\s')) {
+        throw "Empty or invalid package list: $path"
+    }
+    return $packages
+}
+
+function Ensure-MiseTool {
+    param([Parameter(Mandatory = $true)][string]$Tool, [string]$Version = 'latest')
+    $inventory = & mise -C $HOME ls --current $Tool --json
+    Assert-NativeCommandSucceeded -Description "Inspecting mise $Tool" -ExitCode $LASTEXITCODE
+    $configured = @($inventory | ConvertFrom-Json)
+    if ($configured.Count -gt 0) {
+        & mise -C $HOME where $Tool *> $null
+        if ($LASTEXITCODE -eq 0) { return }
+        & mise -C $HOME install $Tool
+    } else {
+        & mise -C $HOME use -g "$Tool@$Version"
+    }
+    Assert-NativeCommandSucceeded -Description "Installing mise $Tool" -ExitCode $LASTEXITCODE
+}
+
+function Ensure-UserNpmPrefix {
+    $prefix = & mise -C $HOME exec node -- npm prefix -g
+    Assert-NativeCommandSucceeded -Description 'Reading npm prefix' -ExitCode $LASTEXITCODE
+    $prefix = [IO.Path]::GetFullPath(($prefix | Out-String).Trim())
+    $userRoot = [IO.Path]::GetFullPath($HOME).TrimEnd('\') + '\'
+    if (-not $prefix.StartsWith($userRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "npm prefix $prefix is outside your home directory. Select a user-owned npm prefix before continuing."
+    }
+    $env:Path = "$prefix;$env:Path"
+}
+
+function Assert-MsvcBuildTools {
+    $programFiles = ${env:ProgramFiles(x86)}
+    if (-not $programFiles) { throw 'Windows with Visual Studio C++ Build Tools is required for Cargo builds.' }
+    $vswhere = Join-Path $programFiles 'Microsoft Visual Studio\Installer\vswhere.exe'
+    $installation = $null
+    if (Test-Path -LiteralPath $vswhere) {
+        $installation = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        Assert-NativeCommandSucceeded -Description 'Finding MSVC build tools' -ExitCode $LASTEXITCODE
+    }
+    $sdkRoot = Join-Path $programFiles 'Windows Kits\10\Lib'
+    $sdk = @(Get-ChildItem -Path "$sdkRoot\*\ucrt\x64\ucrt.lib" -ErrorAction SilentlyContinue)
+    if (-not $installation -or $sdk.Count -eq 0) {
+        throw 'Cargo builds require Visual Studio C++ Build Tools and a Windows SDK. Install the Desktop development with C++ workload, then rerun. See bootstrap/README.md.'
+    }
 }

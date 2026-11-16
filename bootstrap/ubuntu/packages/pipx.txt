@@ -1,0 +1,9 @@
+# Packages for this platform only; keep intentional differences documented.
+black
+djlint
+hererocks
+ipython
+poetry
+pynvim
+pytest
+ruff

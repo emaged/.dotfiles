@@ -1,0 +1,14 @@
+# Packages for this platform only; keep intentional differences documented.
+@github/copilot
+@mermaid-js/mermaid-cli
+@openai/codex
+browser-sync
+eslint
+eslint-config-prettier
+eslint_d
+htmlhint
+http-server
+live-server
+mcp-hub
+neovim
+prettier
