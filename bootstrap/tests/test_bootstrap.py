@@ -186,6 +186,31 @@ exit 22
         self.stub("apt-cache", "printf '  Candidate: 1.2.3\\n'\n")
         self.assert_success(self.helper("ubuntu", "apt_has_package lazygit"))
 
+    def test_development_tools_install_required_java_runtime(self):
+        self.stub("sudo", 'printf "%s\\n" "$*" >> "$TEST_LOG"\n')
+        self.stub("apt-cache", "printf '  Candidate: 1.0\\n'\n")
+        self.stub("bat", "exit 0\n")
+        self.stub("fd", "exit 0\n")
+        for platform in ("ubuntu", "wsl"):
+            with self.subTest(platform=platform):
+                self.log.write_text("")
+                self.assert_success(self.run_bash(ROOT / platform / "modules/dev-tools.sh"))
+                installs = [line.split() for line in self.commands().splitlines()
+                            if line.startswith("apt-get install ")]
+                self.assertTrue(any("openjdk-25-jdk" in args for args in installs))
+
+    def test_missing_required_java_stops_development_tools(self):
+        self.stub("sudo", '''printf '%s\\n' "$*" >> "$TEST_LOG"
+for argument in "$@"; do
+  if [[ $argument == openjdk-25-jdk ]]; then exit 100; fi
+done
+''')
+        for platform in ("ubuntu", "wsl"):
+            with self.subTest(platform=platform):
+                result = self.run_bash(ROOT / platform / "modules/dev-tools.sh")
+                self.assertEqual(result.returncode, 100, result.stdout + result.stderr)
+                self.assertNotIn("Development tools installed.", result.stdout)
+
     def test_system_npm_prefix_is_rejected(self):
         self.stub("npm", "echo /usr/local\n")
         result = self.helper("omarchy", "ensure_user_npm_prefix")

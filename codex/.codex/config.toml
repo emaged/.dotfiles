@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────────────────────
 #        C O D E X   C L I   &   I D E   C O N F I G
 # ──────────────────────────────────────────────────────────────
-model = "gpt-6-astra"
-model_reasoning_effort = "max"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 
   ### Server Configurations
@@ -61,7 +61,7 @@ env_vars = ["BROWSER_USE_ACCESS_EXECUTOR_ID", "BROWSER_USE_ACCESS_PIPE_PATH", "B
       NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
       BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
       BROWSER_USE_CODEX_APP_VERSION = "26.1103.60933"
-      NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/emiel/.codex/plugins/cache/openai-bundled/browser/26.1103.60933/scripts/browser-service.mjs"}'
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/usr/lib/chatgpt/resources/cua_node/lib/node_modules/@oai/browser-desktop/scripts/browser-service.mjs"}'
       CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
   [mcp_servers.cua_repl]

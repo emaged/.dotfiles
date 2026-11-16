@@ -1,12 +1,17 @@
 [[plugin.deps]]
 use = "Lil-Dank/lazygit"
-rev = "ea20d05"
+rev = "=ea20d05"
 hash = "b95f2d56dd4b2df1be338179a6f1f6c9"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
 rev = "19dc890"
 hash = "5b2eb0cc2050cec1e4de83cfa51a5b90"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:zoom"
+rev = "1ef5fe0"
+hash = "558bbb58e3dd36d488280a8f10e7b904"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"

@@ -50,7 +50,8 @@ exec_always --no-startup-id waybar
 exec --no-startup-id swayidle -w \
     timeout 2000 '~/.config/swaylock/swaylock_bash.sh' \
     timeout 3000 'swaymsg "output * dpms off"' \
-    resume 'swaymsg "output * dpms on"'
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep '~/.config/swaylock/swaylock_bash.sh'
 
 # Startup apps
 exec firefox

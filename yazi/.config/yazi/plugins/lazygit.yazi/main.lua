@@ -1,34 +1,40 @@
 return {
     entry = function()
-        local output = Command("git"):arg("status"):stderr(Command.PIPED):output()
-        if output.stderr ~= "" then
+        local output, err = Command("git"):arg("status"):stderr(Command.PIPED):output()
+        if not output or not output.status.success then
             ya.notify({
                 title = "lazygit",
-                content = "Not in a git directory\nError: " .. output.stderr,
+                content = output and output.stderr or ("Unable to run git: " .. tostring(err)),
                 level = "warn",
                 timeout = 5,
             })
+            return
+        end
+
+        local permit = ui.hide()
+        local child
+        child, err = Command("lazygit"):stdin(Command.INHERIT):stdout(Command.INHERIT):stderr(Command.PIPED):spawn()
+        if child then
+            output, err = child:wait_with_output()
         else
-            permit = ui.hide()
-            local output, err_code = Command("lazygit"):stdin(Command.INHERIT):stdout(Command.INHERIT):stderr(Command.PIPED):spawn()
-            if output and not err_code then
-                output, err_code = output:wait_with_output()
-            end
-            if err_code ~= nil then
-                ya.notify({
-                    title = "Failed to run lazygit command",
-                    content = "Status: " .. err_code,
-                    level = "error",
-                    timeout = 5,
-                })
-            elseif not output.status.success then
-                ya.notify({
-                    title = "lazygit in" .. cwd .. "failed, exit code " .. output.status.code,
-                    content = output.stderr,
-                    level = "error",
-                    timeout = 5,
-                })
-            end
+            output = nil
+        end
+        permit:drop()
+
+        if not output then
+            ya.notify({
+                title = "Failed to run lazygit command",
+                content = tostring(err),
+                level = "error",
+                timeout = 5,
+            })
+        elseif not output.status.success then
+            ya.notify({
+                title = "lazygit failed, exit code " .. tostring(output.status.code),
+                content = output.stderr,
+                level = "error",
+                timeout = 5,
+            })
         end
     end,
 }

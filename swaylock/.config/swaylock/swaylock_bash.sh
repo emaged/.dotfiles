@@ -29,9 +29,9 @@ color_separator="00000000"
 # Pick a random wallpaper
 wallpaper="$(find "${wallpapers_path}" -type f | shuf -n 1)"
 
-# Only lock if not already running
-if ! pgrep -x swaylock > /dev/null; then
-    swaylock \
+# Return successfully only after swaylock has acquired the session lock.
+# Process existence alone does not mean a lock is ready.
+exec swaylock --daemonize \
         --image "${wallpaper}" \
         --scaling fill \
         --effect-blur 7x5 \
@@ -68,4 +68,3 @@ if ! pgrep -x swaylock > /dev/null; then
         --text-ver-color "#${color_text_ver}" \
         --text-wrong-color "#${color_text_wrong}" \
         --text-caps-lock-color "#${color_text_caps}"
-fi

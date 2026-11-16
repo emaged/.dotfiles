@@ -1,0 +1,20 @@
+{
+  "name": "@emaged/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./eslint.config.js",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "dependencies": {
+    "@eslint/css": "2.0.1",
+    "@eslint/js": "9.39.5",
+    "@html-eslint/eslint-plugin": "0.68.0",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0"
+  }
+}

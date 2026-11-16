@@ -31,7 +31,21 @@ export PATH
 eval "$(mise activate zsh)"
 
 # Language & Tools
-export JAVA_HOME=/usr/lib/jvm/default
+# Preserve an explicit JDK; otherwise discover the runtime selected on PATH.
+if [[ -z "${JAVA_HOME:-}" || ! -x "$JAVA_HOME/bin/java" ]]; then
+  () {
+    local java_home
+    java_home=$(command java -XshowSettings:properties -version 2>&1 |
+      sed -n 's/^[[:space:]]*java.home = //p')
+    # Java 8 reports its nested JRE rather than the enclosing JDK.
+    if [[ "${java_home:t}" == jre && -x "$java_home/../bin/javac" ]]; then
+      java_home="${java_home:h}"
+    fi
+    if [[ -n "$java_home" && -x "$java_home/bin/java" ]]; then
+      export JAVA_HOME="$java_home"
+    fi
+  }
+fi
 typeset -T PKG_CONFIG_PATH pkg_config_path
 typeset -U pkg_config_path
 pkg_config_path=(/usr/local/lib/pkgconfig ${pkg_config_path:#})
@@ -319,4 +333,6 @@ eval "$(starship init zsh)"
 zinit ice wait'1' lucid
 zinit light zsh-users/zsh-syntax-highlighting
 
-. "$HOME/.local/share/../bin/env"
+if [ -r "$HOME/.local/bin/env" ]; then
+    . "$HOME/.local/bin/env"
+fi

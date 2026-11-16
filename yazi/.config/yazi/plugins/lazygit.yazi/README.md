@@ -1,5 +1,13 @@
 # lazygit.yazi
 Plugin for [Yazi](https://github.com/sxyazi/yazi) to manage git repos with [lazygit](https://github.com/jesseduffield/lazygit)
+
+## Local maintenance
+
+This checkout includes local fixes for process errors and terminal restoration.
+Its revision is pinned in `package.toml` so `ya pkg upgrade` will not replace
+those fixes. Keep the tracked copy when restoring these dotfiles; review the
+local changes before deliberately reinstalling or upgrading this plugin.
+
 ## Dependencies
 Make sure [lazygit](https://github.com/jesseduffield/lazygit) is installed and in your `PATH`.
 ## Installation

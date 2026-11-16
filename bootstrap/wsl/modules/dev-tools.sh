@@ -2,8 +2,9 @@
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 echo '==> Installing development tools...'
+# Java 25 is required by the Eclipse bundles shipped with JDT LS.
 sudo apt-get install -y apt-file bat bc btm cmake cpio fd-find gnupg \
-  imagemagick inotify-tools lua5.1 maven meson mkcert ninja-build python3 \
+  imagemagick inotify-tools lua5.1 maven meson mkcert ninja-build openjdk-25-jdk python3 \
   ruby-full ruby-dev build-essential ripgrep wget zoxide software-properties-common texlive-latex-base
 
 # These packages vary between LTS archives; retain the same CLI capabilities.

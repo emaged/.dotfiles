@@ -12,6 +12,7 @@ $wingetPackages = @(
     @{ Id = 'ImageMagick.ImageMagick'; Name = 'ImageMagick' },
     @{ Id = 'GitLab.GLab'; Name = 'GitLab CLI' },
     @{ Id = 'LLVM.LLVM'; Name = 'LLVM' },
+    @{ Id = 'Microsoft.OpenJDK.25'; Name = 'Microsoft OpenJDK 25 (JDT LS runtime)' },
     @{ Id = 'Microsoft.OpenJDK.21'; Name = 'Microsoft OpenJDK 21' },
     @{ Id = 'Microsoft.OpenJDK.17'; Name = 'Microsoft OpenJDK 17' },
     @{ Id = 'Microsoft.OpenJDK.11'; Name = 'Microsoft OpenJDK 11' },

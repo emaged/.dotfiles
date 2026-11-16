@@ -189,7 +189,7 @@ config.keys = {
 			description = "Enter new name for session",
 			action = wezterm.action_callback(function(window, pane, line)
 				if line then
-					mux.rename_workspace(window:mux_window():get_workspace(), line)
+					wezterm.mux.rename_workspace(window:mux_window():get_workspace(), line)
 				end
 			end),
 		}),

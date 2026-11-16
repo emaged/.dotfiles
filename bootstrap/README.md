@@ -140,7 +140,10 @@ The pipx set is `black`, `djlint`, `hererocks`, `ipython`, `poetry`, `pynvim`,
   it. No Noble repository is silently added to Resolute. Existing repository
   files from earlier runs are not automatically migrated or deleted; use
   vendor-supported standalone client tools when appropriate.
-- JDK/source packages unavailable in an Ubuntu release are explicitly listed
+- Java 25 is required for the installed JDT LS distribution. Ubuntu/WSL install
+  `openjdk-25-jdk` as a required package; Windows installs `Microsoft.OpenJDK.25`.
+  Neovim can discover these JDKs independently of an older project `JAVA_HOME`.
+  Older JDK/source packages unavailable in an Ubuntu release are explicitly listed
   as optional omissions. Firefox Developer Edition and Toolbox remain
   Omarchy-only choices; other GUI package differences are shown above.
 - Ubuntu desktop Postman uses Snap and requires systemd. WSL installs neither
@@ -193,10 +196,10 @@ git diff --check -- .
 ```
 
 The Python suite uses the standard library. It checks Bash syntax, package-list
-parity, previews, module dependencies, early failures, exact pipx matching,
-mise selection preservation, npm ownership checks, download cleanup and SSH
-fallback behavior using temporary homes and mocked commands. Tests that require
-a non-root caller are explicitly skipped when run as root.
+parity, previews, module dependencies, required Java installation, early failures,
+exact pipx matching, mise selection preservation, npm ownership checks, download
+cleanup and SSH fallback behavior using temporary homes and mocked commands.
+Tests that require a non-root caller are explicitly skipped when run as root.
 
 On a machine with PowerShell, also run:
 
@@ -206,12 +209,14 @@ pwsh -NoProfile -File tests/test_windows.ps1
 
 That script parses all Windows files and checks previews, Scoop objects, PATH
 preservation and mise handling with mocks; it does not invoke real installers.
-The Windows runtime checks, ShellCheck and full installations were not run
-during this audit because the required runtime/tools/target hosts were absent.
+The Windows runtime checks and full installations were not run during this audit
+because PowerShell and the target hosts were unavailable.
 
 Package and behavior references: [mise script usage](https://mise.jdx.dev/cli/exec.html),
 [Yazi prerequisites](https://yazi-rs.github.io/docs/installation/),
 [Ubuntu lazygit availability](https://packages.ubuntu.com/lazygit),
+[Ubuntu Java 25](https://packages.ubuntu.com/noble/openjdk-25-jdk),
+[Microsoft OpenJDK installation](https://learn.microsoft.com/en-us/java/openjdk/install),
 [MongoDB 8.0 supported Ubuntu releases](https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-ubuntu/),
 [Rust Windows requirements](https://rust-lang.org/tools/install/),
 [tmux changes](https://github.com/tmux/tmux/blob/master/CHANGES).

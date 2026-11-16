@@ -1,6 +1,23 @@
 # VSCode 
 .vscode/
 
+# Local secrets and private keys (keep only sanitized env templates)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+.git-credentials
+.netrc
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pem
+*.key
+*.p12
+*.pfx
+
 # Codex runtime state
 # Ignore everything inside .codex
 codex/.codex/*
