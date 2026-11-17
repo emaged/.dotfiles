@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────────────────────
 #        C O D E X   C L I   &   I D E   C O N F I G
 # ──────────────────────────────────────────────────────────────
-model = "gpt-6.1-sol"
-model_reasoning_effort = "xhigh"
+model = "gpt-6-astra"
+model_reasoning_effort = "max"
 personality = "pragmatic"
 
   ### Server Configurations

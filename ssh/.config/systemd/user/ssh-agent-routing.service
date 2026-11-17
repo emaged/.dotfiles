@@ -1,0 +1,18 @@
+[Unit]
+Description=Route SSH agent requests to the selected personal computer
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.ssh/agent-routing.py serve
+Restart=on-failure
+RestartSec=2
+RuntimeDirectory=ssh-agent-routing
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+UMask=0077
+NoNewPrivileges=yes
+# Forwarded Tailscale/OpenSSH sockets live in the host's /tmp.
+PrivateTmp=no
+
+[Install]
+WantedBy=default.target

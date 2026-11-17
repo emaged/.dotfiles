@@ -1,0 +1,8 @@
+# Keep documentation, tests, and the former host layout out of the home directory.
+^/README\.md$
+^/tests$
+^/hosts$
+
+# Python may create these beside the routing helper during local checks.
+__pycache__
+.*\.py[co]
